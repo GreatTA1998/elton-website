@@ -10,7 +10,7 @@
     - life management: i.e. tidying, planning, "having a life", physical health, diet, exercise, mental health
     - Practice journals: piano, sports etc.
     - Healthy mindsets for looking good, suffering of others (don't be a weeping doctor), opportunity impact
-  - Upload to Soundcloud and just put links here 
+  - Upload to Soundcloud and just put links here (purpose: opportunities to teach, accompany, and be involved in musical activities)
   - Upload to YouTube and just link here
   - Links to my projects i.e. project calendar, life sanctuary and explain.mit.edu
 
