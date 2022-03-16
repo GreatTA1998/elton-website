@@ -23,6 +23,6 @@
 </main>
 
 <script>
-  import Tiptap from '../lib/Tiptap.svelte'
+  import Tiptap from '../TipTap.svelte'
 </script>
 
