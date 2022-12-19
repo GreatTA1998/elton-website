@@ -1,33 +1,54 @@
 <p>
-  Welcome! Here's everything I work on / enjoy doing:
+  Welcome to my absolutely EPIC website, it's INSANE:
 </p>
 
-Web apps:
+Web apps that could change your life:
 <ul style="margin-top: 4px;">
+  <li><a target="_blank" href="https://organize-life.com">organize-life.com</a></li>
+  <li><a target="_blank" href="https://zen-messenger.com">zen-message.com</a></li>
   <li><a target="_blank" href="https://explain.mit.edu">explain.mit.edu</a></li>
-  <li><a target="_blank" href="https://organize-life.vercel.app">organize-life.vercel.app</a></li>
-  <li><a target="_blank" href="https://zen-messenger.vercel.app">zen-messenger.vercel.app</a></li>
 </ul>
 
-
-
-Content:
+<!-- Content:
 <ul style="margin-top: 4px;">
   <li><a target="_blank" href="https://www.youtube.com/channel/UC6SBAAxsJL80L0Wn335S6Rg">Youtube</a></li>
   <li><a target="_blank" href="https://twitter.com/verypopularguy">Twitter</a></li>
-</ul>
+</ul> -->
 
-Social Media: 
+<!-- Social Media: 
 <ul style="margin-top: 4px;">
   <li><a target="_blank" href="https://www.facebook.com/eltonlin1998/">Facebook</a></li>
   <li><a target="_blank" href="https://www.linkedin.com/in/elton-lin/">LinkedIn</a></li>
-</ul>
+</ul> -->
 
-<img src="david-goggins.png" alt="David Goggins running" width="600"/>
+<div style="display: flex;">
 
 <div>
-  <audio controls="true" src="ghost-in-a-flower.mp3" type="audio/mp3"></audio>
+  <img src="david-goggins.png" alt="David Goggins running" width="400" height="300"/>
+  <div style="display: flex; align-items: center">
+    <audio controls src="chopin-etude-1.mp3" type="audio/mp3" style="width: 400px;"></audio>
+  </div>
 </div>
+
+<div>
+  <img src="https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg" width="400"/>
+  <div>
+    <audio controls="true" src="ghost-in-a-flower.mp3" type="audio/mp3" style="width: 400px;"></audio>
+  </div>
+</div>
+
+<div>
+  <a href="https://www.youtube.com/watch?v=Aa8bXkRsP0A&list=OLAK5uy_lgovKkb1IAMZFrPWYa8_Dh71Kimw5RbjA&index=8">
+    <img src="https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg" width="400"/>
+  </a>
+  <div>
+    <audio controls="true" src="all-of-me.mp3" type="audio/mp3" style="width: 400px;"></audio>
+  </div>
+</div>
+
+</div>
+
+
   <!-- TODO: 
   Keep it dead simple for now
   - Every essay is a Firestore doc
