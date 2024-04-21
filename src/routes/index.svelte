@@ -9,6 +9,13 @@ Web apps that could change your life:
   <li><a target="_blank" href="https://explain.mit.edu">explain.mit.edu</a></li>
 </ul>
 
+<!--
+  Essays:
+  Photos:
+  Youtube channel: etc.
+  Entertaining Youtube videos talking about what I like:
+-->
+
 <!-- Content:
 <ul style="margin-top: 4px;">
   <li><a target="_blank" href="https://www.youtube.com/channel/UC6SBAAxsJL80L0Wn335S6Rg">Youtube</a></li>
