@@ -120,104 +120,103 @@
 	:global(body) {
 		margin: 0;
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		font-size: 15px;
+		font-size: 16px;
 		font-weight: 400;
-		color: #1e1e1e;
+		color: #2c2c2c;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-		background: #f5f5f5;
+		background: #ffffff;
 		min-height: 100vh;
 	}
 
 	:global(body > div) {
-		padding: 1.5rem 1.75rem 2.75rem;
+		max-width: 1100px;
+		padding: 2.25rem 1.75rem 3.5rem;
 		box-sizing: border-box;
 	}
 
 	.intro {
-		margin: 0 0 0.65em;
-		color: #757575;
-		line-height: 1.55;
-		max-width: 36em;
-		font-size: 15px;
+		margin: 0 0 0.55em;
+		color: #555;
+		line-height: 1.6;
+		max-width: 34em;
+		font-size: 1.05rem;
 		font-weight: 400;
 	}
 
 	.welcome {
-		margin: 0 0 0.25em;
-		font-size: 16px;
+		margin: 0 0 0.15em;
+		font-size: 1.05rem;
 		font-weight: 500;
-		color: #1e1e1e;
-		line-height: 1.45;
+		color: #2c2c2c;
+		line-height: 1.5;
 	}
 
 	.section-label {
-		margin: 3em 0 1em;
-		font-size: 22px;
-		font-weight: 600;
+		margin: 2.75em 0 0.85em;
+		font-size: 1.05rem;
+		font-weight: 500;
 		letter-spacing: -0.01em;
 		text-transform: lowercase;
-		color: #1e1e1e;
-		line-height: 1.25;
+		color: #2c2c2c;
+		line-height: 1.3;
 	}
 
 	.welcome + .section-label {
-		margin-top: 1.75em;
+		margin-top: 2em;
 	}
 
 	.app-cards {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 12px;
-		margin: 0 0 8px;
+		gap: 10px;
+		margin: 0;
 	}
 
 	.app-card {
 		display: flex;
 		align-items: center;
-		gap: 14px;
-		padding: 14px 16px;
-		border: 1px solid #e5e5e5;
-		border-radius: 12px;
+		gap: 12px;
+		padding: 12px 12px 12px 10px;
+		border: 1px solid #ececec;
+		border-radius: 10px;
 		text-decoration: none;
 		color: inherit;
 		box-sizing: border-box;
-		background: #ffffff;
-		transition:
-			background-color 0.15s ease,
-			border-color 0.15s ease;
+		background: transparent;
+		transition: background-color 0.15s ease, border-color 0.15s ease;
 	}
 
 	.app-card:hover {
-		background: #fafafa;
-		border-color: #d0d0d0;
+		background: #f7f7f7;
+		border-color: #e0e0e0;
 	}
 
 	.app-card-logo {
-		width: 56px;
-		height: 56px;
+		width: 48px;
+		height: 48px;
 		object-fit: cover;
 		flex-shrink: 0;
-		border-radius: 10px;
+		border-radius: 8px;
 	}
 
 	.app-card-text {
 		display: flex;
 		flex-direction: column;
-		gap: 3px;
+		gap: 2px;
 		min-width: 0;
 	}
 
 	.app-card-text strong {
-		font-weight: 600;
-		font-size: 15px;
-		color: #1e1e1e;
+		font-weight: 500;
+		font-size: 0.95rem;
+		color: #2c2c2c;
 	}
 
 	.app-card-text span {
-		font-size: 14px;
-		color: #757575;
-		line-height: 1.35;
+		font-size: 0.875rem;
+		color: #6a6a6a;
+		line-height: 1.4;
 		font-weight: 400;
 	}
 
@@ -225,9 +224,9 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 12px;
-		margin: 0 0 8px;
+		margin: 0;
 		align-items: start;
-		max-width: 520px;
+		max-width: 480px;
 	}
 
 	.essay-left {
@@ -243,16 +242,15 @@
 		width: 100%;
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
-		border-radius: 10px;
-		border: 1px solid #e5e5e5;
+		border-radius: 8px;
 	}
 
 	.essay-title {
 		margin: 10px 0 4px;
-		font-size: 14px;
-		font-weight: 600;
-		line-height: 1.35;
-		color: #1e1e1e;
+		font-size: 0.9rem;
+		font-weight: 500;
+		line-height: 1.4;
+		color: #2c2c2c;
 	}
 
 	.essay-title a {
@@ -266,18 +264,18 @@
 
 	.essay-sentence {
 		margin: 0;
-		color: #757575;
-		font-size: 13px;
-		line-height: 1.45;
+		color: #6a6a6a;
+		font-size: 0.84rem;
+		line-height: 1.5;
 		font-weight: 400;
 	}
 
 	.empty-frame {
 		width: 100%;
 		aspect-ratio: 16 / 9;
-		border-radius: 10px;
-		border: 1px solid #e5e5e5;
-		background: #f0f0f0;
+		border-radius: 8px;
+		border: 1px solid #ececec;
+		background: #f6f6f6;
 	}
 
 	.empty-frame-top {
@@ -292,25 +290,25 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0;
-		margin: 0 0 28px;
+		margin: 0 0 2rem;
 	}
 
 	.bach-cover {
 		width: 400px;
 		height: 400px;
 		box-sizing: border-box;
-		border: 1px solid #e5e5e5;
-		border-radius: 12px;
-		background: #ffffff;
+		border: 1px solid #ececec;
+		border-radius: 8px;
+		background: #fafafa;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
 		padding: 16px;
-		color: #1e1e1e;
+		color: #555;
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		font-weight: 500;
-		font-size: 15px;
+		font-weight: 400;
+		font-size: 0.95rem;
 	}
 
 	@media (max-width: 900px) {
