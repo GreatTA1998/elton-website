@@ -136,8 +136,9 @@
 	}
 
 	:global(body > div) {
-		max-width: 1100px;
-		padding: 2.25rem 1.75rem 3.5rem;
+		width: 100%;
+		max-width: none;
+		padding: 2.25rem 2rem 3.5rem;
 		box-sizing: border-box;
 	}
 
@@ -219,15 +220,17 @@
 
 	.essay-grid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 14px;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 16px;
 		margin: 0;
 		align-items: start;
 		width: 100%;
+		box-sizing: border-box;
 	}
 
 	.essay-item {
 		min-width: 0;
+		width: 100%;
 	}
 
 	.essay-thumb-link {
@@ -282,24 +285,24 @@
 	}
 
 	.music-item {
-		width: 240px;
+		width: 200px;
 		flex-shrink: 0;
 	}
 
 	.music-item img {
 		display: block;
-		width: 240px;
+		width: 200px;
 		height: auto;
 	}
 
 	.music-audio audio {
-		width: 240px;
+		width: 200px;
 		display: block;
 	}
 
 	.bach-cover {
-		width: 240px;
-		height: 240px;
+		width: 200px;
+		height: 200px;
 		box-sizing: border-box;
 		border: 1px solid #ececec;
 		border-radius: 8px;
@@ -322,13 +325,7 @@
 		}
 	}
 
-	@media (max-width: 800px) {
-		.essay-grid {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-
-	@media (max-width: 700px) {
+	@media (max-width: 720px) {
 		.app-cards {
 			grid-template-columns: 1fr;
 		}
