@@ -129,22 +129,22 @@
 	}
 
 	.section-label {
-		margin: 2.4em 0 0.75em;
-		font-size: 0.78rem;
-		font-weight: 500;
-		letter-spacing: 0.08em;
+		margin: 2.75em 0 0.85em;
+		font-size: 0.82rem;
+		font-weight: 600;
+		letter-spacing: 0.06em;
 		text-transform: lowercase;
-		color: #777;
+		color: #666;
 	}
 
 	.welcome + .section-label {
-		margin-top: 1em;
+		margin-top: 1.35em;
 	}
 
 	.app-cards {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 14px;
+		gap: 16px;
 		margin: 0 0 8px;
 	}
 
@@ -152,9 +152,9 @@
 		display: flex;
 		align-items: center;
 		gap: 14px;
-		padding: 14px;
-		border: 1px solid #e2e2e2;
-		border-radius: 12px;
+		padding: 16px;
+		border: 1px solid #e5e5e5;
+		border-radius: 16px;
 		text-decoration: none;
 		color: inherit;
 		box-sizing: border-box;
@@ -163,8 +163,8 @@
 	}
 
 	.app-card:hover {
-		border-color: #c8c8c8;
-		background: #f5f5f5;
+		border-color: #c4c4c4;
+		background: #f3f3f3;
 		transform: translateY(-1px);
 	}
 
@@ -173,7 +173,7 @@
 		height: 56px;
 		object-fit: cover;
 		flex-shrink: 0;
-		border-radius: 10px;
+		border-radius: 12px;
 	}
 
 	.app-card-text {
@@ -216,7 +216,7 @@
 		width: 100%;
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
-		border-radius: 10px;
+		border-radius: 14px;
 	}
 
 	.essay-title {
@@ -225,6 +225,11 @@
 
 	.essay-title a {
 		color: inherit;
+		text-decoration: none;
+	}
+
+	.essay-title a:hover {
+		text-decoration: underline;
 	}
 
 	.essay-sentence {
@@ -236,8 +241,8 @@
 		width: 100%;
 		aspect-ratio: 16 / 9;
 		background: #ececec;
-		border-radius: 10px;
-		border: 1px solid #e2e2e2;
+		border-radius: 14px;
+		border: 1px solid #e5e5e5;
 	}
 
 	.empty-frame-top {
@@ -259,8 +264,8 @@
 		width: 400px;
 		height: 400px;
 		box-sizing: border-box;
-		border: 1px solid #e2e2e2;
-		border-radius: 12px;
+		border: 1px solid #e5e5e5;
+		border-radius: 16px;
 		background: #f0f0f0;
 		display: flex;
 		align-items: center;
