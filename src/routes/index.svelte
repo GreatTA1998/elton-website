@@ -1,7 +1,3 @@
-<p class="intro">
-	Hi — glad you stopped by. Here's a little of what I've been making.
-</p>
-
 <p class="welcome">
 	Welcome to my absolutely EPIC website, it's INSANE:
 </p>
@@ -42,7 +38,7 @@
 <h2 class="section-label">video essays</h2>
 
 <div class="essay-grid">
-	<div class="essay-left">
+	<div class="essay-item">
 		<a
 			class="essay-thumb-link"
 			target="_blank"
@@ -64,28 +60,39 @@
 			Notion's two innovations: navigating your own content freely, and organizing it beyond folders and notes.
 		</p>
 	</div>
-	<div class="empty-frame empty-frame-top" aria-hidden="true"></div>
-	<div class="empty-frame empty-frame-bottom" aria-hidden="true"></div>
+	<div class="essay-item">
+		<div class="essay-thumb essay-thumb-placeholder" aria-hidden="true"></div>
+		<p class="essay-title">Goh's Folly: Seeing What Others Couldn't</p>
+		<p class="essay-sentence">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+		</p>
+	</div>
+	<div class="essay-item">
+		<div class="essay-thumb essay-thumb-placeholder" aria-hidden="true"></div>
+		<p class="essay-title">The story of 忍鬥風雲 (Nero)</p>
+		<p class="essay-sentence">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud.
+		</p>
+	</div>
 </div>
 
 <h2 class="section-label">music recordings</h2>
 
 <div class="music-row">
 	<div class="music-item">
-		<img src="david-goggins.png" alt="David Goggins running" width="400" height="300" />
+		<img src="david-goggins.png" alt="David Goggins running" />
 		<div class="music-audio">
-			<audio controls src="chopin-etude-1.mp3" type="audio/mp3" style="width: 400px;"></audio>
+			<audio controls src="chopin-etude-1.mp3" type="audio/mp3"></audio>
 		</div>
 	</div>
 
 	<div class="music-item">
 		<img
 			src="https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg"
-			width="400"
 			alt="Ghost in a Flower album cover"
 		/>
-		<div>
-			<audio controls="true" src="ghost-in-a-flower.mp3" type="audio/mp3" style="width: 400px;"></audio>
+		<div class="music-audio">
+			<audio controls="true" src="ghost-in-a-flower.mp3" type="audio/mp3"></audio>
 		</div>
 	</div>
 
@@ -96,12 +103,11 @@
 		>
 			<img
 				src="https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg"
-				width="400"
 				alt="All of Me album cover"
 			/>
 		</a>
-		<div>
-			<audio controls="true" src="all-of-me.mp3" type="audio/mp3" style="width: 400px;"></audio>
+		<div class="music-audio">
+			<audio controls="true" src="all-of-me.mp3" type="audio/mp3"></audio>
 		</div>
 	</div>
 
@@ -133,15 +139,6 @@
 		max-width: 1100px;
 		padding: 2.25rem 1.75rem 3.5rem;
 		box-sizing: border-box;
-	}
-
-	.intro {
-		margin: 0 0 0.55em;
-		color: #555;
-		line-height: 1.6;
-		max-width: 34em;
-		font-size: 1.05rem;
-		font-weight: 400;
 	}
 
 	.welcome {
@@ -222,14 +219,14 @@
 
 	.essay-grid {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 12px;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 14px;
 		margin: 0;
 		align-items: start;
-		max-width: 480px;
+		width: 100%;
 	}
 
-	.essay-left {
+	.essay-item {
 		min-width: 0;
 	}
 
@@ -243,6 +240,12 @@
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
 		border-radius: 8px;
+	}
+
+	.essay-thumb-placeholder {
+		background: #e8e8e8;
+		border: 1px solid #ececec;
+		box-sizing: border-box;
 	}
 
 	.essay-title {
@@ -270,32 +273,33 @@
 		font-weight: 400;
 	}
 
-	.empty-frame {
-		width: 100%;
-		aspect-ratio: 16 / 9;
-		border-radius: 8px;
-		border: 1px solid #ececec;
-		background: #f6f6f6;
-	}
-
-	.empty-frame-top {
-		align-self: start;
-	}
-
-	.empty-frame-bottom {
-		grid-column: 1;
-	}
-
 	.music-row {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0;
+		gap: 10px;
 		margin: 0 0 2rem;
+		align-items: flex-start;
+	}
+
+	.music-item {
+		width: 240px;
+		flex-shrink: 0;
+	}
+
+	.music-item img {
+		display: block;
+		width: 240px;
+		height: auto;
+	}
+
+	.music-audio audio {
+		width: 240px;
+		display: block;
 	}
 
 	.bach-cover {
-		width: 400px;
-		height: 400px;
+		width: 240px;
+		height: 240px;
 		box-sizing: border-box;
 		border: 1px solid #ececec;
 		border-radius: 8px;
@@ -309,10 +313,17 @@
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 		font-weight: 400;
 		font-size: 0.95rem;
+		flex-shrink: 0;
 	}
 
 	@media (max-width: 900px) {
 		.app-cards {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 800px) {
+		.essay-grid {
 			grid-template-columns: repeat(2, 1fr);
 		}
 	}
@@ -324,11 +335,6 @@
 
 		.essay-grid {
 			grid-template-columns: 1fr;
-			max-width: 100%;
-		}
-
-		.empty-frame-bottom {
-			grid-column: 1;
 		}
 	}
 </style>
