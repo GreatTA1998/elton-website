@@ -120,59 +120,55 @@
 	:global(body) {
 		margin: 0;
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-size: 15px;
 		font-weight: 400;
-		color: #1c1c1c;
+		color: #1e1e1e;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-		background:
-			radial-gradient(ellipse 110% 70% at 8% -5%, rgba(186, 206, 228, 0.55), transparent 52%),
-			radial-gradient(ellipse 85% 60% at 96% 5%, rgba(198, 210, 226, 0.42), transparent 48%),
-			radial-gradient(ellipse 70% 50% at 50% 100%, rgba(200, 212, 224, 0.28), transparent 55%),
-			linear-gradient(180deg, #e8edf3 0%, #f0f3f7 45%, #e9eef3 100%);
-		background-attachment: fixed;
+		background: #f5f5f5;
 		min-height: 100vh;
 	}
 
 	:global(body > div) {
-		padding: 1.25rem 1.5rem 2.5rem;
+		padding: 1.5rem 1.75rem 2.75rem;
 		box-sizing: border-box;
 	}
 
 	.intro {
-		margin: 0 0 0.6em;
-		color: #3a3a3a;
+		margin: 0 0 0.65em;
+		color: #757575;
 		line-height: 1.55;
 		max-width: 36em;
-		font-size: 1rem;
+		font-size: 15px;
 		font-weight: 400;
 	}
 
 	.welcome {
 		margin: 0 0 0.25em;
-		font-size: 1.05rem;
+		font-size: 16px;
 		font-weight: 500;
-		color: #1c1c1c;
+		color: #1e1e1e;
 		line-height: 1.45;
 	}
 
 	.section-label {
-		margin: 2.75em 0 0.9em;
-		font-size: 1.6rem;
-		font-weight: 700;
+		margin: 3em 0 1em;
+		font-size: 22px;
+		font-weight: 600;
 		letter-spacing: -0.01em;
 		text-transform: lowercase;
-		color: #111;
-		line-height: 1.2;
+		color: #1e1e1e;
+		line-height: 1.25;
 	}
 
 	.welcome + .section-label {
-		margin-top: 1.35em;
+		margin-top: 1.75em;
 	}
 
 	.app-cards {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 14px;
+		gap: 12px;
 		margin: 0 0 8px;
 	}
 
@@ -180,37 +176,21 @@
 		display: flex;
 		align-items: center;
 		gap: 14px;
-		padding: 16px 18px;
-		border: 1px solid rgba(255, 255, 255, 0.78);
-		border-radius: 18px;
+		padding: 14px 16px;
+		border: 1px solid #e5e5e5;
+		border-radius: 12px;
 		text-decoration: none;
 		color: inherit;
 		box-sizing: border-box;
-		background: rgba(255, 255, 255, 0.58);
-		-webkit-backdrop-filter: blur(22px) saturate(1.4);
-		backdrop-filter: blur(22px) saturate(1.4);
-		box-shadow:
-			0 1px 0 rgba(255, 255, 255, 0.9) inset,
-			0 0.5px 0.5px rgba(30, 40, 60, 0.04),
-			0 4px 12px rgba(30, 40, 60, 0.05),
-			0 12px 28px rgba(30, 40, 60, 0.07),
-			0 28px 56px rgba(30, 40, 60, 0.04);
+		background: #ffffff;
 		transition:
-			box-shadow 0.22s ease,
-			transform 0.22s ease,
-			background-color 0.22s ease,
-			border-color 0.22s ease;
+			background-color 0.15s ease,
+			border-color 0.15s ease;
 	}
 
 	.app-card:hover {
-		background: rgba(255, 255, 255, 0.72);
-		border-color: rgba(255, 255, 255, 0.95);
-		transform: translateY(-2px);
-		box-shadow:
-			0 1px 0 rgba(255, 255, 255, 1) inset,
-			0 2px 4px rgba(30, 40, 60, 0.05),
-			0 10px 22px rgba(30, 40, 60, 0.07),
-			0 22px 48px rgba(30, 40, 60, 0.08);
+		background: #fafafa;
+		border-color: #d0d0d0;
 	}
 
 	.app-card-logo {
@@ -218,7 +198,7 @@
 		height: 56px;
 		object-fit: cover;
 		flex-shrink: 0;
-		border-radius: 12px;
+		border-radius: 10px;
 	}
 
 	.app-card-text {
@@ -230,13 +210,13 @@
 
 	.app-card-text strong {
 		font-weight: 600;
-		font-size: 1.02em;
-		color: #1c1c1c;
+		font-size: 15px;
+		color: #1e1e1e;
 	}
 
 	.app-card-text span {
-		font-size: 0.92em;
-		color: #4a4a4a;
+		font-size: 14px;
+		color: #757575;
 		line-height: 1.35;
 		font-weight: 400;
 	}
@@ -244,10 +224,10 @@
 	.essay-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 10px;
+		gap: 12px;
 		margin: 0 0 8px;
 		align-items: start;
-		max-width: 440px;
+		max-width: 520px;
 	}
 
 	.essay-left {
@@ -263,18 +243,16 @@
 		width: 100%;
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
-		border-radius: 12px;
-		box-shadow:
-			0 1px 2px rgba(30, 40, 60, 0.05),
-			0 6px 16px rgba(30, 40, 60, 0.07);
+		border-radius: 10px;
+		border: 1px solid #e5e5e5;
 	}
 
 	.essay-title {
-		margin: 8px 0 3px;
-		font-size: 0.84rem;
+		margin: 10px 0 4px;
+		font-size: 14px;
 		font-weight: 600;
 		line-height: 1.35;
-		color: #1c1c1c;
+		color: #1e1e1e;
 	}
 
 	.essay-title a {
@@ -288,8 +266,8 @@
 
 	.essay-sentence {
 		margin: 0;
-		color: #4a4a4a;
-		font-size: 0.78rem;
+		color: #757575;
+		font-size: 13px;
 		line-height: 1.45;
 		font-weight: 400;
 	}
@@ -297,15 +275,9 @@
 	.empty-frame {
 		width: 100%;
 		aspect-ratio: 16 / 9;
-		border-radius: 12px;
-		border: 1px solid rgba(255, 255, 255, 0.7);
-		background: rgba(255, 255, 255, 0.42);
-		-webkit-backdrop-filter: blur(16px) saturate(1.25);
-		backdrop-filter: blur(16px) saturate(1.25);
-		box-shadow:
-			0 1px 0 rgba(255, 255, 255, 0.7) inset,
-			0 2px 8px rgba(30, 40, 60, 0.04),
-			0 10px 24px rgba(30, 40, 60, 0.05);
+		border-radius: 10px;
+		border: 1px solid #e5e5e5;
+		background: #f0f0f0;
 	}
 
 	.empty-frame-top {
@@ -327,25 +299,18 @@
 		width: 400px;
 		height: 400px;
 		box-sizing: border-box;
-		border: 1px solid rgba(255, 255, 255, 0.78);
-		border-radius: 18px;
-		background: rgba(255, 255, 255, 0.58);
-		-webkit-backdrop-filter: blur(22px) saturate(1.4);
-		backdrop-filter: blur(22px) saturate(1.4);
-		box-shadow:
-			0 1px 0 rgba(255, 255, 255, 0.9) inset,
-			0 4px 12px rgba(30, 40, 60, 0.05),
-			0 12px 28px rgba(30, 40, 60, 0.07),
-			0 28px 56px rgba(30, 40, 60, 0.04);
+		border: 1px solid #e5e5e5;
+		border-radius: 12px;
+		background: #ffffff;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
 		padding: 16px;
-		color: #3a3a3a;
+		color: #1e1e1e;
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 		font-weight: 500;
-		font-size: 1rem;
+		font-size: 15px;
 	}
 
 	@media (max-width: 900px) {
