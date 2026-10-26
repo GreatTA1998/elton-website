@@ -117,24 +117,51 @@
 </script>
 
 <style>
+	:global(body) {
+		margin: 0;
+		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-weight: 400;
+		color: #1c1c1c;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		background:
+			radial-gradient(ellipse 120% 80% at 10% -10%, rgba(210, 222, 236, 0.55), transparent 55%),
+			radial-gradient(ellipse 90% 70% at 95% 8%, rgba(220, 228, 236, 0.4), transparent 50%),
+			linear-gradient(180deg, #eef1f5 0%, #f4f6f8 42%, #eef1f4 100%);
+		background-attachment: fixed;
+		min-height: 100vh;
+	}
+
+	:global(body > div) {
+		padding: 1.25rem 1.5rem 2.5rem;
+		box-sizing: border-box;
+	}
+
 	.intro {
 		margin: 0 0 0.6em;
-		color: #444;
-		line-height: 1.5;
+		color: #3a3a3a;
+		line-height: 1.55;
 		max-width: 36em;
+		font-size: 1rem;
+		font-weight: 400;
 	}
 
 	.welcome {
 		margin: 0 0 0.25em;
+		font-size: 1.05rem;
+		font-weight: 500;
+		color: #1c1c1c;
+		line-height: 1.45;
 	}
 
 	.section-label {
 		margin: 2.75em 0 0.85em;
-		font-size: 0.82rem;
-		font-weight: 600;
-		letter-spacing: 0.06em;
+		font-size: 1.45rem;
+		font-weight: 700;
+		letter-spacing: 0.01em;
 		text-transform: lowercase;
-		color: #666;
+		color: #1c1c1c;
+		line-height: 1.25;
 	}
 
 	.welcome + .section-label {
@@ -144,7 +171,7 @@
 	.app-cards {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 16px;
+		gap: 14px;
 		margin: 0 0 8px;
 	}
 
@@ -153,19 +180,35 @@
 		align-items: center;
 		gap: 14px;
 		padding: 16px;
-		border: 1px solid #e5e5e5;
+		border: 1px solid rgba(255, 255, 255, 0.65);
 		border-radius: 16px;
 		text-decoration: none;
 		color: inherit;
 		box-sizing: border-box;
-		background: #fafafa;
-		transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+		background: rgba(255, 255, 255, 0.48);
+		-webkit-backdrop-filter: blur(18px) saturate(1.35);
+		backdrop-filter: blur(18px) saturate(1.35);
+		box-shadow:
+			0 1px 1px rgba(255, 255, 255, 0.55) inset,
+			0 1px 2px rgba(30, 40, 60, 0.04),
+			0 6px 16px rgba(30, 40, 60, 0.06),
+			0 14px 36px rgba(30, 40, 60, 0.05);
+		transition:
+			box-shadow 0.22s ease,
+			transform 0.22s ease,
+			background-color 0.22s ease,
+			border-color 0.22s ease;
 	}
 
 	.app-card:hover {
-		border-color: #c4c4c4;
-		background: #f3f3f3;
-		transform: translateY(-1px);
+		background: rgba(255, 255, 255, 0.62);
+		border-color: rgba(255, 255, 255, 0.85);
+		transform: translateY(-2px);
+		box-shadow:
+			0 1px 1px rgba(255, 255, 255, 0.7) inset,
+			0 2px 4px rgba(30, 40, 60, 0.05),
+			0 10px 24px rgba(30, 40, 60, 0.08),
+			0 20px 44px rgba(30, 40, 60, 0.07);
 	}
 
 	.app-card-logo {
@@ -186,21 +229,23 @@
 	.app-card-text strong {
 		font-weight: 600;
 		font-size: 1.02em;
-		color: #222;
+		color: #1c1c1c;
 	}
 
 	.app-card-text span {
 		font-size: 0.92em;
-		color: #555;
+		color: #4a4a4a;
 		line-height: 1.35;
+		font-weight: 400;
 	}
 
 	.essay-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 16px;
+		gap: 11px;
 		margin: 0 0 8px;
 		align-items: start;
+		max-width: 620px;
 	}
 
 	.essay-left {
@@ -216,11 +261,18 @@
 		width: 100%;
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
-		border-radius: 14px;
+		border-radius: 12px;
+		box-shadow:
+			0 1px 2px rgba(30, 40, 60, 0.05),
+			0 6px 16px rgba(30, 40, 60, 0.07);
 	}
 
 	.essay-title {
 		margin: 10px 0 4px;
+		font-size: 0.92rem;
+		font-weight: 600;
+		line-height: 1.35;
+		color: #1c1c1c;
 	}
 
 	.essay-title a {
@@ -234,15 +286,24 @@
 
 	.essay-sentence {
 		margin: 0;
-		color: #555;
+		color: #4a4a4a;
+		font-size: 0.86rem;
+		line-height: 1.45;
+		font-weight: 400;
 	}
 
 	.empty-frame {
 		width: 100%;
 		aspect-ratio: 16 / 9;
-		background: #ececec;
-		border-radius: 14px;
-		border: 1px solid #e5e5e5;
+		border-radius: 12px;
+		border: 1px solid rgba(255, 255, 255, 0.55);
+		background: rgba(255, 255, 255, 0.38);
+		-webkit-backdrop-filter: blur(14px) saturate(1.2);
+		backdrop-filter: blur(14px) saturate(1.2);
+		box-shadow:
+			0 1px 1px rgba(255, 255, 255, 0.45) inset,
+			0 1px 2px rgba(30, 40, 60, 0.03),
+			0 6px 14px rgba(30, 40, 60, 0.05);
 	}
 
 	.empty-frame-top {
@@ -264,15 +325,25 @@
 		width: 400px;
 		height: 400px;
 		box-sizing: border-box;
-		border: 1px solid #e5e5e5;
+		border: 1px solid rgba(255, 255, 255, 0.65);
 		border-radius: 16px;
-		background: #f0f0f0;
+		background: rgba(255, 255, 255, 0.48);
+		-webkit-backdrop-filter: blur(18px) saturate(1.35);
+		backdrop-filter: blur(18px) saturate(1.35);
+		box-shadow:
+			0 1px 1px rgba(255, 255, 255, 0.55) inset,
+			0 1px 2px rgba(30, 40, 60, 0.04),
+			0 6px 16px rgba(30, 40, 60, 0.06),
+			0 14px 36px rgba(30, 40, 60, 0.05);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
 		padding: 16px;
-		color: #555;
+		color: #3a3a3a;
+		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-weight: 500;
+		font-size: 1rem;
 	}
 
 	@media (max-width: 900px) {
@@ -288,6 +359,7 @@
 
 		.essay-grid {
 			grid-template-columns: 1fr;
+			max-width: 100%;
 		}
 
 		.empty-frame-bottom {
