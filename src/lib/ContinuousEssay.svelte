@@ -4,21 +4,27 @@
 	export let essay;
 
 	const STORAGE_KEY = 'essay-font-scale';
-	const MIN_SCALE = 0.8;
-	const MAX_SCALE = 1.6;
-	const STEP = 0.2;
+	const FONT_SIZES = {
+		default: 1,
+		large: 1.2
+	};
 
-	let fontScale = 1;
+	/** @type {'default' | 'large'} */
+	let fontSize = 'default';
 	/** @type {{ src: string, alt: string } | null} */
 	let lightbox = null;
+
+	$: fontScale = FONT_SIZES[fontSize];
 
 	onMount(() => {
 		try {
 			const saved = localStorage.getItem(STORAGE_KEY);
-			if (saved) {
+			if (saved === 'large' || saved === 'default') {
+				fontSize = saved;
+			} else if (saved) {
 				const parsed = parseFloat(saved);
 				if (!Number.isNaN(parsed)) {
-					fontScale = snap(parsed);
+					fontSize = parsed >= 1.15 ? 'large' : 'default';
 				}
 			}
 		} catch (err) {
@@ -34,26 +40,14 @@
 		}
 	});
 
-	function clamp(value) {
-		return Math.min(MAX_SCALE, Math.max(MIN_SCALE, value));
-	}
-
-	function snap(value) {
-		const stepped = Math.round(value / STEP) * STEP;
-		return Math.round(clamp(stepped) * 100) / 100;
-	}
-
-	function setScale(value) {
-		fontScale = snap(value);
+	/** @param {'default' | 'large'} size */
+	function setFontSize(size) {
+		fontSize = size;
 		try {
-			localStorage.setItem(STORAGE_KEY, String(fontScale));
+			localStorage.setItem(STORAGE_KEY, size);
 		} catch (err) {
 			// ignore storage errors
 		}
-	}
-
-	function onScaleInput(event) {
-		setScale(parseFloat(event.currentTarget.value));
 	}
 
 	function openLightbox(src, alt) {
@@ -89,34 +83,39 @@
 <article class="essay" style="--essay-scale: {fontScale}">
 	<header class="top">
 		<div class="top-bar">
-			<div class="top-bar-start">
-				<p class="crumb">
-					<a href="/">Home</a><span class="sep">/</span>
-					{#if series}
-						<span class="series-label" title={seriesLabel}
-							>{seriesName}<span class="series-sep" aria-hidden="true">·</span>{seriesChapterLabel}</span
-						>
-					{:else}
-						<span>Essay</span>
-					{/if}
-				</p>
-			</div>
+			<p class="crumb">
+				<a href="/">Home</a><span class="sep">/</span>
+				{#if series}
+					<span class="series-label" title={seriesLabel}>
+						<span class="series-name">{seriesName}</span>
+						<span class="series-sep" aria-hidden="true">·</span>
+						<span class="series-chapter">{seriesChapterLabel}</span>
+					</span>
+				{:else}
+					<span>Essay</span>
+				{/if}
+			</p>
 
-			<label class="font-control" title="Adjust text size">
-				<span class="font-label">Text size</span>
-				<input
-					class="font-slider"
-					type="range"
-					min={MIN_SCALE}
-					max={MAX_SCALE}
-					step={STEP}
-					value={fontScale}
-					on:input={onScaleInput}
-					aria-valuetext="{Math.round(fontScale * 100)} percent"
-					aria-label="Text size"
-				/>
-				<span class="font-value" aria-hidden="true">{Math.round(fontScale * 100)}%</span>
-			</label>
+			<div class="font-control" role="group" aria-label="Text size">
+				<button
+					type="button"
+					class="font-choice"
+					class:active={fontSize === 'default'}
+					aria-pressed={fontSize === 'default'}
+					on:click={() => setFontSize('default')}
+				>
+					Default
+				</button>
+				<button
+					type="button"
+					class="font-choice"
+					class:active={fontSize === 'large'}
+					aria-pressed={fontSize === 'large'}
+					on:click={() => setFontSize('large')}
+				>
+					Large
+				</button>
+			</div>
 		</div>
 
 		<h1 class="essay-title">{essay.title}</h1>
@@ -221,41 +220,48 @@
 	.essay {
 		--essay-scale: 1;
 		width: 100%;
-		max-width: none;
+		max-width: 100%;
 		margin: 0;
 		padding: 1.35rem 2.5rem 2.75rem;
+		box-sizing: border-box;
+		overflow-x: clip;
+		min-width: 0;
+	}
+
+	.top,
+	.section,
+	.chapter-nav {
+		width: 100%;
+		max-width: min(72rem, 100%);
+		min-width: 0;
 		box-sizing: border-box;
 	}
 
 	.top {
 		margin-bottom: 1.25rem;
-		max-width: 72rem;
 	}
 
 	.top-bar {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: space-between;
-		gap: 0.75rem 1rem;
+		gap: 0.65rem 1rem;
 		margin: 0 0 0.85rem;
 		flex-wrap: wrap;
-	}
-
-	.top-bar-start {
-		display: flex;
-		align-items: center;
-		gap: 0.55rem 0.85rem;
+		width: 100%;
 		min-width: 0;
-		flex: 1 1 auto;
-		flex-wrap: wrap;
 	}
 
 	.crumb {
 		margin: 0;
 		font-size: 0.8rem;
+		line-height: 1.4;
 		color: #6a6a6a;
 		min-width: 0;
-		white-space: nowrap;
+		flex: 1 1 12rem;
+		max-width: 100%;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	.crumb a {
@@ -275,7 +281,11 @@
 
 	.series-label {
 		color: inherit;
-		white-space: nowrap;
+	}
+
+	.series-name,
+	.series-chapter {
+		display: inline;
 	}
 
 	.series-sep {
@@ -286,40 +296,47 @@
 	.font-control {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
+		gap: 4px;
 		margin: 0;
-		margin-left: auto;
-		padding: 0;
-		border: none;
-		border-radius: 0;
-		background: transparent;
-		font-size: 0.78rem;
-		color: #6a6a6a;
-		user-select: none;
-		width: fit-content;
+		padding: 2px;
+		border: 1px solid #d8d8d8;
+		border-radius: 8px;
+		background: #fafafa;
+		flex: 0 0 auto;
 		max-width: 100%;
 		box-sizing: border-box;
-		flex: 0 0 auto;
 	}
 
-	.font-label {
+	.font-choice {
+		appearance: none;
+		margin: 0;
+		padding: 0.28rem 0.65rem;
+		border: none;
+		border-radius: 6px;
+		background: transparent;
+		color: #6a6a6a;
+		font: inherit;
+		font-size: 0.75rem;
 		font-weight: 500;
 		letter-spacing: 0.01em;
+		line-height: 1.2;
+		cursor: pointer;
 		white-space: nowrap;
 	}
 
-	.font-slider {
-		width: 72px;
-		accent-color: #2c2c2c;
-		cursor: pointer;
-		flex: 0 0 auto;
+	.font-choice:hover {
+		color: #2c2c2c;
 	}
 
-	.font-value {
-		min-width: 2.4rem;
-		font-variant-numeric: tabular-nums;
-		font-weight: 500;
-		color: #6a6a6a;
+	.font-choice.active {
+		background: #fff;
+		color: #2c2c2c;
+		box-shadow: 0 0 0 1px #e4e4e4;
+	}
+
+	.font-choice:focus-visible {
+		outline: 2px solid #2c2c2c;
+		outline-offset: 1px;
 	}
 
 	.essay-title {
@@ -329,28 +346,42 @@
 		letter-spacing: -0.03em;
 		line-height: 1.2;
 		color: #2c2c2c;
-		max-width: none;
+		max-width: 100%;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
-	.hero-figure {
+	.hero-figure,
+	.figure {
 		margin: 0 0 0.95rem;
 		max-width: min(36rem, 100%);
+		width: 100%;
+		min-width: 0;
+		box-sizing: border-box;
+	}
+
+	.figure {
+		margin: 0.15rem 0 0.8rem;
 	}
 
 	.image-button {
 		display: block;
 		width: 100%;
+		max-width: 100%;
 		padding: 0;
 		border: none;
 		background: transparent;
 		cursor: zoom-in;
 		text-align: left;
+		min-width: 0;
+		box-sizing: border-box;
 	}
 
 	.hero-figure img,
 	.figure img {
 		display: block;
 		width: 100%;
+		max-width: 100%;
 		height: auto;
 		border-radius: 8px;
 		border: 1px solid #ececec;
@@ -370,6 +401,7 @@
 		align-items: center;
 		justify-content: center;
 		box-sizing: border-box;
+		overflow: auto;
 	}
 
 	.lightbox img {
@@ -389,15 +421,16 @@
 		font-size: calc(clamp(0.98rem, 1.15vw, 1.08rem) * var(--essay-scale));
 		line-height: 1.55;
 		color: #4a4a4a;
-		max-width: 62rem;
+		max-width: min(62rem, 100%);
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	.section {
 		margin: 0 0 1.25rem;
-		max-width: 72rem;
 	}
 
-	.section:last-child {
+	.section:last-of-type {
 		margin-bottom: 0;
 	}
 
@@ -408,6 +441,8 @@
 		letter-spacing: -0.015em;
 		line-height: 1.3;
 		color: #2c2c2c;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	.body {
@@ -415,7 +450,9 @@
 		font-size: calc(clamp(0.95rem, 1.05vw, 1.05rem) * var(--essay-scale));
 		line-height: 1.58;
 		color: #2c2c2c;
-		max-width: 62rem;
+		max-width: min(62rem, 100%);
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	.body:last-child {
@@ -437,8 +474,10 @@
 		border-left: 2px solid #2c2c2c;
 		background: #fafafa;
 		border-radius: 0 8px 8px 0;
-		max-width: 62rem;
+		max-width: min(62rem, 100%);
 		box-sizing: border-box;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	.quote p {
@@ -464,14 +503,9 @@
 		color: #6a6a6a;
 	}
 
-	.figure {
-		margin: 0.15rem 0 0.8rem;
-		max-width: min(36rem, 100%);
-	}
-
 	.chapter-nav {
 		margin: 1.75rem 0 0;
-		max-width: 62rem;
+		max-width: min(62rem, 100%);
 		padding-top: 1rem;
 		border-top: 1px solid #ececec;
 	}
@@ -485,6 +519,9 @@
 		padding: 0.15rem 0;
 		color: #2c2c2c;
 		text-decoration: none;
+		overflow-wrap: anywhere;
+		word-break: break-word;
+		box-sizing: border-box;
 	}
 
 	a.next-chapter:hover .next-kicker,
@@ -519,7 +556,15 @@
 
 	@media (max-width: 720px) {
 		.essay {
-			padding: 1.15rem 1.15rem 2.25rem;
+			padding: 1.15rem 1rem 2.25rem;
+		}
+
+		.top-bar {
+			align-items: stretch;
+		}
+
+		.font-control {
+			margin-left: 0;
 		}
 	}
 </style>
