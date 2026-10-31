@@ -20,13 +20,24 @@
 
 <script>
 	import ChapteredEssay from '$lib/ChapteredEssay.svelte';
+	import ContinuousEssay from '$lib/ContinuousEssay.svelte';
 
 	export let essay;
+
+	$: isContinuous = essay.layout === 'continuous';
 </script>
 
 <svelte:head>
 	<title>{essay.title}</title>
-	<meta name="description" content={essay.summary} />
+	{#if essay.summary}
+		<meta name="description" content={essay.summary} />
+	{:else if essay.lede}
+		<meta name="description" content={essay.lede} />
+	{/if}
 </svelte:head>
 
-<ChapteredEssay {essay} />
+{#if isContinuous}
+	<ContinuousEssay {essay} />
+{:else}
+	<ChapteredEssay {essay} />
+{/if}
