@@ -115,7 +115,19 @@
 
 			{#each section.blocks as block, blockIndex (`${section.id}-${blockIndex}`)}
 				{#if block.type === 'p'}
-					<p class="body">{block.text}</p>
+					<p class="body">
+						{#if block.parts}
+							{#each block.parts as part, partIndex (`${section.id}-${blockIndex}-${partIndex}`)}
+								{#if part.highlight}
+									<mark class="doc-highlight">{part.text}</mark>
+								{:else}
+									{part.text}
+								{/if}
+							{/each}
+						{:else}
+							{block.text}
+						{/if}
+					</p>
 				{:else if block.type === 'quote'}
 					<blockquote class="quote">
 						{#each block.paragraphs as qParagraph, qIndex (qIndex)}
@@ -327,6 +339,15 @@
 
 	.body:last-child {
 		margin-bottom: 0;
+	}
+
+	.doc-highlight {
+		background: #f6e7a3;
+		color: inherit;
+		padding: 0.05em 0.18em;
+		border-radius: 2px;
+		box-decoration-break: clone;
+		-webkit-box-decoration-break: clone;
 	}
 
 	.quote {

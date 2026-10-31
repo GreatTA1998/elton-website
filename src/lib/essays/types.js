@@ -8,7 +8,8 @@
  *   image?: EssayImage,
  *   quote?: EssayQuote
  * }} EssayChapter
- * @typedef {{ type: 'p', text: string }} EssayParagraphBlock
+ * @typedef {{ text: string, highlight?: boolean }} EssayTextPart
+ * @typedef {{ type: 'p', text?: string, parts?: EssayTextPart[] }} EssayParagraphBlock
  * @typedef {{ type: 'quote', paragraphs: string[], attribution?: string }} EssayQuoteBlock
  * @typedef {{ type: 'image', src: string, alt: string }} EssayImageBlock
  * @typedef {EssayParagraphBlock | EssayQuoteBlock | EssayImageBlock} EssayBlock
