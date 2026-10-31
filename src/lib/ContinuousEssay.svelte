@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	export let essay;
 
@@ -9,6 +9,9 @@
 	const STEP = 0.05;
 
 	let fontScale = 1;
+	/** @type {{ src: string, alt: string } | null} */
+	let lightbox = null;
+
 	onMount(() => {
 		try {
 			const saved = localStorage.getItem(STORAGE_KEY);
@@ -20,6 +23,14 @@
 			}
 		} catch (err) {
 			// ignore storage errors
+		}
+
+		window.addEventListener('keydown', onKeydown);
+	});
+
+	onDestroy(() => {
+		if (typeof window !== 'undefined') {
+			window.removeEventListener('keydown', onKeydown);
 		}
 	});
 
@@ -38,6 +49,21 @@
 
 	function onScaleInput(event) {
 		setScale(parseFloat(event.currentTarget.value));
+	}
+
+	function openLightbox(src, alt) {
+		lightbox = { src, alt };
+	}
+
+	function closeLightbox() {
+		lightbox = null;
+	}
+
+	function onKeydown(event) {
+		if (event.key === 'Escape' && lightbox) {
+			event.preventDefault();
+			closeLightbox();
+		}
 	}
 </script>
 
@@ -66,7 +92,15 @@
 
 		{#if essay.heroImage}
 			<figure class="hero-figure">
-				<img src={essay.heroImage.src} alt={essay.heroImage.alt} />
+				<button
+					type="button"
+					class="image-button"
+					on:click={() => openLightbox(essay.heroImage.src, essay.heroImage.alt)}
+					aria-label="Expand chart"
+				>
+					<img src={essay.heroImage.src} alt={essay.heroImage.alt} />
+				</button>
+				<p class="image-hint">Click to enlarge</p>
 			</figure>
 		{/if}
 
@@ -93,13 +127,31 @@
 					</blockquote>
 				{:else if block.type === 'image'}
 					<figure class="figure">
-						<img src={block.src} alt={block.alt} />
+						<button
+							type="button"
+							class="image-button"
+							on:click={() => openLightbox(block.src, block.alt)}
+							aria-label="Expand image"
+						>
+							<img src={block.src} alt={block.alt} />
+						</button>
 					</figure>
 				{/if}
 			{/each}
 		</section>
 	{/each}
 </article>
+
+{#if lightbox}
+	<button
+		type="button"
+		class="lightbox"
+		on:click={closeLightbox}
+		aria-label="Close enlarged image"
+	>
+		<img src={lightbox.src} alt={lightbox.alt} />
+	</button>
+{/if}
 
 <style>
 	.essay {
@@ -183,16 +235,60 @@
 
 	.hero-figure {
 		margin: 0 0 0.95rem;
-		max-width: 72rem;
+		max-width: min(36rem, 100%);
 	}
 
-	.hero-figure img {
+	.image-button {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: none;
+		background: transparent;
+		cursor: zoom-in;
+		text-align: left;
+	}
+
+	.hero-figure img,
+	.figure img {
 		display: block;
 		width: 100%;
 		height: auto;
 		border-radius: 8px;
 		border: 1px solid #ececec;
 		background: #fff;
+	}
+
+	.image-hint {
+		margin: 0.35rem 0 0;
+		font-size: 0.75rem;
+		color: #a0a0a0;
+	}
+
+	.lightbox {
+		position: fixed;
+		inset: 0;
+		z-index: 40;
+		margin: 0;
+		padding: 1.5rem;
+		border: none;
+		background: rgba(255, 255, 255, 0.94);
+		cursor: zoom-out;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+	}
+
+	.lightbox img {
+		display: block;
+		max-width: min(1100px, 100%);
+		max-height: calc(100vh - 3rem);
+		width: auto;
+		height: auto;
+		border-radius: 8px;
+		border: 1px solid #ececec;
+		background: #fff;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 	}
 
 	.essay-lede {
@@ -268,16 +364,7 @@
 
 	.figure {
 		margin: 0.15rem 0 0.8rem;
-		max-width: 72rem;
-	}
-
-	.figure img {
-		display: block;
-		width: 100%;
-		height: auto;
-		border-radius: 8px;
-		border: 1px solid #ececec;
-		background: #fff;
+		max-width: min(36rem, 100%);
 	}
 
 	@media (max-width: 720px) {
