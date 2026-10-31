@@ -380,7 +380,7 @@
 	}
 
 	.essay-lede {
-		margin: 0;
+		margin: 0 0 0.95rem;
 		font-size: calc(clamp(0.98rem, 1.15vw, 1.08rem) * var(--essay-scale));
 		line-height: 1.55;
 		color: #4a4a4a;
