@@ -85,19 +85,16 @@
 	<header class="top">
 		<div class="top-bar">
 			<div class="top-bar-start">
-				<p class="crumb"><a href="/">Home</a><span class="sep">/</span><span>Essay</span></p>
-
-				{#if series}
-					<p class="series-label" title={seriesLabel}>
-						{#if series.href}
-							<a href={series.href}>{seriesName}</a>
-						{:else}
-							<span>{seriesName}</span>
-						{/if}
-						<span class="series-sep" aria-hidden="true">·</span>
-						<span>Chapter {series.chapter}</span>
-					</p>
-				{/if}
+				<p class="crumb">
+					<a href="/">Home</a><span class="sep">/</span>
+					{#if series}
+						<span class="series-label" title={seriesLabel}
+							>{seriesName}<span class="series-sep" aria-hidden="true">·</span>Chapter {series.chapter}</span
+						>
+					{:else}
+						<span>Essay</span>
+					{/if}
+				</p>
 			</div>
 
 			<label class="font-control" title="Adjust text size">
@@ -256,14 +253,12 @@
 		white-space: nowrap;
 	}
 
-	.crumb a,
-	.series-label a {
+	.crumb a {
 		text-decoration: none;
 		color: inherit;
 	}
 
-	.crumb a:hover,
-	.series-label a:hover {
+	.crumb a:hover {
 		text-decoration: underline;
 		color: #2c2c2c;
 	}
@@ -274,10 +269,7 @@
 	}
 
 	.series-label {
-		margin: 0;
-		font-size: 0.8rem;
-		color: #6a6a6a;
-		min-width: 0;
+		color: inherit;
 		white-space: nowrap;
 	}
 
