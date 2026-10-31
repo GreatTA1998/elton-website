@@ -315,12 +315,12 @@
 		padding: 0;
 		min-width: 44px;
 		min-height: 44px;
-		border: 1px solid #d8d8d8;
+		border: 1px solid #cfcfcf;
 		background: #fff;
-		color: #6a6a6a;
+		color: #4a4a4a;
 		font-family: inherit;
-		font-weight: 500;
-		letter-spacing: -0.03em;
+		font-weight: 600;
+		letter-spacing: -0.04em;
 		line-height: 1;
 		cursor: pointer;
 		display: inline-flex;
@@ -330,34 +330,40 @@
 	}
 
 	.font-choice.size-default {
-		font-size: 0.8rem;
+		font-size: 0.68rem;
 		border-radius: 8px 0 0 8px;
 		border-right-width: 0;
 	}
 
 	.font-choice.size-large {
-		font-size: 1.05rem;
+		font-size: 1.2rem;
 		border-radius: 0 8px 8px 0;
 	}
 
 	.font-choice:hover {
-		color: #2c2c2c;
+		color: #1a1a1a;
 		background: #f7f7f7;
 	}
 
 	.font-choice.active {
-		color: #2c2c2c;
-		background: #f0f0f0;
-		border-color: #c8c8c8;
+		color: #fff;
+		background: #1a1a1a;
+		border-color: #1a1a1a;
+	}
+
+	.font-choice.active:hover {
+		color: #fff;
+		background: #2c2c2c;
+		border-color: #2c2c2c;
 	}
 
 	.font-choice.size-default.active {
-		border-right-color: #c8c8c8;
+		border-right-color: #1a1a1a;
 	}
 
 	.font-choice:focus-visible {
-		outline: 2px solid #2c2c2c;
-		outline-offset: 1px;
+		outline: 2px solid #1a1a1a;
+		outline-offset: 2px;
 		z-index: 1;
 	}
 
