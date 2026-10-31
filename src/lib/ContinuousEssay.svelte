@@ -74,25 +74,27 @@
 
 <article class="essay" style="--essay-scale: {fontScale}">
 	<header class="top">
-		<p class="crumb"><a href="/">Home</a><span class="sep">/</span><span>Essay</span></p>
+		<div class="top-bar">
+			<p class="crumb"><a href="/">Home</a><span class="sep">/</span><span>Essay</span></p>
+
+			<label class="font-control" title="Adjust text size">
+				<span class="font-label">Text size</span>
+				<input
+					class="font-slider"
+					type="range"
+					min={MIN_SCALE}
+					max={MAX_SCALE}
+					step={STEP}
+					value={fontScale}
+					on:input={onScaleInput}
+					aria-valuetext="{Math.round(fontScale * 100)} percent"
+					aria-label="Text size"
+				/>
+				<span class="font-value" aria-hidden="true">{Math.round(fontScale * 100)}%</span>
+			</label>
+		</div>
 
 		<h1 class="essay-title">{essay.title}</h1>
-
-		<label class="font-control" title="Adjust text size">
-			<span class="font-label">Text size</span>
-			<input
-				class="font-slider"
-				type="range"
-				min={MIN_SCALE}
-				max={MAX_SCALE}
-				step={STEP}
-				value={fontScale}
-				on:input={onScaleInput}
-				aria-valuetext="{Math.round(fontScale * 100)} percent"
-				aria-label="Text size"
-			/>
-			<span class="font-value" aria-hidden="true">{Math.round(fontScale * 100)}%</span>
-		</label>
 
 		{#if essay.heroImage}
 			<figure class="hero-figure">
@@ -183,10 +185,20 @@
 		max-width: 72rem;
 	}
 
-	.crumb {
+	.top-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem 1rem;
 		margin: 0 0 0.85rem;
+		flex-wrap: wrap;
+	}
+
+	.crumb {
+		margin: 0;
 		font-size: 0.8rem;
 		color: #6a6a6a;
+		min-width: 0;
 	}
 
 	.crumb a {
@@ -206,18 +218,20 @@
 	.font-control {
 		display: inline-flex;
 		align-items: center;
-		gap: 10px;
-		margin: 0 0 1rem;
-		padding: 8px 12px;
-		border: 1px solid #d8d8d8;
-		border-radius: 10px;
-		background: #fafafa;
-		font-size: 0.88rem;
-		color: #2c2c2c;
+		gap: 8px;
+		margin: 0;
+		margin-left: auto;
+		padding: 0;
+		border: none;
+		border-radius: 0;
+		background: transparent;
+		font-size: 0.78rem;
+		color: #6a6a6a;
 		user-select: none;
 		width: fit-content;
 		max-width: 100%;
 		box-sizing: border-box;
+		flex: 0 0 auto;
 	}
 
 	.font-label {
@@ -227,17 +241,17 @@
 	}
 
 	.font-slider {
-		width: 96px;
+		width: 72px;
 		accent-color: #2c2c2c;
 		cursor: pointer;
 		flex: 0 0 auto;
 	}
 
 	.font-value {
-		min-width: 2.75rem;
+		min-width: 2.4rem;
 		font-variant-numeric: tabular-nums;
 		font-weight: 500;
-		color: #2c2c2c;
+		color: #6a6a6a;
 	}
 
 	.essay-title {
