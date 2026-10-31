@@ -4,8 +4,8 @@
 	export let essay;
 
 	const STORAGE_KEY = 'essay-font-scale';
-	const MIN_SCALE = 0.9;
-	const MAX_SCALE = 1.35;
+	const MIN_SCALE = 0.8;
+	const MAX_SCALE = 1.6;
 	const STEP = 0.05;
 
 	let fontScale = 1;
@@ -69,26 +69,25 @@
 
 <article class="essay" style="--essay-scale: {fontScale}">
 	<header class="top">
-		<div class="top-row">
-			<p class="crumb"><a href="/">Home</a><span class="sep">/</span><span>Essay</span></p>
-			<label class="font-control" title="Adjust text size">
-				<span class="font-label">Text</span>
-				<input
-					class="font-slider"
-					type="range"
-					min={MIN_SCALE}
-					max={MAX_SCALE}
-					step={STEP}
-					value={fontScale}
-					on:input={onScaleInput}
-					aria-valuetext="{Math.round(fontScale * 100)} percent"
-					aria-label="Text size"
-				/>
-				<span class="font-value" aria-hidden="true">{Math.round(fontScale * 100)}%</span>
-			</label>
-		</div>
+		<p class="crumb"><a href="/">Home</a><span class="sep">/</span><span>Essay</span></p>
 
 		<h1 class="essay-title">{essay.title}</h1>
+
+		<label class="font-control" title="Adjust text size">
+			<span class="font-label">Text size</span>
+			<input
+				class="font-slider"
+				type="range"
+				min={MIN_SCALE}
+				max={MAX_SCALE}
+				step={STEP}
+				value={fontScale}
+				on:input={onScaleInput}
+				aria-valuetext="{Math.round(fontScale * 100)} percent"
+				aria-label="Text size"
+			/>
+			<span class="font-value" aria-hidden="true">{Math.round(fontScale * 100)}%</span>
+		</label>
 
 		{#if essay.heroImage}
 			<figure class="hero-figure">
@@ -180,17 +179,8 @@
 		max-width: 72rem;
 	}
 
-	.top-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		margin-bottom: 0.85rem;
-		flex-wrap: wrap;
-	}
-
 	.crumb {
-		margin: 0;
+		margin: 0 0 0.85rem;
 		font-size: 0.8rem;
 		color: #6a6a6a;
 	}
@@ -212,27 +202,38 @@
 	.font-control {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
-		font-size: 0.78rem;
-		color: #8a8a8a;
+		gap: 10px;
+		margin: 0 0 1rem;
+		padding: 8px 12px;
+		border: 1px solid #d8d8d8;
+		border-radius: 10px;
+		background: #fafafa;
+		font-size: 0.88rem;
+		color: #2c2c2c;
 		user-select: none;
+		width: fit-content;
+		max-width: 100%;
+		box-sizing: border-box;
 	}
 
 	.font-label {
 		font-weight: 500;
-		letter-spacing: 0.02em;
+		letter-spacing: 0.01em;
+		white-space: nowrap;
 	}
 
 	.font-slider {
-		width: 88px;
+		width: 140px;
+		max-width: 40vw;
 		accent-color: #2c2c2c;
 		cursor: pointer;
 	}
 
 	.font-value {
-		min-width: 2.5rem;
+		min-width: 2.75rem;
 		font-variant-numeric: tabular-nums;
-		color: #6a6a6a;
+		font-weight: 500;
+		color: #2c2c2c;
 	}
 
 	.essay-title {
@@ -242,7 +243,7 @@
 		letter-spacing: -0.03em;
 		line-height: 1.2;
 		color: #2c2c2c;
-		max-width: 22ch;
+		max-width: none;
 	}
 
 	.hero-figure {
@@ -393,12 +394,14 @@
 			padding: 1.15rem 1.15rem 2.25rem;
 		}
 
-		.essay-title {
-			max-width: none;
+		.font-control {
+			width: 100%;
 		}
 
 		.font-slider {
-			width: 72px;
+			flex: 1;
+			width: auto;
+			max-width: none;
 		}
 	}
 </style>
