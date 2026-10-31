@@ -116,6 +116,10 @@
 
 		<h1 class="essay-title">{essay.title}</h1>
 
+		{#if essay.lede}
+			<p class="essay-lede">{essay.lede}</p>
+		{/if}
+
 		{#if essay.heroImage}
 			<figure class="hero-figure">
 				<button
@@ -127,10 +131,6 @@
 					<img src={essay.heroImage.src} alt={essay.heroImage.alt} />
 				</button>
 			</figure>
-		{/if}
-
-		{#if essay.lede}
-			<p class="essay-lede">{essay.lede}</p>
 		{/if}
 	</header>
 
