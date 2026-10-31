@@ -73,7 +73,12 @@
 
 	$: series = essay.series || null;
 	$: seriesName = series ? series.title : '';
-	$: seriesLabel = series ? `${series.title} · Chapter ${series.chapter}` : '';
+	$: seriesChapterLabel = series
+		? series.chapterCount
+			? `Chapter ${series.chapter} of ${series.chapterCount}`
+			: `Chapter ${series.chapter}`
+		: '';
+	$: seriesLabel = series ? `${series.title} · ${seriesChapterLabel}` : '';
 	$: nextChapter = essay.nextChapter || null;
 	$: nextHref = nextChapter && nextChapter.href ? nextChapter.href : '';
 	$: nextEnabled = Boolean(nextHref);
@@ -89,7 +94,7 @@
 					<a href="/">Home</a><span class="sep">/</span>
 					{#if series}
 						<span class="series-label" title={seriesLabel}
-							>{seriesName}<span class="series-sep" aria-hidden="true">·</span>Chapter {series.chapter}</span
+							>{seriesName}<span class="series-sep" aria-hidden="true">·</span>{seriesChapterLabel}</span
 						>
 					{:else}
 						<span>Essay</span>

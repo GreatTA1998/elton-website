@@ -18,6 +18,7 @@
  *   title: string,
  *   shortTitle?: string,
  *   chapter: number,
+ *   chapterCount?: number,
  *   href?: string
  * }} EssaySeries
  * @typedef {{

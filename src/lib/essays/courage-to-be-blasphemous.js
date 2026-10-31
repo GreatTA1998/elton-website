@@ -9,7 +9,8 @@ const essay = {
 	series: {
 		title: "Goh's Folly: Seeing What Others Couldn't",
 		shortTitle: "Goh's Folly",
-		chapter: 3
+		chapter: 3,
+		chapterCount: 4
 	},
 	// Add href (and optional title) on nextChapter when the following piece ships.
 	nextChapter: {
