@@ -1,11 +1,75 @@
 <script>
+	import { onMount } from 'svelte';
+
 	export let essay;
+
+	const STORAGE_KEY = 'essay-font-scale';
+	const MIN_SCALE = 0.9;
+	const MAX_SCALE = 1.35;
+	const STEP = 0.05;
+
+	let fontScale = 1;
+	onMount(() => {
+		try {
+			const saved = localStorage.getItem(STORAGE_KEY);
+			if (saved) {
+				const parsed = parseFloat(saved);
+				if (!Number.isNaN(parsed)) {
+					fontScale = clamp(parsed);
+				}
+			}
+		} catch (err) {
+			// ignore storage errors
+		}
+	});
+
+	function clamp(value) {
+		return Math.min(MAX_SCALE, Math.max(MIN_SCALE, value));
+	}
+
+	function setScale(value) {
+		fontScale = clamp(value);
+		try {
+			localStorage.setItem(STORAGE_KEY, String(fontScale));
+		} catch (err) {
+			// ignore storage errors
+		}
+	}
+
+	function onScaleInput(event) {
+		setScale(parseFloat(event.currentTarget.value));
+	}
 </script>
 
-<article class="essay">
+<article class="essay" style="--essay-scale: {fontScale}">
 	<header class="top">
-		<p class="crumb"><a href="/">Home</a><span class="sep">/</span><span>Essay</span></p>
+		<div class="top-row">
+			<p class="crumb"><a href="/">Home</a><span class="sep">/</span><span>Essay</span></p>
+			<label class="font-control" title="Adjust text size">
+				<span class="font-label">Text</span>
+				<input
+					class="font-slider"
+					type="range"
+					min={MIN_SCALE}
+					max={MAX_SCALE}
+					step={STEP}
+					value={fontScale}
+					on:input={onScaleInput}
+					aria-valuetext="{Math.round(fontScale * 100)} percent"
+					aria-label="Text size"
+				/>
+				<span class="font-value" aria-hidden="true">{Math.round(fontScale * 100)}%</span>
+			</label>
+		</div>
+
 		<h1 class="essay-title">{essay.title}</h1>
+
+		{#if essay.heroImage}
+			<figure class="hero-figure">
+				<img src={essay.heroImage.src} alt={essay.heroImage.alt} />
+			</figure>
+		{/if}
+
 		{#if essay.lede}
 			<p class="essay-lede">{essay.lede}</p>
 		{/if}
@@ -39,6 +103,7 @@
 
 <style>
 	.essay {
+		--essay-scale: 1;
 		width: 100%;
 		max-width: none;
 		margin: 0;
@@ -47,12 +112,21 @@
 	}
 
 	.top {
-		margin-bottom: 1.35rem;
+		margin-bottom: 1.25rem;
 		max-width: 72rem;
 	}
 
+	.top-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 0.85rem;
+		flex-wrap: wrap;
+	}
+
 	.crumb {
-		margin: 0 0 0.85rem;
+		margin: 0;
 		font-size: 0.8rem;
 		color: #6a6a6a;
 	}
@@ -71,9 +145,35 @@
 		color: #c0c0c0;
 	}
 
+	.font-control {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 0.78rem;
+		color: #8a8a8a;
+		user-select: none;
+	}
+
+	.font-label {
+		font-weight: 500;
+		letter-spacing: 0.02em;
+	}
+
+	.font-slider {
+		width: 88px;
+		accent-color: #2c2c2c;
+		cursor: pointer;
+	}
+
+	.font-value {
+		min-width: 2.5rem;
+		font-variant-numeric: tabular-nums;
+		color: #6a6a6a;
+	}
+
 	.essay-title {
-		margin: 0 0 0.35em;
-		font-size: clamp(1.55rem, 2.4vw, 2.05rem);
+		margin: 0 0 0.75rem;
+		font-size: calc(clamp(1.55rem, 2.4vw, 2.05rem) * var(--essay-scale));
 		font-weight: 500;
 		letter-spacing: -0.03em;
 		line-height: 1.2;
@@ -81,16 +181,30 @@
 		max-width: 22ch;
 	}
 
+	.hero-figure {
+		margin: 0 0 0.95rem;
+		max-width: 72rem;
+	}
+
+	.hero-figure img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+		border: 1px solid #ececec;
+		background: #fff;
+	}
+
 	.essay-lede {
 		margin: 0;
-		font-size: clamp(0.98rem, 1.15vw, 1.08rem);
+		font-size: calc(clamp(0.98rem, 1.15vw, 1.08rem) * var(--essay-scale));
 		line-height: 1.55;
 		color: #4a4a4a;
 		max-width: 62rem;
 	}
 
 	.section {
-		margin: 0 0 1.35rem;
+		margin: 0 0 1.25rem;
 		max-width: 72rem;
 	}
 
@@ -99,8 +213,8 @@
 	}
 
 	.section-title {
-		margin: 0 0 0.55rem;
-		font-size: clamp(1.05rem, 1.35vw, 1.2rem);
+		margin: 0 0 0.5rem;
+		font-size: calc(clamp(1.05rem, 1.35vw, 1.2rem) * var(--essay-scale));
 		font-weight: 500;
 		letter-spacing: -0.015em;
 		line-height: 1.3;
@@ -108,8 +222,8 @@
 	}
 
 	.body {
-		margin: 0 0 0.7em;
-		font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+		margin: 0 0 0.65em;
+		font-size: calc(clamp(0.95rem, 1.05vw, 1.05rem) * var(--essay-scale));
 		line-height: 1.58;
 		color: #2c2c2c;
 		max-width: 62rem;
@@ -120,8 +234,8 @@
 	}
 
 	.quote {
-		margin: 0 0 0.85rem;
-		padding: 0.7rem 0.95rem;
+		margin: 0 0 0.8rem;
+		padding: 0.65rem 0.9rem;
 		border-left: 2px solid #2c2c2c;
 		background: #fafafa;
 		border-radius: 0 8px 8px 0;
@@ -130,14 +244,14 @@
 	}
 
 	.quote p {
-		margin: 0 0 0.55em;
-		font-size: clamp(0.92rem, 1.02vw, 1.02rem);
+		margin: 0 0 0.5em;
+		font-size: calc(clamp(0.92rem, 1.02vw, 1.02rem) * var(--essay-scale));
 		line-height: 1.55;
 		color: #2c2c2c;
 	}
 
 	.quote p:last-of-type {
-		margin-bottom: 0.55em;
+		margin-bottom: 0.5em;
 	}
 
 	.quote p:only-child,
@@ -146,14 +260,14 @@
 	}
 
 	.attribution {
-		margin: 0.55rem 0 0;
-		font-size: 0.82rem;
+		margin: 0.5rem 0 0;
+		font-size: calc(0.82rem * var(--essay-scale));
 		line-height: 1.4;
 		color: #6a6a6a;
 	}
 
 	.figure {
-		margin: 0.15rem 0 0.85rem;
+		margin: 0.15rem 0 0.8rem;
 		max-width: 72rem;
 	}
 
@@ -173,6 +287,10 @@
 
 		.essay-title {
 			max-width: none;
+		}
+
+		.font-slider {
+			width: 72px;
 		}
 	}
 </style>

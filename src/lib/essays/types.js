@@ -18,6 +18,7 @@
  *   title: string,
  *   summary?: string,
  *   lede?: string,
+ *   heroImage?: EssayImage,
  *   layout?: 'column' | 'full' | 'continuous',
  *   chapters?: EssayChapter[],
  *   sections?: EssaySection[]

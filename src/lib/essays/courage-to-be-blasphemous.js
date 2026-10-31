@@ -6,10 +6,14 @@ const essay = {
 	lede:
 		'It’s easy to have contrarian opinions when we don’t think much of others. The blindspot emerges when we have people we admire, whose words we accept as gospel. Or when we have total deference to beautiful ideas.',
 	layout: 'continuous',
+	heroImage: {
+		src: '/courage-blasphemous-chart.png',
+		alt: 'Government debt / savings chart'
+	},
 	sections: [
 		{
-			id: 'freedom-and-democracy',
-			title: 'Freedom and democracy',
+			id: 'dangerous-freedom',
+			title: 'Dangerous freedom',
 			blocks: [
 				{
 					type: 'p',
@@ -32,8 +36,8 @@ const essay = {
 			]
 		},
 		{
-			id: 'competitive-elections',
-			title: 'Competitive elections',
+			id: 'uncompetitive-elections',
+			title: 'Uncompetitive elections',
 			blocks: [
 				{
 					type: 'quote',
@@ -47,11 +51,6 @@ const essay = {
 				{
 					type: 'p',
 					text: 'Is he right? It seems so. Looking at the latest data for 2026 with government debts, a key indicator of honesty. Its savings is so high, one would mistakenly think the country has oil.'
-				},
-				{
-					type: 'image',
-					src: '/courage-blasphemous-chart.png',
-					alt: 'Government debt / savings chart'
 				},
 				{
 					type: 'p',
