@@ -570,5 +570,22 @@
 		.font-control {
 			margin-left: 0;
 		}
+
+		.lightbox {
+			padding: 0;
+			align-items: center;
+			justify-content: stretch;
+		}
+
+		.lightbox img {
+			width: 100%;
+			max-width: 100%;
+			max-height: 100vh;
+			height: auto;
+			border-radius: 0;
+			border-left: none;
+			border-right: none;
+			box-shadow: none;
+		}
 	}
 </style>
