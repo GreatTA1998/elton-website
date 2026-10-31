@@ -1,8 +1,10 @@
 import gohsFolly from './gohs-folly.js';
+import courageToBeBlasphemous from './courage-to-be-blasphemous.js';
 
 /** @type {Record<string, import('./types').Essay>} */
 const essays = {
-	[gohsFolly.slug]: gohsFolly
+	[gohsFolly.slug]: gohsFolly,
+	[courageToBeBlasphemous.slug]: courageToBeBlasphemous
 };
 
 /**
