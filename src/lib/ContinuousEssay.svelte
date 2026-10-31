@@ -470,11 +470,13 @@
 
 	.quote {
 		margin: 0 0 0.8rem;
-		padding: 0.65rem 0.9rem;
-		border-left: 2px solid #2c2c2c;
-		background: #fafafa;
-		border-radius: 0 8px 8px 0;
+		padding: 0.1rem 0 0.1rem 0.7rem;
+		border: none;
+		border-left: 1.5px solid #c8c8c8;
+		background: transparent;
+		border-radius: 0;
 		max-width: min(62rem, 100%);
+		width: 100%;
 		box-sizing: border-box;
 		overflow-wrap: anywhere;
 		word-break: break-word;
@@ -482,9 +484,10 @@
 
 	.quote p {
 		margin: 0 0 0.5em;
-		font-size: calc(clamp(0.92rem, 1.02vw, 1.02rem) * var(--essay-scale));
-		line-height: 1.55;
-		color: #2c2c2c;
+		font-size: calc(clamp(0.95rem, 1.05vw, 1.05rem) * var(--essay-scale));
+		line-height: 1.58;
+		color: #555;
+		font-weight: 400;
 	}
 
 	.quote p:last-of-type {
@@ -497,10 +500,11 @@
 	}
 
 	.attribution {
-		margin: 0.5rem 0 0;
-		font-size: calc(0.82rem * var(--essay-scale));
+		margin: 0.45rem 0 0;
+		font-size: calc(0.8rem * var(--essay-scale));
 		line-height: 1.4;
-		color: #6a6a6a;
+		color: #8a8a8a;
+		font-style: normal;
 	}
 
 	.chapter-nav {
