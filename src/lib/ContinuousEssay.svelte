@@ -99,21 +99,25 @@
 			<div class="font-control" role="group" aria-label="Text size">
 				<button
 					type="button"
-					class="font-choice"
+					class="font-choice size-default"
 					class:active={fontSize === 'default'}
 					aria-pressed={fontSize === 'default'}
+					aria-label="Default text size"
+					title="Default"
 					on:click={() => setFontSize('default')}
 				>
-					Default
+					<span class="font-glyph" aria-hidden="true">aA</span>
 				</button>
 				<button
 					type="button"
-					class="font-choice"
+					class="font-choice size-large"
 					class:active={fontSize === 'large'}
 					aria-pressed={fontSize === 'large'}
+					aria-label="Large text size"
+					title="Large"
 					on:click={() => setFontSize('large')}
 				>
-					Large
+					<span class="font-glyph" aria-hidden="true">aA</span>
 				</button>
 			</div>
 		</div>
@@ -296,7 +300,7 @@
 	.font-control {
 		display: inline-flex;
 		align-items: center;
-		gap: 4px;
+		gap: 2px;
 		margin: 0;
 		padding: 2px;
 		border: 1px solid #d8d8d8;
@@ -310,18 +314,33 @@
 	.font-choice {
 		appearance: none;
 		margin: 0;
-		padding: 0.28rem 0.65rem;
+		padding: 0.2rem 0.42rem;
+		min-width: 1.85rem;
+		min-height: 1.7rem;
 		border: none;
 		border-radius: 6px;
 		background: transparent;
 		color: #6a6a6a;
 		font: inherit;
-		font-size: 0.75rem;
-		font-weight: 500;
-		letter-spacing: 0.01em;
-		line-height: 1.2;
 		cursor: pointer;
-		white-space: nowrap;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.font-glyph {
+		font-weight: 600;
+		letter-spacing: -0.04em;
+		line-height: 1;
+		font-family: Georgia, 'Times New Roman', serif;
+	}
+
+	.font-choice.size-default .font-glyph {
+		font-size: 0.72rem;
+	}
+
+	.font-choice.size-large .font-glyph {
+		font-size: 0.98rem;
 	}
 
 	.font-choice:hover {
