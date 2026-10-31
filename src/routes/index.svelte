@@ -1,3 +1,4 @@
+<div class="home">
 <p class="welcome">
 	Welcome to my absolutely EPIC website, it's INSANE:
 </p>
@@ -61,10 +62,16 @@
 		</p>
 	</div>
 	<div class="essay-item">
-		<div class="essay-thumb essay-thumb-placeholder" aria-hidden="true"></div>
-		<p class="essay-title">Goh's Folly: Seeing What Others Couldn't</p>
+		<a class="essay-thumb-link" href="/essays/gohs-folly">
+			<div class="essay-thumb essay-thumb-placeholder essay-thumb-written" aria-hidden="true">
+				<span>written</span>
+			</div>
+		</a>
+		<p class="essay-title">
+			<a href="/essays/gohs-folly">Goh's Folly: Seeing What Others Couldn't</a>
+		</p>
 		<p class="essay-sentence">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+			A short chaptered essay — one page at a time, with a quiet chapter navigator.
 		</p>
 	</div>
 	<div class="essay-item">
@@ -116,26 +123,23 @@
 	</div>
 </div>
 
-<main>
-</main>
+<section class="email-section" aria-labelledby="email-updates-label">
+	<h2 class="section-label" id="email-updates-label">email updates</h2>
+	<p class="email-lede">
+		If you want a quiet way to follow along —
+		<a class="email-page-link" href="/subscribe">subscribe</a>
+		for a quarterly digest or every new post.
+	</p>
+	<SubscribeForm compact />
+</section>
+</div>
 
 <script>
+	import SubscribeForm from '$lib/SubscribeForm.svelte';
 </script>
 
 <style>
-	:global(body) {
-		margin: 0;
-		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		font-size: 16px;
-		font-weight: 400;
-		color: #2c2c2c;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-		background: #ffffff;
-		min-height: 100vh;
-	}
-
-	:global(body > div) {
+	.home {
 		width: 100%;
 		max-width: none;
 		padding: 2.25rem 2rem 3.5rem;
@@ -251,6 +255,20 @@
 		box-sizing: border-box;
 	}
 
+	.essay-thumb-written {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #fafafa;
+	}
+
+	.essay-thumb-written span {
+		font-size: 0.8rem;
+		font-weight: 500;
+		color: #6a6a6a;
+		letter-spacing: 0.02em;
+	}
+
 	.essay-title {
 		margin: 10px 0 4px;
 		font-size: 0.9rem;
@@ -317,6 +335,29 @@
 		font-weight: 400;
 		font-size: 0.95rem;
 		flex-shrink: 0;
+	}
+
+	.email-section {
+		margin-top: 0.5rem;
+		padding-top: 0.25rem;
+		max-width: 36rem;
+	}
+
+	.email-lede {
+		margin: -0.35em 0 1.1em;
+		font-size: 0.9rem;
+		line-height: 1.5;
+		color: #6a6a6a;
+	}
+
+	.email-page-link {
+		color: #2c2c2c;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+
+	.email-page-link:hover {
+		color: #000;
 	}
 
 	@media (max-width: 900px) {
