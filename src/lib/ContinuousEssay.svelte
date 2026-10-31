@@ -315,8 +315,8 @@
 		padding: 0;
 		min-width: 44px;
 		min-height: 44px;
-		border: 1px solid #e4e4e4;
-		background: #fff;
+		border: none;
+		background: transparent;
 		color: #b5b5b5;
 		font-family: inherit;
 		font-weight: 500;
@@ -331,42 +331,29 @@
 
 	.font-choice.size-default {
 		font-size: 0.68rem;
-		border-radius: 8px 0 0 8px;
-		border-right-width: 0;
 	}
 
 	.font-choice.size-large {
 		font-size: 1.2rem;
-		border-radius: 0 8px 8px 0;
 	}
 
 	.font-choice:hover {
 		color: #8a8a8a;
-		background: #fafafa;
 	}
 
 	.font-choice.active {
-		color: #2c2c2c;
-		background: #fff;
-		border-color: #2c2c2c;
-		font-weight: 700;
-		box-shadow: inset 0 0 0 1px #2c2c2c;
+		color: #1a1a1a;
+		font-weight: 600;
 	}
 
 	.font-choice.active:hover {
-		color: #1a1a1a;
-		background: #fff;
-		border-color: #1a1a1a;
-	}
-
-	.font-choice.size-default.active {
-		border-right-color: #2c2c2c;
+		color: #000;
 	}
 
 	.font-choice:focus-visible {
 		outline: 2px solid #2c2c2c;
 		outline-offset: 2px;
-		z-index: 1;
+		border-radius: 4px;
 	}
 
 	.essay-title {
