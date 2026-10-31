@@ -571,6 +571,41 @@
 			margin-left: 0;
 		}
 
+		.section {
+			margin: 0 0 1.55rem;
+		}
+
+		.section-title {
+			margin: 0 0 0.7rem;
+		}
+
+		.body {
+			margin: 0 0 1.05em;
+			line-height: 1.65;
+		}
+
+		.quote {
+			margin: 0 0 1.15rem;
+		}
+
+		.quote p {
+			margin: 0 0 0.7em;
+			line-height: 1.65;
+		}
+
+		.figure {
+			margin: 0.35rem 0 1.1rem;
+		}
+
+		.essay-lede {
+			margin: 0 0 1.15rem;
+			line-height: 1.62;
+		}
+
+		.hero-figure {
+			margin: 0 0 1.15rem;
+		}
+
 		.lightbox {
 			padding: 0;
 			align-items: center;
