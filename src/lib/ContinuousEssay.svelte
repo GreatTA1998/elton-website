@@ -70,12 +70,35 @@
 			closeLightbox();
 		}
 	}
+
+	$: series = essay.series || null;
+	$: seriesName = series ? series.shortTitle || series.title : '';
+	$: seriesLabel = series ? `${series.title} · Chapter ${series.chapter}` : '';
+	$: nextChapter = essay.nextChapter || null;
+	$: nextHref = nextChapter && nextChapter.href ? nextChapter.href : '';
+	$: nextEnabled = Boolean(nextHref);
+	$: nextLabel = (nextChapter && nextChapter.label) || 'Next chapter';
+	$: nextTitle = (nextChapter && nextChapter.title) || '';
 </script>
 
 <article class="essay" style="--essay-scale: {fontScale}">
 	<header class="top">
 		<div class="top-bar">
-			<p class="crumb"><a href="/">Home</a><span class="sep">/</span><span>Essay</span></p>
+			<div class="top-bar-start">
+				<p class="crumb"><a href="/">Home</a><span class="sep">/</span><span>Essay</span></p>
+
+				{#if series}
+					<p class="series-label" title={seriesLabel}>
+						{#if series.href}
+							<a href={series.href}>{seriesName}</a>
+						{:else}
+							<span>{seriesName}</span>
+						{/if}
+						<span class="series-sep" aria-hidden="true">·</span>
+						<span>Chapter {series.chapter}</span>
+					</p>
+				{/if}
+			</div>
 
 			<label class="font-control" title="Adjust text size">
 				<span class="font-label">Text size</span>
@@ -157,6 +180,28 @@
 			{/each}
 		</section>
 	{/each}
+
+	{#if nextChapter}
+		<nav class="chapter-nav" aria-label="Series navigation">
+			{#if nextEnabled}
+				<a class="next-chapter" href={nextHref}>
+					<span class="next-kicker">{nextLabel}</span>
+					{#if nextTitle}
+						<span class="next-title">{nextTitle}</span>
+					{/if}
+				</a>
+			{:else}
+				<span class="next-chapter is-disabled" aria-disabled="true" title="Coming soon">
+					<span class="next-kicker">{nextLabel}</span>
+					{#if nextTitle}
+						<span class="next-title">{nextTitle}</span>
+					{:else}
+						<span class="next-soon">Coming soon</span>
+					{/if}
+				</span>
+			{/if}
+		</nav>
+	{/if}
 </article>
 
 {#if lightbox}
@@ -194,24 +239,50 @@
 		flex-wrap: wrap;
 	}
 
+	.top-bar-start {
+		display: flex;
+		align-items: center;
+		gap: 0.55rem 0.85rem;
+		min-width: 0;
+		flex: 1 1 auto;
+		flex-wrap: wrap;
+	}
+
 	.crumb {
 		margin: 0;
 		font-size: 0.8rem;
 		color: #6a6a6a;
 		min-width: 0;
+		white-space: nowrap;
 	}
 
-	.crumb a {
+	.crumb a,
+	.series-label a {
 		text-decoration: none;
+		color: inherit;
 	}
 
-	.crumb a:hover {
+	.crumb a:hover,
+	.series-label a:hover {
 		text-decoration: underline;
 		color: #2c2c2c;
 	}
 
 	.sep {
 		margin: 0 0.4em;
+		color: #c0c0c0;
+	}
+
+	.series-label {
+		margin: 0;
+		font-size: 0.8rem;
+		color: #6a6a6a;
+		min-width: 0;
+		white-space: nowrap;
+	}
+
+	.series-sep {
+		margin: 0 0.35em;
 		color: #c0c0c0;
 	}
 
@@ -399,6 +470,54 @@
 	.figure {
 		margin: 0.15rem 0 0.8rem;
 		max-width: min(36rem, 100%);
+	}
+
+	.chapter-nav {
+		margin: 1.75rem 0 0;
+		max-width: 62rem;
+		padding-top: 1rem;
+		border-top: 1px solid #ececec;
+	}
+
+	.next-chapter {
+		display: inline-flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.2rem;
+		max-width: 100%;
+		padding: 0.15rem 0;
+		color: #2c2c2c;
+		text-decoration: none;
+	}
+
+	a.next-chapter:hover .next-kicker,
+	a.next-chapter:hover .next-title {
+		text-decoration: underline;
+	}
+
+	.next-chapter.is-disabled {
+		color: #b0b0b0;
+		cursor: not-allowed;
+		pointer-events: none;
+		user-select: none;
+	}
+
+	.next-kicker {
+		font-size: 0.78rem;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+		color: inherit;
+	}
+
+	.next-title,
+	.next-soon {
+		font-size: 0.95rem;
+		line-height: 1.35;
+		color: inherit;
+	}
+
+	.next-soon {
+		font-style: italic;
 	}
 
 	@media (max-width: 720px) {

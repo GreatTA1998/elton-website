@@ -6,6 +6,16 @@ const essay = {
 	lede:
 		'It’s easy to have contrarian opinions when we don’t think much of others. The blindspot emerges when we have people we admire, whose words we accept as principle. Or when we have total deference to beautiful ideas.',
 	layout: 'continuous',
+	series: {
+		title: "Goh's Folly: Seeing What Others Couldn't",
+		shortTitle: "Goh's Folly",
+		chapter: 3,
+		href: '/essays/gohs-folly'
+	},
+	// Add href (and optional title) on nextChapter when the following piece ships.
+	nextChapter: {
+		label: 'Next chapter'
+	},
 	heroImage: {
 		src: '/courage-blasphemous-chart.png',
 		alt: 'Government debt / savings chart'

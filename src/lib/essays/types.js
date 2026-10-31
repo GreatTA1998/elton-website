@@ -15,12 +15,25 @@
  * @typedef {EssayParagraphBlock | EssayQuoteBlock | EssayImageBlock} EssayBlock
  * @typedef {{ id: string, title: string, blocks: EssayBlock[] }} EssaySection
  * @typedef {{
+ *   title: string,
+ *   shortTitle?: string,
+ *   chapter: number,
+ *   href?: string
+ * }} EssaySeries
+ * @typedef {{
+ *   label?: string,
+ *   title?: string,
+ *   href?: string
+ * }} EssayNextChapter
+ * @typedef {{
  *   slug: string,
  *   title: string,
  *   summary?: string,
  *   lede?: string,
  *   heroImage?: EssayImage,
  *   layout?: 'column' | 'full' | 'continuous',
+ *   series?: EssaySeries,
+ *   nextChapter?: EssayNextChapter,
  *   chapters?: EssayChapter[],
  *   sections?: EssaySection[]
  * }} Essay
