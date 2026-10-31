@@ -6,7 +6,7 @@
 	const STORAGE_KEY = 'essay-font-scale';
 	const MIN_SCALE = 0.8;
 	const MAX_SCALE = 1.6;
-	const STEP = 0.05;
+	const STEP = 0.2;
 
 	let fontScale = 1;
 	/** @type {{ src: string, alt: string } | null} */
@@ -38,8 +38,13 @@
 		return Math.min(MAX_SCALE, Math.max(MIN_SCALE, value));
 	}
 
+	function snap(value) {
+		const stepped = Math.round(value / STEP) * STEP;
+		return Math.round(clamp(stepped) * 100) / 100;
+	}
+
 	function setScale(value) {
-		fontScale = clamp(value);
+		fontScale = snap(value);
 		try {
 			localStorage.setItem(STORAGE_KEY, String(fontScale));
 		} catch (err) {
@@ -99,7 +104,6 @@
 				>
 					<img src={essay.heroImage.src} alt={essay.heroImage.alt} />
 				</button>
-				<p class="image-hint">Click to enlarge</p>
 			</figure>
 		{/if}
 
@@ -223,10 +227,10 @@
 	}
 
 	.font-slider {
-		width: 140px;
-		max-width: 40vw;
+		width: 96px;
 		accent-color: #2c2c2c;
 		cursor: pointer;
+		flex: 0 0 auto;
 	}
 
 	.font-value {
@@ -269,12 +273,6 @@
 		border-radius: 8px;
 		border: 1px solid #ececec;
 		background: #fff;
-	}
-
-	.image-hint {
-		margin: 0.35rem 0 0;
-		font-size: 0.75rem;
-		color: #a0a0a0;
 	}
 
 	.lightbox {
@@ -392,16 +390,6 @@
 	@media (max-width: 720px) {
 		.essay {
 			padding: 1.15rem 1.15rem 2.25rem;
-		}
-
-		.font-control {
-			width: 100%;
-		}
-
-		.font-slider {
-			flex: 1;
-			width: auto;
-			max-width: none;
 		}
 	}
 </style>
