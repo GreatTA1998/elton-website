@@ -66,14 +66,8 @@ const essay = {
 					type: 'p',
 					parts: [
 						{
-							text: 'If it’s inevitable that sometimes we take others’ words as gospel, then equally, we must have '
-						},
-						{
-							text: 'the courage to be blasphemous',
+							text: 'If it’s inevitable that sometimes we take others’ words as gospel, then equally, we must have the courage to be blasphemous.',
 							highlight: true
-						},
-						{
-							text: '.'
 						}
 					]
 				},
