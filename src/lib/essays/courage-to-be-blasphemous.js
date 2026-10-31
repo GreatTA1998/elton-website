@@ -50,7 +50,7 @@ const essay = {
 				},
 				{
 					type: 'p',
-					text: 'Is he right? It seems so. Looking at the latest data for 2026 with government debts, a key indicator of honesty. Its savings is so high, one would mistakenly think the country has oil.'
+					text: 'Is he right? It seems so. Despite having 1/4 the population of Taiwan, its government surplus is 20x larger. Meanwhile Japan is completely in the red, with debt doubling that of France.'
 				},
 				{
 					type: 'p',
