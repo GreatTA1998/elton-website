@@ -72,7 +72,7 @@
 	}
 
 	$: series = essay.series || null;
-	$: seriesName = series ? series.shortTitle || series.title : '';
+	$: seriesName = series ? series.title : '';
 	$: seriesLabel = series ? `${series.title} · Chapter ${series.chapter}` : '';
 	$: nextChapter = essay.nextChapter || null;
 	$: nextHref = nextChapter && nextChapter.href ? nextChapter.href : '';
