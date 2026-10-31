@@ -18,7 +18,7 @@
 			if (saved) {
 				const parsed = parseFloat(saved);
 				if (!Number.isNaN(parsed)) {
-					fontScale = clamp(parsed);
+					fontScale = snap(parsed);
 				}
 			}
 		} catch (err) {

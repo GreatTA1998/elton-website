@@ -4,7 +4,7 @@ const essay = {
 	title: 'The courage to be blasphemous',
 	summary: '',
 	lede:
-		'It’s easy to have contrarian opinions when we don’t think much of others. The blindspot emerges when we have people we admire, whose words we accept as gospel. Or when we have total deference to beautiful ideas.',
+		'It’s easy to have contrarian opinions when we don’t think much of others. The blindspot emerges when we have people we admire, whose words we accept as principle. Or when we have total deference to beautiful ideas.',
 	layout: 'continuous',
 	heroImage: {
 		src: '/courage-blasphemous-chart.png',
