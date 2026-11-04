@@ -5,34 +5,34 @@
 <h2 class="section-label">software apps</h2>
 
 <div class="app-cards">
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://actions.life">
-		<img class="app-card-logo" src="/actions-life-logo.png" alt="actions.life logo" />
-		<div class="app-card-text">
-			<strong>actions.life</strong>
-			<span>Put to-do lists on the calendar.</span>
-		</div>
-	</a>
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://explanations.io">
-		<img class="app-card-logo" src="/explanations-logo.png" alt="explanations.io logo" />
-		<div class="app-card-text">
-			<strong>explanations.io</strong>
-			<span>Blackboard-video explanations.</span>
-		</div>
-	</a>
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://zetteldraw.com">
-		<img class="app-card-logo" src="/zetteldraw-logo.png" alt="zetteldraw logo" />
-		<div class="app-card-text">
-			<strong>zetteldraw</strong>
-			<span>Handwriting-first notes on a Boox.</span>
-		</div>
-	</a>
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://zen-message.com">
-		<img class="app-card-logo" src="/zen-message-logo.jpg" alt="zen-message logo" />
-		<div class="app-card-text">
-			<strong>zen-message</strong>
-			<span>A calmer, less interruptive messaging system.</span>
-		</div>
-	</a>
+	{#each apps as app (app.name)}
+		<a class="app-card" target="_blank" rel="noopener noreferrer" href={app.href}>
+			<div class="app-card-top">
+				<img class="app-card-logo" src={app.logo} alt="{app.name} logo" />
+				<div class="app-card-heading">
+					<div class="app-card-title-row">
+						<strong class="app-card-name">{app.name}</strong>
+						{#if app.started}
+							<span class="app-card-year">{app.started}</span>
+						{:else}
+							<span class="app-card-year app-card-year-empty" aria-hidden="true"></span>
+						{/if}
+					</div>
+					<p class="app-card-desc">{app.description}</p>
+				</div>
+			</div>
+
+			{#if app.platforms && app.platforms.length}
+				<ul class="app-card-platforms" aria-label="Platforms">
+					{#each app.platforms as platform (platform)}
+						<li class="app-platform-chip">{platform}</li>
+					{/each}
+				</ul>
+			{/if}
+
+			<div class="app-card-demo" aria-hidden="true"></div>
+		</a>
+	{/each}
 </div>
 
 <h2 class="section-label">video essays</h2>
@@ -120,6 +120,38 @@
 </main>
 
 <script>
+	const apps = [
+		{
+			name: 'actions.life',
+			href: 'https://actions.life',
+			logo: '/actions-life-logo.png',
+			description: 'Put to-do lists on the calendar.',
+			started: 2022,
+			platforms: []
+		},
+		{
+			name: 'explanations.io',
+			href: 'https://explanations.io',
+			logo: '/explanations-logo.png',
+			description: 'Blackboard-video explanations.',
+			started: 2018,
+			platforms: []
+		},
+		{
+			name: 'zetteldraw',
+			href: 'https://zetteldraw.com',
+			logo: '/zetteldraw-logo.png',
+			description: 'Handwriting-first notes on a Boox.',
+			platforms: []
+		},
+		{
+			name: 'zen-message',
+			href: 'https://zen-message.com',
+			logo: '/zen-message-logo.jpg',
+			description: 'A calmer, less interruptive messaging system.',
+			platforms: []
+		}
+	];
 </script>
 
 <style>
@@ -167,21 +199,23 @@
 	.app-cards {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 10px;
+		gap: 12px;
 		margin: 0;
+		align-items: stretch;
 	}
 
 	.app-card {
 		display: flex;
-		align-items: center;
-		gap: 12px;
-		padding: 12px 12px 12px 10px;
+		flex-direction: column;
+		gap: 10px;
+		padding: 12px;
 		border: 1px solid #ececec;
 		border-radius: 10px;
 		text-decoration: none;
 		color: inherit;
 		box-sizing: border-box;
 		background: transparent;
+		min-width: 0;
 		transition: background-color 0.15s ease, border-color 0.15s ease;
 	}
 
@@ -190,32 +224,115 @@
 		border-color: #e0e0e0;
 	}
 
+	.app-card-top {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		min-width: 0;
+	}
+
 	.app-card-logo {
-		width: 48px;
-		height: 48px;
+		width: 44px;
+		height: 44px;
 		object-fit: cover;
 		flex-shrink: 0;
 		border-radius: 8px;
 	}
 
-	.app-card-text {
+	.app-card-heading {
 		display: flex;
 		flex-direction: column;
-		gap: 2px;
+		gap: 4px;
+		min-width: 0;
+		flex: 1;
+	}
+
+	.app-card-title-row {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 8px;
 		min-width: 0;
 	}
 
-	.app-card-text strong {
+	.app-card-name {
 		font-weight: 500;
 		font-size: 0.95rem;
 		color: #2c2c2c;
+		line-height: 1.3;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
-	.app-card-text span {
+	.app-card-year {
+		flex-shrink: 0;
+		font-size: 0.78rem;
+		font-weight: 400;
+		color: #9a9a9a;
+		letter-spacing: 0.01em;
+		font-variant-numeric: tabular-nums;
+		line-height: 1.3;
+		min-width: 2.4em;
+		text-align: right;
+	}
+
+	.app-card-year-empty {
+		visibility: hidden;
+		min-height: 1em;
+	}
+
+	.app-card-desc {
+		margin: 0;
 		font-size: 0.875rem;
 		color: #6a6a6a;
-		line-height: 1.4;
+		line-height: 1.45;
 		font-weight: 400;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		line-clamp: 3;
+		overflow: hidden;
+	}
+
+	.app-card-platforms {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.app-platform-chip {
+		margin: 0;
+		padding: 2px 7px;
+		font-size: 0.72rem;
+		font-weight: 400;
+		line-height: 1.4;
+		color: #7a7a7a;
+		border: 1px solid #ececec;
+		border-radius: 5px;
+		background: #fafafa;
+		letter-spacing: 0.01em;
+	}
+
+	.app-card-demo {
+		margin-top: auto;
+		width: 100%;
+		height: 52px;
+		border-radius: 7px;
+		border: 1px dashed #ececec;
+		background:
+			repeating-linear-gradient(
+				-45deg,
+				transparent,
+				transparent 5px,
+				#f4f4f4 5px,
+				#f4f4f4 6px
+			),
+			#fcfcfc;
+		box-sizing: border-box;
 	}
 
 	.essay-grid {
