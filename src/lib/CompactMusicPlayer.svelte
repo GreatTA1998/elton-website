@@ -20,6 +20,7 @@
 	let ready = false;
 	let collapsed = false;
 	let embedBlocked = false;
+	let playAttempted = false;
 	let titleKey = 0;
 
 	/** @type {HTMLElement} */
@@ -99,7 +100,7 @@
 				},
 				onError: () => {
 					playing = false;
-					embedBlocked = true;
+					if (playAttempted) embedBlocked = true;
 				}
 			}
 		});
@@ -111,10 +112,11 @@
 			player.pauseVideo();
 			return;
 		}
+		playAttempted = true;
 		embedBlocked = false;
 		player.playVideo();
 		setTimeout(() => {
-			if (destroyed || playing || !player) return;
+			if (destroyed || playing || !player || !playAttempted) return;
 			try {
 				const state = player.getPlayerState?.();
 				if (
@@ -134,6 +136,7 @@
 	 */
 	function selectTrack(nextIndex, autoplay = playing) {
 		embedBlocked = false;
+		playAttempted = false;
 		titleKey += 1;
 		if (!player || !ready) {
 			trackIndex = nextIndex;
