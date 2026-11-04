@@ -1,17 +1,17 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 
-	/** Listening playlist — other people’s recordings, not Elton’s. */
+	/** Other people’s recordings — not Elton’s. */
 	const tracks = [
 		{
 			videoId: 'J7FNWtUwBD0',
 			title: 'Rachmaninoff: 10 Preludes, Op. 23: No. 4 in D Major (Andante cantabile)',
-			credit: 'Vladimir Ashkenazy · Decca'
+			credit: 'Ashkenazy'
 		},
 		{
 			videoId: '20Gb0JcviRA',
 			title: 'Brahms - Intermezzo in A major, Op. 118 No. 2 (Stephen Kovacevich) - 1981',
-			credit: 'Stephen Kovacevich · Philips, 1981'
+			credit: 'Kovacevich, 1981'
 		}
 	];
 
@@ -20,6 +20,7 @@
 	let ready = false;
 	let collapsed = false;
 	let embedBlocked = false;
+	let titleKey = 0;
 
 	/** @type {HTMLElement} */
 	let hostEl;
@@ -112,7 +113,6 @@
 		}
 		embedBlocked = false;
 		player.playVideo();
-		// If the embed is blocked, surface a quiet fallback shortly after.
 		setTimeout(() => {
 			if (destroyed || playing || !player) return;
 			try {
@@ -134,6 +134,7 @@
 	 */
 	function selectTrack(nextIndex, autoplay = playing) {
 		embedBlocked = false;
+		titleKey += 1;
 		if (!player || !ready) {
 			trackIndex = nextIndex;
 			return;
@@ -187,9 +188,8 @@
 	class:collapsed
 	class:playing
 	role="region"
-	aria-label="Listening — recordings by other musicians"
+	aria-label="Music player — recordings by other musicians"
 >
-	<!-- YouTube host: kept for API / ToS presence, visually suppressed -->
 	<div class="yt-host" aria-hidden="true">
 		<div bind:this={hostEl}></div>
 	</div>
@@ -199,30 +199,25 @@
 			type="button"
 			class="icon-btn expand"
 			on:click={toggleCollapsed}
-			aria-label="Expand listening player"
-			title="Listening"
+			aria-label="Show music player"
+			title={track.title}
 		>
-			<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-				<path
-					fill="currentColor"
-					d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"
-				/>
+			<span class="pulse" aria-hidden="true"></span>
+			<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+				<path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
 			</svg>
 		</button>
 	{:else}
-		<div class="chrome">
-			<p class="eyebrow">Listening</p>
-			<button
-				type="button"
-				class="icon-btn dismiss"
-				on:click={toggleCollapsed}
-				aria-label="Minimize listening player"
-			>
-				<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-					<path fill="currentColor" d="M6 12h12v2H6z" />
-				</svg>
-			</button>
-		</div>
+		<button
+			type="button"
+			class="icon-btn dismiss"
+			on:click={toggleCollapsed}
+			aria-label="Minimize music player"
+		>
+			<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
+				<path fill="currentColor" d="M6 11.25h12v1.5H6z" />
+			</svg>
+		</button>
 
 		<div class="row">
 			<button
@@ -233,19 +228,21 @@
 				aria-label={playing ? 'Pause' : 'Play'}
 			>
 				{#if playing}
-					<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-						<path fill="currentColor" d="M7 6h3v12H7V6zm7 0h3v12h-3V6z" />
+					<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+						<path fill="currentColor" d="M7 6h3.25v12H7V6zm6.75 0H17v12h-3.25V6z" />
 					</svg>
 				{:else}
-					<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-						<path fill="currentColor" d="M8 5v14l11-7L8 5z" />
+					<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+						<path fill="currentColor" d="M8.2 5.6v12.8L18.4 12 8.2 5.6z" />
 					</svg>
 				{/if}
 			</button>
 
 			<div class="meta">
-				<p class="title" title={track.title}>{track.title}</p>
-				<p class="credit">{track.credit}</p>
+				{#key titleKey}
+					<p class="title" title={track.title}>{track.title}</p>
+					<p class="credit">{track.credit}</p>
+				{/key}
 			</div>
 
 			<div class="nav">
@@ -256,8 +253,8 @@
 					disabled={!ready}
 					aria-label="Previous piece"
 				>
-					<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-						<path fill="currentColor" d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z" />
+					<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+						<path fill="currentColor" d="M6.5 6h1.6v12H6.5V6zm3.2 6 8.3 5.7V6.3L9.7 12z" />
 					</svg>
 				</button>
 				<button
@@ -267,8 +264,8 @@
 					disabled={!ready}
 					aria-label="Next piece"
 				>
-					<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-						<path fill="currentColor" d="M16 6h2v12h-2V6zM6 18l8.5-6L6 6v12z" />
+					<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+						<path fill="currentColor" d="M16 6h1.6v12H16V6zM6 17.7 14.3 12 6 6.3v11.4z" />
 					</svg>
 				</button>
 			</div>
@@ -276,42 +273,51 @@
 
 		{#if embedBlocked}
 			<p class="hint">
-				Playback blocked here —
-				<a href={watchUrl} target="_blank" rel="noopener noreferrer">open on YouTube</a>
+				<a href={watchUrl} target="_blank" rel="noopener noreferrer">Open recording</a>
 			</p>
-		{:else}
-			<a class="source" href={watchUrl} target="_blank" rel="noopener noreferrer">YouTube</a>
 		{/if}
 	{/if}
 </div>
 
 <style>
 	.player {
+		--ink: #2a2a2a;
+		--mute: #7a7a7a;
+		--line: rgba(40, 40, 40, 0.08);
+		--wash: rgba(255, 252, 248, 0.86);
 		position: fixed;
-		top: 0.85rem;
-		right: 0.85rem;
+		top: 0.9rem;
+		right: 0.9rem;
 		z-index: 50;
-		width: min(22.5rem, calc(100vw - 1.5rem));
+		width: min(21.5rem, calc(100vw - 1.6rem));
 		box-sizing: border-box;
-		padding: 0.7rem 0.75rem 0.65rem;
-		background: rgba(255, 255, 255, 0.92);
-		border: 1px solid #ececec;
-		border-radius: 10px;
-		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-		color: #2c2c2c;
+		padding: 0.72rem 1.85rem 0.72rem 0.72rem;
+		background: linear-gradient(160deg, var(--wash), rgba(255, 255, 255, 0.78));
+		border: 1px solid var(--line);
+		border-radius: 14px;
+		backdrop-filter: blur(14px) saturate(1.05);
+		-webkit-backdrop-filter: blur(14px) saturate(1.05);
+		box-shadow: 0 8px 28px rgba(40, 36, 30, 0.05);
+		color: var(--ink);
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		transition: box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+	}
+
+	.player.playing {
+		border-color: rgba(40, 40, 40, 0.11);
+		box-shadow: 0 10px 32px rgba(40, 36, 30, 0.07);
 	}
 
 	.player.collapsed {
 		width: auto;
-		padding: 0.4rem;
-		right: 0.75rem;
-		top: 0.75rem;
+		padding: 0;
+		background: transparent;
+		border: none;
+		box-shadow: none;
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
 	}
 
-	/* Keep a real-sized host so the IFrame API will play; hide visually. */
 	.yt-host {
 		position: fixed;
 		width: 200px;
@@ -324,28 +330,10 @@
 		z-index: -1;
 	}
 
-	.chrome {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 0.5rem;
-		margin-bottom: 0.35rem;
-	}
-
-	.eyebrow {
-		margin: 0;
-		font-size: 0.68rem;
-		font-weight: 500;
-		letter-spacing: 0.04em;
-		text-transform: uppercase;
-		color: #8a8a8a;
-		line-height: 1.2;
-	}
-
 	.row {
 		display: flex;
 		align-items: center;
-		gap: 0.55rem;
+		gap: 0.6rem;
 		min-width: 0;
 	}
 
@@ -356,132 +344,187 @@
 
 	.title {
 		margin: 0;
-		font-size: 0.8rem;
+		font-size: 0.78rem;
 		font-weight: 500;
+		letter-spacing: -0.015em;
 		line-height: 1.35;
-		color: #2c2c2c;
+		color: var(--ink);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		animation: rise 0.45s ease;
 	}
 
 	.credit {
-		margin: 0.12rem 0 0;
-		font-size: 0.7rem;
+		margin: 0.18rem 0 0;
+		font-size: 0.68rem;
 		font-weight: 400;
+		letter-spacing: 0.01em;
 		line-height: 1.3;
-		color: #6a6a6a;
+		color: var(--mute);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		animation: rise 0.55s ease;
+	}
+
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(3px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 
 	.nav {
 		display: flex;
 		align-items: center;
 		flex-shrink: 0;
-		gap: 0.1rem;
+		gap: 0.05rem;
+		opacity: 0.72;
+		transition: opacity 0.25s ease;
+	}
+
+	.player:hover .nav {
+		opacity: 1;
 	}
 
 	.icon-btn {
 		appearance: none;
 		border: none;
 		background: transparent;
-		color: #2c2c2c;
+		color: var(--ink);
 		padding: 0.28rem;
 		margin: 0;
-		border-radius: 6px;
+		border-radius: 999px;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
 		line-height: 0;
-		transition: background-color 0.15s ease, color 0.15s ease;
+		transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease,
+			opacity 0.2s ease;
 	}
 
 	.icon-btn:hover:not(:disabled) {
-		background: #f3f3f3;
+		background: rgba(40, 40, 40, 0.05);
+	}
+
+	.icon-btn:active:not(:disabled) {
+		transform: scale(0.96);
 	}
 
 	.icon-btn:disabled {
-		opacity: 0.35;
+		opacity: 0.32;
 		cursor: default;
 	}
 
 	.icon-btn.play {
+		position: relative;
 		flex-shrink: 0;
-		width: 2rem;
-		height: 2rem;
-		border-radius: 999px;
-		background: #f5f5f5;
-		border: 1px solid #ececec;
+		width: 2.05rem;
+		height: 2.05rem;
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid var(--line);
+		color: var(--ink);
 	}
 
 	.player.playing .icon-btn.play {
-		background: #2c2c2c;
-		border-color: #2c2c2c;
+		background: #2f2f2f;
+		border-color: #2f2f2f;
 		color: #fff;
 	}
 
 	.icon-btn.play:hover:not(:disabled) {
-		background: #ebebeb;
+		background: rgba(255, 255, 255, 0.95);
 	}
 
 	.player.playing .icon-btn.play:hover:not(:disabled) {
-		background: #1f1f1f;
+		background: #222;
 	}
 
 	.icon-btn.dismiss {
-		color: #8a8a8a;
-		padding: 0.15rem;
+		position: absolute;
+		top: 0.35rem;
+		right: 0.35rem;
+		width: 1.35rem;
+		height: 1.35rem;
+		padding: 0;
+		color: #9a9a9a;
+		opacity: 0;
+		transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+	}
+
+	.player:hover .icon-btn.dismiss,
+	.icon-btn.dismiss:focus-visible {
+		opacity: 1;
 	}
 
 	.icon-btn.expand {
-		width: 2rem;
-		height: 2rem;
-		border-radius: 999px;
-		background: #fff;
-		border: 1px solid #ececec;
-		color: #2c2c2c;
+		position: relative;
+		width: 2.25rem;
+		height: 2.25rem;
+		background: rgba(255, 252, 248, 0.9);
+		border: 1px solid var(--line);
+		box-shadow: 0 6px 20px rgba(40, 36, 30, 0.06);
+		color: var(--ink);
+		overflow: hidden;
 	}
 
 	.player.playing .icon-btn.expand {
-		background: #2c2c2c;
-		border-color: #2c2c2c;
+		background: #2f2f2f;
+		border-color: #2f2f2f;
 		color: #fff;
 	}
 
-	.source,
+	.pulse {
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		pointer-events: none;
+	}
+
+	.player.playing .pulse {
+		animation: breathe 2.8s ease-in-out infinite;
+		box-shadow: 0 0 0 0 rgba(47, 47, 47, 0.22);
+	}
+
+	@keyframes breathe {
+		0%,
+		100% {
+			box-shadow: 0 0 0 0 rgba(47, 47, 47, 0.18);
+		}
+		50% {
+			box-shadow: 0 0 0 8px rgba(47, 47, 47, 0);
+		}
+	}
+
 	.hint {
-		display: inline-block;
-		margin: 0.4rem 0 0;
+		margin: 0.45rem 0 0;
 		font-size: 0.65rem;
-		color: #9a9a9a;
-		letter-spacing: 0.01em;
-		line-height: 1.35;
-	}
-
-	.source {
-		text-decoration: none;
-	}
-
-	.source:hover,
-	.hint a:hover {
-		color: #6a6a6a;
-		text-decoration: underline;
+		color: var(--mute);
+		line-height: 1.3;
 	}
 
 	.hint a {
-		color: #6a6a6a;
+		color: var(--mute);
 		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+
+	.hint a:hover {
+		color: var(--ink);
 	}
 
 	@media (max-width: 520px) {
 		.player:not(.collapsed) {
 			top: 0.55rem;
 			right: 0.55rem;
-			width: min(17.5rem, calc(100vw - 1.1rem));
-			padding: 0.55rem 0.55rem 0.5rem;
+			width: min(16.8rem, calc(100vw - 1.1rem));
+			padding: 0.62rem 1.6rem 0.62rem 0.62rem;
 		}
 
 		.nav button:first-child {
@@ -489,11 +532,29 @@
 		}
 
 		.title {
-			font-size: 0.74rem;
+			font-size: 0.72rem;
 		}
 
 		.credit {
-			font-size: 0.66rem;
+			font-size: 0.64rem;
+		}
+
+		.icon-btn.dismiss {
+			opacity: 0.7;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.title,
+		.credit,
+		.player.playing .pulse {
+			animation: none;
+		}
+
+		.icon-btn,
+		.nav,
+		.player {
+			transition: none;
 		}
 	}
 </style>
