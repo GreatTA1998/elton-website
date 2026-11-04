@@ -19,6 +19,7 @@
 	let playing = false;
 	let ready = false;
 	let collapsed = false;
+	let embedBlocked = false;
 
 	/** @type {HTMLElement} */
 	let hostEl;
@@ -27,6 +28,7 @@
 	let destroyed = false;
 
 	$: track = tracks[trackIndex];
+	$: watchUrl = `https://www.youtube.com/watch?v=${track.videoId}`;
 
 	function loadApi() {
 		return new Promise((resolve) => {
@@ -67,8 +69,17 @@
 				origin: typeof window !== 'undefined' ? window.location.origin : undefined
 			},
 			events: {
-				onReady: () => {
-					if (!destroyed) ready = true;
+				onReady: (event) => {
+					if (destroyed) return;
+					const iframe = event.target.getIframe?.() || hostEl?.querySelector?.('iframe');
+					if (iframe) {
+						iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+						iframe.setAttribute(
+							'allow',
+							'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+						);
+					}
+					ready = true;
 				},
 				onStateChange: (event) => {
 					if (destroyed || !window.YT) return;
@@ -87,6 +98,7 @@
 				},
 				onError: () => {
 					playing = false;
+					embedBlocked = true;
 				}
 			}
 		});
@@ -96,15 +108,32 @@
 		if (!player || !ready) return;
 		if (playing) {
 			player.pauseVideo();
-		} else {
-			player.playVideo();
+			return;
 		}
+		embedBlocked = false;
+		player.playVideo();
+		// If the embed is blocked, surface a quiet fallback shortly after.
+		setTimeout(() => {
+			if (destroyed || playing || !player) return;
+			try {
+				const state = player.getPlayerState?.();
+				if (
+					state !== window.YT?.PlayerState?.PLAYING &&
+					state !== window.YT?.PlayerState?.BUFFERING
+				) {
+					embedBlocked = true;
+				}
+			} catch (e) {
+				embedBlocked = true;
+			}
+		}, 2500);
 	}
 
 	/**
 	 * @param {boolean} [autoplay]
 	 */
 	function selectTrack(nextIndex, autoplay = playing) {
+		embedBlocked = false;
 		if (!player || !ready) {
 			trackIndex = nextIndex;
 			return;
@@ -245,14 +274,14 @@
 			</div>
 		</div>
 
-		<a
-			class="source"
-			href={`https://www.youtube.com/watch?v=${track.videoId}`}
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			YouTube
-		</a>
+		{#if embedBlocked}
+			<p class="hint">
+				Playback blocked here —
+				<a href={watchUrl} target="_blank" rel="noopener noreferrer">open on YouTube</a>
+			</p>
+		{:else}
+			<a class="source" href={watchUrl} target="_blank" rel="noopener noreferrer">YouTube</a>
+		{/if}
 	{/if}
 </div>
 
@@ -282,17 +311,17 @@
 		top: 0.75rem;
 	}
 
+	/* Keep a real-sized host so the IFrame API will play; hide visually. */
 	.yt-host {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip: rect(0 0 0 0);
-		clip-path: inset(50%);
-		white-space: nowrap;
-		border: 0;
-		padding: 0;
+		position: fixed;
+		width: 200px;
+		height: 200px;
+		bottom: 0;
+		right: 0;
+		opacity: 0;
 		pointer-events: none;
+		overflow: hidden;
+		z-index: -1;
 	}
 
 	.chrome {
@@ -422,16 +451,27 @@
 		color: #fff;
 	}
 
-	.source {
+	.source,
+	.hint {
 		display: inline-block;
-		margin-top: 0.4rem;
+		margin: 0.4rem 0 0;
 		font-size: 0.65rem;
 		color: #9a9a9a;
-		text-decoration: none;
 		letter-spacing: 0.01em;
+		line-height: 1.35;
 	}
 
-	.source:hover {
+	.source {
+		text-decoration: none;
+	}
+
+	.source:hover,
+	.hint a:hover {
+		color: #6a6a6a;
+		text-decoration: underline;
+	}
+
+	.hint a {
 		color: #6a6a6a;
 		text-decoration: underline;
 	}
