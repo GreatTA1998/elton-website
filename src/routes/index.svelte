@@ -320,13 +320,18 @@
 	.app-card-demo {
 		margin-top: auto;
 		width: 100%;
-		aspect-ratio: 16 / 9;
+		height: 52px;
 		border-radius: 7px;
 		border: 1px dashed #ececec;
 		background:
-			linear-gradient(135deg, transparent 48%, #f3f3f3 48%, #f3f3f3 52%, transparent 52%),
+			repeating-linear-gradient(
+				-45deg,
+				transparent,
+				transparent 5px,
+				#f4f4f4 5px,
+				#f4f4f4 6px
+			),
 			#fcfcfc;
-		background-size: 10px 10px, auto;
 		box-sizing: border-box;
 	}
 
