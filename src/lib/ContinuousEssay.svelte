@@ -89,6 +89,13 @@
 			: '';
 	$: nextLabel = nextProgress ? `Next · ${nextProgress}` : (nextChapter && nextChapter.label) || 'Next chapter';
 	$: hasSeriesNav = Boolean(nextChapter);
+	$: isSeriesEnd =
+		Boolean(series) &&
+		!nextChapter &&
+		series.part === 'chapter' &&
+		typeof series.chapter === 'number' &&
+		series.chapterCount &&
+		series.chapter >= series.chapterCount;
 </script>
 
 <article class="essay" style="--essay-scale: {fontScale}">
@@ -241,6 +248,10 @@
 				</span>
 			{/if}
 		</nav>
+	{:else if isSeriesEnd}
+		<footer class="series-end">
+			<p class="series-end-mark">The end</p>
+		</footer>
 	{/if}
 </article>
 
@@ -595,6 +606,24 @@
 		box-sizing: border-box;
 	}
 
+	.series-end {
+		margin: 2.25rem 0 calc(1.5rem + env(safe-area-inset-bottom, 0px));
+		max-width: min(62rem, 100%);
+		padding-top: 1.35rem;
+		border-top: 1px solid #ececec;
+		box-sizing: border-box;
+	}
+
+	.series-end-mark {
+		margin: 0;
+		font-size: calc(0.95rem * var(--essay-scale));
+		line-height: 1.4;
+		letter-spacing: 0.02em;
+		color: #6a6a6a;
+		font-style: italic;
+		font-weight: 400;
+	}
+
 	.nav-link {
 		display: inline-flex;
 		flex-direction: column;
@@ -680,6 +709,11 @@
 		.chapter-nav {
 			margin-bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
 			padding-bottom: 0.5rem;
+		}
+
+		.series-end {
+			margin-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+			padding-bottom: 0.35rem;
 		}
 
 		.section {
