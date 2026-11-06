@@ -18,7 +18,6 @@
 	let trackIndex = 0;
 	let playing = false;
 	let ready = false;
-	let collapsed = false;
 	let embedBlocked = false;
 	let playAttempted = false;
 	let titleKey = 0;
@@ -166,10 +165,6 @@
 		selectTrack((trackIndex - 1 + tracks.length) % tracks.length, autoplay);
 	}
 
-	function toggleCollapsed() {
-		collapsed = !collapsed;
-	}
-
 	onMount(async () => {
 		await loadApi();
 		if (!destroyed) createPlayer();
@@ -188,7 +183,6 @@
 
 <div
 	class="player"
-	class:collapsed
 	class:playing
 	role="region"
 	aria-label="Music player — recordings by other musicians"
@@ -197,88 +191,62 @@
 		<div bind:this={hostEl}></div>
 	</div>
 
-	{#if collapsed}
+	<div class="row">
 		<button
 			type="button"
-			class="icon-btn expand"
-			on:click={toggleCollapsed}
-			aria-label="Show music player"
-			title={track.title}
+			class="icon-btn play"
+			on:click={togglePlay}
+			disabled={!ready}
+			aria-label={playing ? 'Pause' : 'Play'}
 		>
-			<span class="pulse" aria-hidden="true"></span>
-			<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-				<path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
-			</svg>
-		</button>
-	{:else}
-		<button
-			type="button"
-			class="icon-btn dismiss"
-			on:click={toggleCollapsed}
-			aria-label="Minimize music player"
-		>
-			<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
-				<path fill="currentColor" d="M6 11.25h12v1.5H6z" />
-			</svg>
+			{#if playing}
+				<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+					<path fill="currentColor" d="M7 6h3.25v12H7V6zm6.75 0H17v12h-3.25V6z" />
+				</svg>
+			{:else}
+				<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+					<path fill="currentColor" d="M8.2 5.6v12.8L18.4 12 8.2 5.6z" />
+				</svg>
+			{/if}
 		</button>
 
-		<div class="row">
-			<button
-				type="button"
-				class="icon-btn play"
-				on:click={togglePlay}
-				disabled={!ready}
-				aria-label={playing ? 'Pause' : 'Play'}
-			>
-				{#if playing}
-					<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-						<path fill="currentColor" d="M7 6h3.25v12H7V6zm6.75 0H17v12h-3.25V6z" />
-					</svg>
-				{:else}
-					<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-						<path fill="currentColor" d="M8.2 5.6v12.8L18.4 12 8.2 5.6z" />
-					</svg>
-				{/if}
-			</button>
-
-			<div class="meta">
-				{#key titleKey}
-					<p class="title" title={track.title}>{track.title}</p>
-					<p class="credit">{track.credit}</p>
-				{/key}
-			</div>
-
-			<div class="nav">
-				<button
-					type="button"
-					class="icon-btn"
-					on:click={() => prevTrack()}
-					disabled={!ready}
-					aria-label="Previous piece"
-				>
-					<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-						<path fill="currentColor" d="M6.5 6h1.6v12H6.5V6zm3.2 6 8.3 5.7V6.3L9.7 12z" />
-					</svg>
-				</button>
-				<button
-					type="button"
-					class="icon-btn"
-					on:click={() => nextTrack()}
-					disabled={!ready}
-					aria-label="Next piece"
-				>
-					<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-						<path fill="currentColor" d="M16 6h1.6v12H16V6zM6 17.7 14.3 12 6 6.3v11.4z" />
-					</svg>
-				</button>
-			</div>
+		<div class="meta">
+			{#key titleKey}
+				<p class="title" title={track.title}>{track.title}</p>
+				<p class="credit">{track.credit}</p>
+			{/key}
 		</div>
 
-		{#if embedBlocked}
-			<p class="hint">
-				<a href={watchUrl} target="_blank" rel="noopener noreferrer">Open recording</a>
-			</p>
-		{/if}
+		<div class="nav">
+			<button
+				type="button"
+				class="icon-btn"
+				on:click={() => prevTrack()}
+				disabled={!ready}
+				aria-label="Previous piece"
+			>
+				<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+					<path fill="currentColor" d="M6.5 6h1.6v12H6.5V6zm3.2 6 8.3 5.7V6.3L9.7 12z" />
+				</svg>
+			</button>
+			<button
+				type="button"
+				class="icon-btn"
+				on:click={() => nextTrack()}
+				disabled={!ready}
+				aria-label="Next piece"
+			>
+				<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+					<path fill="currentColor" d="M16 6h1.6v12H16V6zM6 17.7 14.3 12 6 6.3v11.4z" />
+				</svg>
+			</button>
+		</div>
+	</div>
+
+	{#if embedBlocked}
+		<p class="hint">
+			<a href={watchUrl} target="_blank" rel="noopener noreferrer">Open recording</a>
+		</p>
 	{/if}
 </div>
 
@@ -294,7 +262,7 @@
 		z-index: 50;
 		width: min(21.5rem, calc(100vw - 1.6rem));
 		box-sizing: border-box;
-		padding: 0.72rem 1.85rem 0.72rem 0.72rem;
+		padding: 0.72rem;
 		background: linear-gradient(160deg, var(--wash), rgba(255, 255, 255, 0.78));
 		border: 1px solid var(--line);
 		border-radius: 14px;
@@ -309,16 +277,6 @@
 	.player.playing {
 		border-color: rgba(40, 40, 40, 0.11);
 		box-shadow: 0 10px 32px rgba(40, 36, 30, 0.07);
-	}
-
-	.player.collapsed {
-		width: auto;
-		padding: 0;
-		background: transparent;
-		border: none;
-		box-shadow: none;
-		backdrop-filter: none;
-		-webkit-backdrop-filter: none;
 	}
 
 	.yt-host {
@@ -449,62 +407,6 @@
 		background: #222;
 	}
 
-	.icon-btn.dismiss {
-		position: absolute;
-		top: 0.35rem;
-		right: 0.35rem;
-		width: 1.35rem;
-		height: 1.35rem;
-		padding: 0;
-		color: #9a9a9a;
-		opacity: 0;
-		transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-	}
-
-	.player:hover .icon-btn.dismiss,
-	.icon-btn.dismiss:focus-visible {
-		opacity: 1;
-	}
-
-	.icon-btn.expand {
-		position: relative;
-		width: 2.25rem;
-		height: 2.25rem;
-		background: rgba(255, 252, 248, 0.9);
-		border: 1px solid var(--line);
-		box-shadow: 0 6px 20px rgba(40, 36, 30, 0.06);
-		color: var(--ink);
-		overflow: hidden;
-	}
-
-	.player.playing .icon-btn.expand {
-		background: #2f2f2f;
-		border-color: #2f2f2f;
-		color: #fff;
-	}
-
-	.pulse {
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		pointer-events: none;
-	}
-
-	.player.playing .pulse {
-		animation: breathe 2.8s ease-in-out infinite;
-		box-shadow: 0 0 0 0 rgba(47, 47, 47, 0.22);
-	}
-
-	@keyframes breathe {
-		0%,
-		100% {
-			box-shadow: 0 0 0 0 rgba(47, 47, 47, 0.18);
-		}
-		50% {
-			box-shadow: 0 0 0 8px rgba(47, 47, 47, 0);
-		}
-	}
-
 	.hint {
 		margin: 0.45rem 0 0;
 		font-size: 0.65rem;
@@ -523,11 +425,11 @@
 	}
 
 	@media (max-width: 520px) {
-		.player:not(.collapsed) {
+		.player {
 			top: 0.55rem;
 			right: 0.55rem;
 			width: min(16.8rem, calc(100vw - 1.1rem));
-			padding: 0.62rem 1.6rem 0.62rem 0.62rem;
+			padding: 0.62rem;
 		}
 
 		.nav button:first-child {
@@ -541,16 +443,11 @@
 		.credit {
 			font-size: 0.64rem;
 		}
-
-		.icon-btn.dismiss {
-			opacity: 0.7;
-		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
 		.title,
-		.credit,
-		.player.playing .pulse {
+		.credit {
 			animation: none;
 		}
 
