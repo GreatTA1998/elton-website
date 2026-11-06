@@ -13,6 +13,7 @@
 		'Milton Keynes, UK',
 		'London, UK',
 		'Boston, USA',
+		'Taipei, Taiwan',
 		'Tokyo, Japan'
 	];
 </script>
