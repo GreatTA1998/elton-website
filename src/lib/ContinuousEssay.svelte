@@ -293,6 +293,24 @@
 	{:else if isSeriesEnd}
 		<footer class="series-end">
 			<p class="series-end-mark">The end</p>
+			{#if essay.furtherReading}
+				<div class="further-reading">
+					<p class="further-intro">{essay.furtherReading.intro}</p>
+					<ul class="further-list">
+						{#each essay.furtherReading.items as item, itemIndex (itemIndex)}
+							<li>
+								{#if item.href}
+									<a href={item.href} target="_blank" rel="noopener noreferrer"
+										>{item.label}</a
+									>{#if item.note}<span class="further-note"> — {item.note}</span>{/if}
+								{:else}
+									{item.label}
+								{/if}
+							</li>
+						{/each}
+					</ul>
+				</div>
+			{/if}
 		</footer>
 	{/if}
 </article>
@@ -699,6 +717,51 @@
 		color: #6a6a6a;
 		font-style: italic;
 		font-weight: 400;
+	}
+
+	.further-reading {
+		margin: 1.35rem 0 0;
+		max-width: min(36rem, 100%);
+	}
+
+	.further-intro {
+		margin: 0 0 0.65rem;
+		font-size: calc(0.88rem * var(--essay-scale));
+		line-height: 1.55;
+		color: #7a7a7a;
+	}
+
+	.further-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.further-list li {
+		margin: 0 0 0.45rem;
+		font-size: calc(0.88rem * var(--essay-scale));
+		line-height: 1.5;
+		color: #6a6a6a;
+	}
+
+	.further-list li:last-child {
+		margin-bottom: 0;
+	}
+
+	.further-list a {
+		color: #4a4a4a;
+		text-decoration: underline;
+		text-decoration-color: #d4d4d4;
+		text-underline-offset: 0.15em;
+	}
+
+	.further-list a:hover {
+		color: #2c2c2c;
+		text-decoration-color: #9a9a9a;
+	}
+
+	.further-note {
+		color: #9a9a9a;
 	}
 
 	.nav-link {

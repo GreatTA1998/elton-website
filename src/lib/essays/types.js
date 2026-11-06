@@ -29,6 +29,15 @@
  *   href?: string
  * }} EssayNavLink
  * @typedef {{
+ *   label: string,
+ *   href?: string,
+ *   note?: string
+ * }} EssayFurtherReadingItem
+ * @typedef {{
+ *   intro: string,
+ *   items: EssayFurtherReadingItem[]
+ * }} EssayFurtherReading
+ * @typedef {{
  *   slug: string,
  *   title: string,
  *   summary?: string,
@@ -38,6 +47,7 @@
  *   series?: EssaySeries,
  *   prevChapter?: EssayNavLink,
  *   nextChapter?: EssayNavLink,
+ *   furtherReading?: EssayFurtherReading,
  *   chapters?: EssayChapter[],
  *   sections?: EssaySection[]
  * }} Essay
