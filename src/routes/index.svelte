@@ -1,36 +1,57 @@
+<div class="home">
+<HomeAtmosphere />
+
 <p class="welcome">
 	Welcome to my absolutely EPIC website, it's INSANE:
+</p>
+<p class="welcome-sub">
+	I'm a solo founder who dreams of being useful and making it big some day.
 </p>
 
 <h2 class="section-label">software apps</h2>
 
 <div class="app-cards">
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://actions.life">
+	<a
+		class="app-card app-card-active"
+		target="_blank"
+		rel="noopener noreferrer"
+		href="https://actions.life"
+	>
 		<img class="app-card-logo" src="/actions-life-logo.png" alt="actions.life logo" />
 		<div class="app-card-text">
 			<strong>actions.life</strong>
-			<span>Put to-do lists on the calendar.</span>
+			<span class="app-desc"
+				>Put to-do lists on the calendar. Fully using since 2024; currently v2 after 2380
+				commits.</span
+			>
+			<span class="app-status">2022 – current · fully active / usable</span>
 		</div>
 	</a>
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://explanations.io">
+	<a class="app-card app-card-quiet" target="_blank" rel="noopener noreferrer" href="https://explanations.io">
 		<img class="app-card-logo" src="/explanations-logo.png" alt="explanations.io logo" />
 		<div class="app-card-text">
 			<strong>explanations.io</strong>
-			<span>Blackboard-video explanations.</span>
+			<span class="app-desc"
+				>Blackboard-video explanations. Previously explain.mit.edu — ~800 students/teachers across
+				~10 MIT classes during COVID-19.</span
+			>
+			<span class="app-status">2018 (under rework) – current</span>
 		</div>
 	</a>
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://zetteldraw.com">
+	<a class="app-card app-card-quiet" target="_blank" rel="noopener noreferrer" href="https://zetteldraw.com">
 		<img class="app-card-logo" src="/zetteldraw-logo.png" alt="zetteldraw logo" />
 		<div class="app-card-text">
 			<strong>zetteldraw</strong>
-			<span>Handwriting-first notes on a Boox.</span>
+			<span class="app-desc">Handwriting-first notes on a Boox.</span>
+			<span class="app-status">2026 (in private testing) – current</span>
 		</div>
 	</a>
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://zen-message.com">
+	<a class="app-card app-card-quiet" target="_blank" rel="noopener noreferrer" href="https://zen-message.com">
 		<img class="app-card-logo" src="/zen-message-logo.jpg" alt="zen-message logo" />
 		<div class="app-card-text">
 			<strong>zen-message</strong>
-			<span>A calmer, less interruptive messaging system.</span>
+			<span class="app-desc">A calmer, less interruptive messaging system.</span>
+			<span class="app-status">2024 (in development)</span>
 		</div>
 	</a>
 </div>
@@ -39,40 +60,65 @@
 
 <div class="essay-grid">
 	<div class="essay-item">
-		<a
-			class="essay-thumb-link"
-			target="_blank"
-			rel="noopener noreferrer"
-			href="https://www.youtube.com/watch?v=DhyhHdN02xc"
-		>
-			<img
-				class="essay-thumb"
-				src="/notion-essay-thumb.jpg"
-				alt="Beyond the features: what is the point of Notion?"
-			/>
+		<a class="essay-thumb-link" href="/essays/gohs-folly">
+			<picture>
+				<source srcset="/gohs-folly-cover.avif" type="image/avif" />
+				<source srcset="/gohs-folly-cover.webp" type="image/webp" />
+				<img
+					class="essay-thumb"
+					src="/gohs-folly-cover.jpg"
+					alt="Goh's Folly: Seeing What Others Couldn't"
+					loading="lazy"
+					decoding="async"
+				/>
+			</picture>
 		</a>
 		<p class="essay-title">
-			<a target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/watch?v=DhyhHdN02xc">
-				Beyond the features: what is the point of Notion?
-			</a>
+			<a href="/essays/gohs-folly">Goh's Folly: Seeing What Others Couldn't</a>
 		</p>
 		<p class="essay-sentence">
-			Notion's two innovations: navigating your own content freely, and organizing it beyond folders and notes.
+			Sometimes, we have to devote many years of our life into something that might not work - a
+			four-chapter essay on originality, courage, based on Singapore's founding story
 		</p>
 	</div>
 	<div class="essay-item">
-		<div class="essay-thumb essay-thumb-placeholder" aria-hidden="true"></div>
-		<p class="essay-title">Goh's Folly: Seeing What Others Couldn't</p>
+		{#if notionPlaying}
+			<div class="essay-video-frame">
+				<iframe
+					src="https://www.youtube-nocookie.com/embed/DhyhHdN02xc?autoplay=1&rel=0"
+					title="Beyond the features: what is the point of Notion?"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+					allowfullscreen
+				></iframe>
+			</div>
+		{:else}
+			<button
+				type="button"
+				class="essay-thumb-link essay-thumb-link-video"
+				aria-label="Play video: Beyond the features: what is the point of Notion?"
+				on:click={() => (notionPlaying = true)}
+			>
+				<img
+					class="essay-thumb"
+					src="/notion-essay-thumb.jpg"
+					alt="Beyond the features: what is the point of Notion?"
+				/>
+				<span class="essay-play" aria-hidden="true">
+					<svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
+						<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
+					</svg>
+				</span>
+			</button>
+		{/if}
+		<p class="essay-title">Beyond the features: what is the point of Notion?</p>
 		<p class="essay-sentence">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+			True freedom to customize the UI by drag-and-drop, and databases
 		</p>
 	</div>
 	<div class="essay-item">
 		<div class="essay-thumb essay-thumb-placeholder" aria-hidden="true"></div>
 		<p class="essay-title">《童年回憶：拜訪 Nero——忍鬥風雲 2 開發者》</p>
-		<p class="essay-sentence">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud.
-		</p>
+		<p class="essay-sentence">coming soon</p>
 	</div>
 </div>
 
@@ -80,34 +126,22 @@
 
 <div class="music-row">
 	<div class="music-item">
-		<img src="david-goggins.png" alt="David Goggins running" />
-		<div class="music-audio">
-			<audio controls src="chopin-etude-1.mp3" type="audio/mp3"></audio>
+		<div class="music-cover">
+			<img
+				src="https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg"
+				alt="Ghost in a Flower album cover"
+			/>
+			<GlassAudioPlayer src="ghost-in-a-flower.mp3" label="Ghost in a Flower" />
 		</div>
 	</div>
 
 	<div class="music-item">
-		<img
-			src="https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg"
-			alt="Ghost in a Flower album cover"
-		/>
-		<div class="music-audio">
-			<audio controls="true" src="ghost-in-a-flower.mp3" type="audio/mp3"></audio>
-		</div>
-	</div>
-
-	<div class="music-item">
-		<a
-			href="https://www.youtube.com/watch?v=Aa8bXkRsP0A&list=OLAK5uy_lgovKkb1IAMZFrPWYa8_Dh71Kimw5RbjA&index=8"
-			aria-label="All of Me on YouTube"
-		>
+		<div class="music-cover">
 			<img
 				src="https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg"
 				alt="All of Me album cover"
 			/>
-		</a>
-		<div class="music-audio">
-			<audio controls="true" src="all-of-me.mp3" type="audio/mp3"></audio>
+			<GlassAudioPlayer src="all-of-me.mp3" label="All of Me" />
 		</div>
 	</div>
 
@@ -116,26 +150,25 @@
 	</div>
 </div>
 
-<main>
-</main>
+<section class="email-section" aria-labelledby="email-updates-label">
+	<h2 class="section-label" id="email-updates-label">email updates</h2>
+	<SubscribeForm compact />
+</section>
+</div>
+
+<SiteFooter />
 
 <script>
+	import GlassAudioPlayer from '$lib/GlassAudioPlayer.svelte';
+	import HomeAtmosphere from '$lib/HomeAtmosphere.svelte';
+	import SiteFooter from '$lib/SiteFooter.svelte';
+	import SubscribeForm from '$lib/SubscribeForm.svelte';
+
+	let notionPlaying = false;
 </script>
 
 <style>
-	:global(body) {
-		margin: 0;
-		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		font-size: 16px;
-		font-weight: 400;
-		color: #2c2c2c;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-		background: #ffffff;
-		min-height: 100vh;
-	}
-
-	:global(body > div) {
+	.home {
 		width: 100%;
 		max-width: none;
 		padding: 2.25rem 2rem 3.5rem;
@@ -143,11 +176,20 @@
 	}
 
 	.welcome {
-		margin: 0 0 0.15em;
+		margin: 1.35rem 0 0.15em;
 		font-size: 1.05rem;
 		font-weight: 500;
 		color: #2c2c2c;
 		line-height: 1.5;
+	}
+
+	.welcome-sub {
+		margin: 0.35em 0 0;
+		max-width: 34rem;
+		font-size: 0.95rem;
+		font-weight: 400;
+		color: #6a6a6a;
+		line-height: 1.55;
 	}
 
 	.section-label {
@@ -160,7 +202,7 @@
 		line-height: 1.3;
 	}
 
-	.welcome + .section-label {
+	.welcome-sub + .section-label {
 		margin-top: 2em;
 	}
 
@@ -182,12 +224,32 @@
 		color: inherit;
 		box-sizing: border-box;
 		background: transparent;
-		transition: background-color 0.15s ease, border-color 0.15s ease;
+		transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 	}
 
 	.app-card:hover {
 		background: #f7f7f7;
 		border-color: #e0e0e0;
+	}
+
+	.app-card-active {
+		border-color: #d0d0d0;
+		background: #fafafa;
+	}
+
+	.app-card-active:hover {
+		background: #f3f3f3;
+		border-color: #c4c4c4;
+	}
+
+	.app-card-quiet {
+		opacity: 0.62;
+	}
+
+	.app-card-quiet:hover {
+		opacity: 0.78;
+		background: #fafafa;
+		border-color: #ececec;
 	}
 
 	.app-card-logo {
@@ -196,6 +258,10 @@
 		object-fit: cover;
 		flex-shrink: 0;
 		border-radius: 8px;
+	}
+
+	.app-card-quiet .app-card-logo {
+		filter: grayscale(0.35);
 	}
 
 	.app-card-text {
@@ -211,11 +277,32 @@
 		color: #2c2c2c;
 	}
 
-	.app-card-text span {
+	.app-card-active .app-card-text strong {
+		font-weight: 600;
+		color: #1a1a1a;
+	}
+
+	.app-desc {
 		font-size: 0.875rem;
 		color: #6a6a6a;
 		line-height: 1.4;
 		font-weight: 400;
+	}
+
+	.app-card-active .app-desc {
+		color: #4a4a4a;
+	}
+
+	.app-status {
+		font-size: 0.78rem;
+		color: #9a9a9a;
+		line-height: 1.4;
+		font-weight: 400;
+	}
+
+	.app-card-active .app-status {
+		color: #2c2c2c;
+		font-weight: 500;
 	}
 
 	.essay-grid {
@@ -235,6 +322,13 @@
 
 	.essay-thumb-link {
 		display: block;
+		position: relative;
+		width: 100%;
+		padding: 0;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		text-align: left;
 	}
 
 	.essay-thumb {
@@ -245,10 +339,67 @@
 		border-radius: 8px;
 	}
 
+	.essay-video-frame {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		border-radius: 8px;
+		overflow: hidden;
+		background: #111;
+	}
+
+	.essay-video-frame iframe {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+
+	.essay-play {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 3rem;
+		height: 3rem;
+		border-radius: 999px;
+		background: rgba(20, 20, 20, 0.72);
+		color: #fff;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		pointer-events: none;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+	}
+
+	.essay-play svg {
+		display: block;
+		margin-left: 2px;
+	}
+
+	.essay-thumb-link-video:hover .essay-play {
+		background: rgba(20, 20, 20, 0.86);
+	}
+
 	.essay-thumb-placeholder {
 		background: #e8e8e8;
 		border: 1px solid #ececec;
 		box-sizing: border-box;
+	}
+
+	.essay-thumb-written {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #fafafa;
+	}
+
+	.essay-thumb-written span {
+		font-size: 0.8rem;
+		font-weight: 500;
+		color: #6a6a6a;
+		letter-spacing: 0.02em;
 	}
 
 	.essay-title {
@@ -279,7 +430,7 @@
 	.music-row {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px;
+		gap: 12px;
 		margin: 0 0 2rem;
 		align-items: flex-start;
 	}
@@ -289,15 +440,25 @@
 		flex-shrink: 0;
 	}
 
-	.music-item img {
-		display: block;
+	.music-cover {
+		position: relative;
 		width: 200px;
-		height: auto;
+		height: 200px;
+		border-radius: 10px;
+		overflow: hidden;
+		background: transparent;
+		transform: translateZ(0);
+		-webkit-mask-image: -webkit-radial-gradient(white, black);
+		mask-image: radial-gradient(white, black);
 	}
 
-	.music-audio audio {
-		width: 200px;
+	.music-cover img {
 		display: block;
+		width: 200px;
+		height: 200px;
+		object-fit: cover;
+		object-position: center;
+		border-radius: 10px;
 	}
 
 	.bach-cover {
@@ -305,7 +466,7 @@
 		height: 200px;
 		box-sizing: border-box;
 		border: 1px solid #ececec;
-		border-radius: 8px;
+		border-radius: 10px;
 		background: #fafafa;
 		display: flex;
 		align-items: center;
@@ -317,6 +478,12 @@
 		font-weight: 400;
 		font-size: 0.95rem;
 		flex-shrink: 0;
+	}
+
+	.email-section {
+		margin-top: 0.5rem;
+		padding-top: 0.25rem;
+		max-width: 36rem;
 	}
 
 	@media (max-width: 900px) {
