@@ -111,9 +111,7 @@
 				src="https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg"
 				alt="Ghost in a Flower album cover"
 			/>
-			<div class="music-audio">
-				<audio controls src="ghost-in-a-flower.mp3" type="audio/mp3"></audio>
-			</div>
+			<GlassAudioPlayer src="ghost-in-a-flower.mp3" label="Ghost in a Flower" />
 		</div>
 	</div>
 
@@ -129,9 +127,7 @@
 					alt="All of Me album cover"
 				/>
 			</a>
-			<div class="music-audio">
-				<audio controls src="all-of-me.mp3" type="audio/mp3"></audio>
-			</div>
+			<GlassAudioPlayer src="all-of-me.mp3" label="All of Me" />
 		</div>
 	</div>
 
@@ -147,6 +143,7 @@
 </div>
 
 <script>
+	import GlassAudioPlayer from '$lib/GlassAudioPlayer.svelte';
 	import SubscribeForm from '$lib/SubscribeForm.svelte';
 
 	let notionPlaying = false;
@@ -390,29 +387,6 @@
 		width: 100%;
 		aspect-ratio: 1 / 1;
 		object-fit: cover;
-	}
-
-	.music-audio {
-		position: absolute;
-		left: 8px;
-		right: 8px;
-		bottom: 8px;
-		z-index: 2;
-		padding: 5px 7px;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.34);
-		border: 1px solid rgba(255, 255, 255, 0.55);
-		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-		backdrop-filter: blur(16px) saturate(1.35);
-		-webkit-backdrop-filter: blur(16px) saturate(1.35);
-		box-sizing: border-box;
-	}
-
-	.music-audio audio {
-		width: 100%;
-		height: 28px;
-		display: block;
-		opacity: 0.92;
 	}
 
 	.bach-cover {
