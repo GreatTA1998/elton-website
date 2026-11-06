@@ -143,7 +143,6 @@
 			type="email"
 			name="email"
 			autocomplete="email"
-			placeholder="you@example.com"
 			bind:value={email}
 			required
 			disabled={status === 'submitting' || status === 'success'}
