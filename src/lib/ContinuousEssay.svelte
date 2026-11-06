@@ -776,15 +776,15 @@
 		width: 100%;
 		max-width: 100%;
 		padding: 1.15rem 1.25rem;
-		color: #2c2c2c;
+		color: #1f1f1f;
 		text-decoration: none;
 		overflow-wrap: anywhere;
 		word-break: break-word;
 		box-sizing: border-box;
 		min-width: 0;
-		border: 1px solid #e4e4e4;
+		border: 1px solid #d6d6d6;
 		border-radius: 10px;
-		background: #fafafa;
+		background: #fff;
 		transition: background-color 0.15s ease, border-color 0.15s ease;
 	}
 
@@ -794,8 +794,8 @@
 	}
 
 	a.nav-link:hover {
-		background: #f3f3f3;
-		border-color: #d4d4d4;
+		background: #f7f7f7;
+		border-color: #bdbdbd;
 	}
 
 	a.nav-link:hover .nav-kicker,
@@ -813,10 +813,10 @@
 	}
 
 	.nav-kicker {
-		font-size: 0.92rem;
-		letter-spacing: 0.02em;
+		font-size: 0.95rem;
+		letter-spacing: 0.01em;
 		text-transform: none;
-		color: #5a5a5a;
+		color: #2c2c2c;
 		font-weight: 500;
 	}
 
@@ -826,10 +826,10 @@
 
 	.nav-title,
 	.nav-soon {
-		font-size: 1.2rem;
+		font-size: 1.22rem;
 		line-height: 1.35;
-		color: inherit;
-		font-weight: 500;
+		color: #1a1a1a;
+		font-weight: 600;
 	}
 
 	.nav-soon {
