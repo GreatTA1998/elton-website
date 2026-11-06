@@ -19,6 +19,9 @@ const redirects = {
 	'courage-to-be-blasphemous': `/essays/${SERIES_SLUGS.chapter3}`
 };
 
+// Note: `/essays/gohs-folly` is the series intro route (gohs-folly.svelte),
+// not ContinuousEssay. Preface reading lives at SERIES_SLUGS.preface.
+
 /**
  * @param {string} slug
  */

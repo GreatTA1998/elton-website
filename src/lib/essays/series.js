@@ -2,9 +2,11 @@
 
 export const SERIES_TITLE = "Goh's Folly: Seeing What Others Couldn't";
 export const SERIES_CHAPTER_COUNT = 4;
+/** Dedicated intro / chapters index (not ContinuousEssay). */
+export const SERIES_INTRO_PATH = '/essays/gohs-folly';
 
 export const SERIES_SLUGS = {
-	preface: 'gohs-folly',
+	preface: 'gohs-folly-preface',
 	chapter1: 'gohs-folly-1',
 	chapter2: 'gohs-folly-2',
 	chapter3: 'gohs-folly-3',
@@ -19,12 +21,46 @@ export const SERIES_TITLES = {
 	chapter4: 'Acting with courage'
 };
 
+/** Preface + four chapters for the series intro page. */
+export const SERIES_PARTS = [
+	{
+		id: 'preface',
+		label: 'Preface',
+		title: SERIES_TITLES.preface,
+		href: `/essays/${SERIES_SLUGS.preface}`
+	},
+	{
+		id: 'chapter1',
+		label: 'Chapter 1',
+		title: SERIES_TITLES.chapter1,
+		href: `/essays/${SERIES_SLUGS.chapter1}`
+	},
+	{
+		id: 'chapter2',
+		label: 'Chapter 2',
+		title: SERIES_TITLES.chapter2,
+		href: `/essays/${SERIES_SLUGS.chapter2}`
+	},
+	{
+		id: 'chapter3',
+		label: 'Chapter 3',
+		title: SERIES_TITLES.chapter3,
+		href: `/essays/${SERIES_SLUGS.chapter3}`
+	},
+	{
+		id: 'chapter4',
+		label: 'Chapter 4',
+		title: SERIES_TITLES.chapter4,
+		href: `/essays/${SERIES_SLUGS.chapter4}`
+	}
+];
+
 /**
  * @param {'preface' | 1 | 2 | 3 | 4} part
  * @returns {import('./types').EssaySeries}
  */
 export function seriesMeta(part) {
-	const href = `/essays/${SERIES_SLUGS.preface}`;
+	const href = SERIES_INTRO_PATH;
 
 	if (part === 'preface') {
 		return {
