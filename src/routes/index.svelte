@@ -6,32 +6,37 @@
 <h2 class="section-label">software apps</h2>
 
 <div class="app-cards">
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://actions.life">
+	<a
+		class="app-card app-card-active"
+		target="_blank"
+		rel="noopener noreferrer"
+		href="https://actions.life"
+	>
 		<img class="app-card-logo" src="/actions-life-logo.png" alt="actions.life logo" />
 		<div class="app-card-text">
 			<strong>actions.life</strong>
-			<span>2022 – current (fully active)</span>
+			<span class="app-status">2022 – current · fully active / usable</span>
 		</div>
 	</a>
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://explanations.io">
+	<a class="app-card app-card-quiet" target="_blank" rel="noopener noreferrer" href="https://explanations.io">
 		<img class="app-card-logo" src="/explanations-logo.png" alt="explanations.io logo" />
 		<div class="app-card-text">
 			<strong>explanations.io</strong>
-			<span>2018 (in development) – current</span>
+			<span class="app-status">2018 (under rework) – current</span>
 		</div>
 	</a>
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://zetteldraw.com">
+	<a class="app-card app-card-quiet" target="_blank" rel="noopener noreferrer" href="https://zetteldraw.com">
 		<img class="app-card-logo" src="/zetteldraw-logo.png" alt="zetteldraw logo" />
 		<div class="app-card-text">
 			<strong>zetteldraw</strong>
-			<span>2026 (in private testing) – current</span>
+			<span class="app-status">2026 (in private testing) – current</span>
 		</div>
 	</a>
-	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://zen-message.com">
+	<a class="app-card app-card-quiet" target="_blank" rel="noopener noreferrer" href="https://zen-message.com">
 		<img class="app-card-logo" src="/zen-message-logo.jpg" alt="zen-message logo" />
 		<div class="app-card-text">
 			<strong>zen-message</strong>
-			<span>2024 (in development)</span>
+			<span class="app-status">2024 (in development)</span>
 		</div>
 	</a>
 </div>
@@ -197,12 +202,32 @@
 		color: inherit;
 		box-sizing: border-box;
 		background: transparent;
-		transition: background-color 0.15s ease, border-color 0.15s ease;
+		transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 	}
 
 	.app-card:hover {
 		background: #f7f7f7;
 		border-color: #e0e0e0;
+	}
+
+	.app-card-active {
+		border-color: #d0d0d0;
+		background: #fafafa;
+	}
+
+	.app-card-active:hover {
+		background: #f3f3f3;
+		border-color: #c4c4c4;
+	}
+
+	.app-card-quiet {
+		opacity: 0.62;
+	}
+
+	.app-card-quiet:hover {
+		opacity: 0.78;
+		background: #fafafa;
+		border-color: #ececec;
 	}
 
 	.app-card-logo {
@@ -211,6 +236,10 @@
 		object-fit: cover;
 		flex-shrink: 0;
 		border-radius: 8px;
+	}
+
+	.app-card-quiet .app-card-logo {
+		filter: grayscale(0.35);
 	}
 
 	.app-card-text {
@@ -226,11 +255,21 @@
 		color: #2c2c2c;
 	}
 
-	.app-card-text span {
-		font-size: 0.875rem;
-		color: #6a6a6a;
+	.app-card-active .app-card-text strong {
+		font-weight: 600;
+		color: #1a1a1a;
+	}
+
+	.app-status {
+		font-size: 0.82rem;
+		color: #8a8a8a;
 		line-height: 1.4;
 		font-weight: 400;
+	}
+
+	.app-card-active .app-status {
+		color: #2c2c2c;
+		font-weight: 500;
 	}
 
 	.essay-grid {
