@@ -14,7 +14,7 @@
 	<p class="back"><a href="/">← Home</a></p>
 
 	<div class="lead">
-		<a class="cover-link" href={SERIES_PARTS[0].href}>
+		<div class="cover-wrap">
 			<picture>
 				<source srcset="/gohs-folly-cover.avif" type="image/avif" />
 				<source srcset="/gohs-folly-cover.webp" type="image/webp" />
@@ -27,7 +27,7 @@
 					decoding="async"
 				/>
 			</picture>
-		</a>
+		</div>
 
 		<div class="copy">
 			<h1 class="title">{SERIES_TITLE}</h1>
@@ -38,8 +38,8 @@
 		</div>
 	</div>
 
-	<ol class="chapters" aria-label="Chapters">
-		{#each SERIES_PARTS as part, index (part.id)}
+	<ol class="chapters" aria-label="Preface and chapters">
+		{#each SERIES_PARTS as part (part.id)}
 			<li>
 				<a class="chapter" href={part.href}>
 					<span class="chapter-label">{part.label}</span>
@@ -80,7 +80,7 @@
 		margin: 0 0 2rem;
 	}
 
-	.cover-link {
+	.cover-wrap {
 		display: block;
 		width: min(100%, 22rem);
 		line-height: 0;

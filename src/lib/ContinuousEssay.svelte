@@ -102,7 +102,8 @@
 		typeof series.chapter === 'number' &&
 		series.chapterCount &&
 		series.chapter >= series.chapterCount;
-	$: showSeriesOpener = Boolean(series && series.part === 'preface');
+	/* Intro page owns series title + cover. Preface is its own reading start. */
+	$: showSeriesOpener = false;
 </script>
 
 <article class="essay" style="--essay-scale: {fontScale}">
