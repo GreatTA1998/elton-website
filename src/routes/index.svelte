@@ -106,27 +106,32 @@
 
 <div class="music-row">
 	<div class="music-item">
-		<img
-			src="https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg"
-			alt="Ghost in a Flower album cover"
-		/>
-		<div class="music-audio">
-			<audio controls="true" src="ghost-in-a-flower.mp3" type="audio/mp3"></audio>
+		<div class="music-cover">
+			<img
+				src="https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg"
+				alt="Ghost in a Flower album cover"
+			/>
+			<div class="music-audio">
+				<audio controls src="ghost-in-a-flower.mp3" type="audio/mp3"></audio>
+			</div>
 		</div>
 	</div>
 
 	<div class="music-item">
-		<a
-			href="https://www.youtube.com/watch?v=Aa8bXkRsP0A&list=OLAK5uy_lgovKkb1IAMZFrPWYa8_Dh71Kimw5RbjA&index=8"
-			aria-label="All of Me on YouTube"
-		>
-			<img
-				src="https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg"
-				alt="All of Me album cover"
-			/>
-		</a>
-		<div class="music-audio">
-			<audio controls="true" src="all-of-me.mp3" type="audio/mp3"></audio>
+		<div class="music-cover">
+			<a
+				class="music-cover-link"
+				href="https://www.youtube.com/watch?v=Aa8bXkRsP0A&list=OLAK5uy_lgovKkb1IAMZFrPWYa8_Dh71Kimw5RbjA&index=8"
+				aria-label="All of Me on YouTube"
+			>
+				<img
+					src="https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg"
+					alt="All of Me album cover"
+				/>
+			</a>
+			<div class="music-audio">
+				<audio controls src="all-of-me.mp3" type="audio/mp3"></audio>
+			</div>
 		</div>
 	</div>
 
@@ -356,7 +361,7 @@
 	.music-row {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px;
+		gap: 12px;
 		margin: 0 0 2rem;
 		align-items: flex-start;
 	}
@@ -366,15 +371,48 @@
 		flex-shrink: 0;
 	}
 
-	.music-item img {
-		display: block;
+	.music-cover {
+		position: relative;
 		width: 200px;
-		height: auto;
+		border-radius: 10px;
+		overflow: hidden;
+		isolation: isolate;
+		background: #f0f0f0;
+	}
+
+	.music-cover-link {
+		display: block;
+		line-height: 0;
+	}
+
+	.music-cover img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		object-fit: cover;
+	}
+
+	.music-audio {
+		position: absolute;
+		left: 8px;
+		right: 8px;
+		bottom: 8px;
+		z-index: 2;
+		padding: 5px 7px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.34);
+		border: 1px solid rgba(255, 255, 255, 0.55);
+		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+		backdrop-filter: blur(16px) saturate(1.35);
+		-webkit-backdrop-filter: blur(16px) saturate(1.35);
+		box-sizing: border-box;
 	}
 
 	.music-audio audio {
-		width: 200px;
+		width: 100%;
+		height: 28px;
 		display: block;
+		opacity: 0.92;
 	}
 
 	.bach-cover {
@@ -382,7 +420,7 @@
 		height: 200px;
 		box-sizing: border-box;
 		border: 1px solid #ececec;
-		border-radius: 8px;
+		border-radius: 10px;
 		background: #fafafa;
 		display: flex;
 		align-items: center;
