@@ -34,7 +34,7 @@
  *   note?: string
  * }} EssayFurtherReadingItem
  * @typedef {{
- *   intro: string,
+ *   label: string,
  *   items: EssayFurtherReadingItem[]
  * }} EssayFurtherReading
  * @typedef {{

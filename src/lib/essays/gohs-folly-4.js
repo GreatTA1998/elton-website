@@ -14,16 +14,14 @@ const essay = {
 		href: `/essays/${SERIES_SLUGS.chapter3}`
 	},
 	furtherReading: {
-		intro:
-			'If any of this stayed with you, these are what shaped the essay — worth a look sometime, no rush:',
+		label: 'Original material',
 		items: [
 			{
-				label: 'Lee Kuan Yew’s books: “A Memoir” and “From Third World to First”'
+				label: 'Lee Kuan Yew — “A Memoir” and “From Third World to First”'
 			},
 			{
-				label: 'CNA’s “Separation: Declassified”',
-				href: 'https://www.youtube.com/watch?v=mwG-Dp00sDY',
-				note: 'on YouTube'
+				label: 'CNA — “Separation: Declassified”',
+				href: 'https://www.youtube.com/watch?v=mwG-Dp00sDY'
 			}
 		]
 	},

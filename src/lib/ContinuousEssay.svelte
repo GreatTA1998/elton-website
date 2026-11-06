@@ -295,14 +295,14 @@
 			<p class="series-end-mark">The end</p>
 			{#if essay.furtherReading}
 				<div class="further-reading">
-					<p class="further-intro">{essay.furtherReading.intro}</p>
+					<p class="further-label">{essay.furtherReading.label}</p>
 					<ul class="further-list">
 						{#each essay.furtherReading.items as item, itemIndex (itemIndex)}
 							<li>
 								{#if item.href}
 									<a href={item.href} target="_blank" rel="noopener noreferrer"
 										>{item.label}</a
-									>{#if item.note}<span class="further-note"> — {item.note}</span>{/if}
+									>
 								{:else}
 									{item.label}
 								{/if}
@@ -724,11 +724,14 @@
 		max-width: min(36rem, 100%);
 	}
 
-	.further-intro {
-		margin: 0 0 0.65rem;
-		font-size: calc(0.88rem * var(--essay-scale));
-		line-height: 1.55;
-		color: #7a7a7a;
+	.further-label {
+		margin: 0 0 0.55rem;
+		font-size: calc(0.72rem * var(--essay-scale));
+		line-height: 1.4;
+		letter-spacing: 0.03em;
+		text-transform: uppercase;
+		color: #9a9a9a;
+		font-weight: 500;
 	}
 
 	.further-list {
@@ -758,10 +761,6 @@
 	.further-list a:hover {
 		color: #2c2c2c;
 		text-decoration-color: #9a9a9a;
-	}
-
-	.further-note {
-		color: #9a9a9a;
 	}
 
 	.nav-link {
