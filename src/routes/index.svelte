@@ -20,7 +20,10 @@
 		<img class="app-card-logo" src="/actions-life-logo.png" alt="actions.life logo" />
 		<div class="app-card-text">
 			<strong>actions.life</strong>
-			<span class="app-desc">Put to-do lists on the calendar.</span>
+			<span class="app-desc"
+				>Put to-do lists on the calendar. Fully using since 2024; currently v2 after 2380 commits;
+				total LOC under 10,000.</span
+			>
 			<span class="app-status">2022 – current · fully active / usable</span>
 		</div>
 	</a>
