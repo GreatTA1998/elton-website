@@ -91,12 +91,12 @@
 		on:click={togglePlay}
 	>
 		{#if playing}
-			<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+			<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
 				<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" />
 				<rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
 			</svg>
 		{:else}
-			<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+			<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
 				<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
 			</svg>
 		{/if}
@@ -121,34 +121,34 @@
 <style>
 	.glass-player {
 		position: absolute;
-		left: 8px;
-		right: 8px;
-		bottom: 8px;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		z-index: 2;
 		display: flex;
 		align-items: center;
-		gap: 10px;
-		padding: 8px 12px 8px 11px;
-		border-radius: 999px;
+		gap: 8px;
+		padding: 4px 10px;
+		min-height: 0;
+		border-radius: 0 0 10px 10px;
 		background: linear-gradient(
 			180deg,
-			rgba(255, 255, 255, 0.28) 0%,
-			rgba(255, 255, 255, 0.14) 100%
+			rgba(255, 255, 255, 0.22) 0%,
+			rgba(255, 255, 255, 0.12) 100%
 		);
-		border: 1px solid rgba(255, 255, 255, 0.48);
-		box-shadow:
-			inset 0 1px 0 rgba(255, 255, 255, 0.45),
-			0 8px 20px rgba(0, 0, 0, 0.12);
-		backdrop-filter: blur(18px) saturate(1.4);
-		-webkit-backdrop-filter: blur(18px) saturate(1.4);
+		border: none;
+		border-top: 1px solid rgba(255, 255, 255, 0.42);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+		backdrop-filter: blur(16px) saturate(1.35);
+		-webkit-backdrop-filter: blur(16px) saturate(1.35);
 		box-sizing: border-box;
 	}
 
 	.play-btn {
 		appearance: none;
 		flex: 0 0 auto;
-		width: 22px;
-		height: 22px;
+		width: 16px;
+		height: 16px;
 		margin: 0;
 		padding: 0;
 		border: none;
@@ -174,7 +174,7 @@
 	.scrub {
 		flex: 1 1 auto;
 		min-width: 0;
-		height: 22px;
+		height: 16px;
 		display: flex;
 		align-items: center;
 		cursor: pointer;
@@ -184,7 +184,7 @@
 	.scrub-track {
 		position: relative;
 		width: 100%;
-		height: 4px;
+		height: 3px;
 		border-radius: 999px;
 		background: rgba(255, 255, 255, 0.28);
 		overflow: hidden;
