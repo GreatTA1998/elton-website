@@ -38,7 +38,18 @@ const essay = {
 				},
 				{
 					type: 'p',
-					text: 'Ideology can induce lazy thinking. To see elegant ideas as true without wanting the inconvenience of engaging and debugging reality. If it’s inevitable that we take certain words as gospel, then equally, we must have the courage to be blasphemous sometimes, letting reality be the guiding star.'
+					parts: [
+						{
+							text: 'Ideology can induce lazy thinking. To see elegant ideas as true without wanting the inconvenience of engaging and debugging reality. If it’s inevitable that we take certain words as gospel, then equally, '
+						},
+						{
+							text: 'we must have the courage to be blasphemous sometimes',
+							highlight: true
+						},
+						{
+							text: ', letting reality be the guiding star.'
+						}
+					]
 				},
 				{
 					type: 'image',

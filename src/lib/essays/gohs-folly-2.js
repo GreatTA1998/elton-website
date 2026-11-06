@@ -40,7 +40,15 @@ const essay = {
 				},
 				{
 					type: 'p',
-					text: 'It is this confluence of perspectives that lead to a more complete picture of reality, and what to do to change it.'
+					parts: [
+						{
+							text: 'It is this confluence of perspectives that lead to a more complete picture of reality',
+							highlight: true
+						},
+						{
+							text: ', and what to do to change it.'
+						}
+					]
 				},
 				{
 					type: 'image',
