@@ -41,16 +41,22 @@
 <div class="essay-grid">
 	<div class="essay-item">
 		<a
-			class="essay-thumb-link"
+			class="essay-thumb-link essay-thumb-link-video"
 			target="_blank"
 			rel="noopener noreferrer"
 			href="https://www.youtube.com/watch?v=DhyhHdN02xc"
+			aria-label="Watch video: Beyond the features: what is the point of Notion?"
 		>
 			<img
 				class="essay-thumb"
 				src="/notion-essay-thumb.jpg"
 				alt="Beyond the features: what is the point of Notion?"
 			/>
+			<span class="essay-play" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
+					<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
+				</svg>
+			</span>
 		</a>
 		<p class="essay-title">
 			<a target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/watch?v=DhyhHdN02xc">
@@ -239,6 +245,7 @@
 
 	.essay-thumb-link {
 		display: block;
+		position: relative;
 	}
 
 	.essay-thumb {
@@ -247,6 +254,36 @@
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
 		border-radius: 8px;
+	}
+
+	.essay-thumb-link-video .essay-thumb {
+		display: block;
+	}
+
+	.essay-play {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 3rem;
+		height: 3rem;
+		border-radius: 999px;
+		background: rgba(20, 20, 20, 0.72);
+		color: #fff;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		pointer-events: none;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+	}
+
+	.essay-play svg {
+		display: block;
+		margin-left: 2px;
+	}
+
+	.essay-thumb-link-video:hover .essay-play {
+		background: rgba(20, 20, 20, 0.86);
 	}
 
 	.essay-thumb-placeholder {
