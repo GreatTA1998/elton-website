@@ -84,36 +84,40 @@
 		on:timeupdate={onTimeUpdate}
 	></audio>
 
-	<button
-		type="button"
-		class="play-btn"
-		aria-label={playing ? `Pause ${label}` : `Play ${label}`}
-		on:click={togglePlay}
-	>
-		{#if playing}
-			<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-				<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" />
-				<rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
-			</svg>
-		{:else}
-			<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-				<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
-			</svg>
-		{/if}
-	</button>
+	<div class="glass-fade" aria-hidden="true"></div>
 
-	<div
-		class="scrub"
-		role="slider"
-		tabindex="0"
-		aria-label={`${label} progress`}
-		aria-valuemin="0"
-		aria-valuemax="100"
-		aria-valuenow={Math.round(progress * 100)}
-		on:pointerdown={onScrubPointerDown}
-	>
-		<div class="scrub-track">
-			<div class="scrub-fill" style={`width: ${progress * 100}%`}></div>
+	<div class="glass-controls">
+		<button
+			type="button"
+			class="play-btn"
+			aria-label={playing ? `Pause ${label}` : `Play ${label}`}
+			on:click={togglePlay}
+		>
+			{#if playing}
+				<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+					<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" />
+					<rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
+				</svg>
+			{:else}
+				<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+					<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
+				</svg>
+			{/if}
+		</button>
+
+		<div
+			class="scrub"
+			role="slider"
+			tabindex="0"
+			aria-label={`${label} progress`}
+			aria-valuemin="0"
+			aria-valuemax="100"
+			aria-valuenow={Math.round(progress * 100)}
+			on:pointerdown={onScrubPointerDown}
+		>
+			<div class="scrub-track">
+				<div class="scrub-fill" style={`width: ${progress * 100}%`}></div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -125,37 +129,58 @@
 		right: 0;
 		bottom: 0;
 		z-index: 2;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 18px 10px 5px;
-		min-height: 0;
+		padding: 0;
+		border: none;
 		border-radius: 0 0 10px 10px;
+		background: transparent;
+		box-shadow: none;
+		overflow: hidden;
+		box-sizing: border-box;
+		pointer-events: none;
+	}
+
+	.glass-fade {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 58%;
+		pointer-events: none;
 		background: linear-gradient(
 			180deg,
-			rgba(255, 255, 255, 0) 0%,
-			rgba(255, 255, 255, 0.04) 42%,
-			rgba(255, 255, 255, 0.14) 100%
+			rgba(0, 0, 0, 0) 0%,
+			rgba(0, 0, 0, 0.08) 48%,
+			rgba(0, 0, 0, 0.28) 100%
 		);
-		border: none;
-		box-shadow: none;
-		backdrop-filter: blur(3px) saturate(1.08);
-		-webkit-backdrop-filter: blur(3px) saturate(1.08);
+		backdrop-filter: blur(2px);
+		-webkit-backdrop-filter: blur(2px);
 		-webkit-mask-image: linear-gradient(
 			to bottom,
 			transparent 0%,
-			rgba(0, 0, 0, 0.55) 28%,
-			#000 52%,
+			rgba(0, 0, 0, 0.35) 34%,
+			#000 72%,
 			#000 100%
 		);
 		mask-image: linear-gradient(
 			to bottom,
 			transparent 0%,
-			rgba(0, 0, 0, 0.55) 28%,
-			#000 52%,
+			rgba(0, 0, 0, 0.35) 34%,
+			#000 72%,
 			#000 100%
 		);
-		box-sizing: border-box;
+	}
+
+	.glass-controls {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 22px 10px 6px;
+		background: transparent;
+		border: none;
+		box-shadow: none;
+		pointer-events: auto;
 	}
 
 	.play-btn {
@@ -174,6 +199,7 @@
 		justify-content: center;
 		cursor: pointer;
 		box-shadow: none;
+		filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
 	}
 
 	.play-btn:hover {
@@ -201,7 +227,7 @@
 		width: 100%;
 		height: 3px;
 		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.26);
+		background: rgba(255, 255, 255, 0.28);
 		overflow: hidden;
 		box-shadow: none;
 	}
@@ -209,7 +235,7 @@
 	.scrub-fill {
 		height: 100%;
 		border-radius: inherit;
-		background: rgba(255, 255, 255, 0.92);
+		background: rgba(255, 255, 255, 0.95);
 		box-shadow: none;
 	}
 </style>
