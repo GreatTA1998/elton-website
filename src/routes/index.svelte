@@ -126,16 +126,10 @@
 
 	<div class="music-item">
 		<div class="music-cover">
-			<a
-				class="music-cover-link"
-				href="https://www.youtube.com/watch?v=Aa8bXkRsP0A&list=OLAK5uy_lgovKkb1IAMZFrPWYa8_Dh71Kimw5RbjA&index=8"
-				aria-label="All of Me on YouTube"
-			>
-				<img
-					src="https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg"
-					alt="All of Me album cover"
-				/>
-			</a>
+			<img
+				src="https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg"
+				alt="All of Me album cover"
+			/>
 			<GlassAudioPlayer src="all-of-me.mp3" label="All of Me" />
 		</div>
 	</div>
@@ -432,15 +426,6 @@
 		transform: translateZ(0);
 		-webkit-mask-image: -webkit-radial-gradient(white, black);
 		mask-image: radial-gradient(white, black);
-	}
-
-	.music-cover-link {
-		display: block;
-		width: 100%;
-		height: 100%;
-		line-height: 0;
-		border-radius: 10px;
-		overflow: hidden;
 	}
 
 	.music-cover img {

@@ -84,6 +84,13 @@
 		on:timeupdate={onTimeUpdate}
 	></audio>
 
+	<button
+		type="button"
+		class="cover-hit"
+		aria-label={playing ? `Pause ${label}` : `Play ${label}`}
+		on:click={togglePlay}
+	></button>
+
 	<div class="glass-fade" aria-hidden="true"></div>
 
 	<div class="glass-controls">
@@ -91,7 +98,7 @@
 			type="button"
 			class="play-btn"
 			aria-label={playing ? `Pause ${label}` : `Play ${label}`}
-			on:click={togglePlay}
+			on:click|stopPropagation={togglePlay}
 		>
 			{#if playing}
 				<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
@@ -125,18 +132,30 @@
 <style>
 	.glass-player {
 		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 0;
+		inset: 0;
 		z-index: 2;
 		padding: 0;
 		border: none;
-		border-radius: 0 0 10px 10px;
+		border-radius: 10px;
 		background: transparent;
 		box-shadow: none;
 		overflow: hidden;
 		box-sizing: border-box;
 		pointer-events: none;
+	}
+
+	.cover-hit {
+		appearance: none;
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		margin: 0;
+		padding: 0;
+		border: none;
+		border-radius: inherit;
+		background: transparent;
+		cursor: pointer;
+		pointer-events: auto;
 	}
 
 	.glass-fade {
@@ -171,7 +190,10 @@
 	}
 
 	.glass-controls {
-		position: relative;
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		z-index: 1;
 		display: flex;
 		align-items: center;
