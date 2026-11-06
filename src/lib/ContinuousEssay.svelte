@@ -441,13 +441,13 @@
 	}
 
 	.font-choice.size-default {
-		font-size: 0.68rem;
+		font-size: 0.82rem;
 		border-radius: 8px 0 0 8px;
 		border-right-width: 0;
 	}
 
 	.font-choice.size-large {
-		font-size: 1.2rem;
+		font-size: 1.38rem;
 		border-radius: 0 8px 8px 0;
 	}
 
