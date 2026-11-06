@@ -150,9 +150,12 @@
 </section>
 </div>
 
+<SiteFooter />
+
 <script>
 	import GlassAudioPlayer from '$lib/GlassAudioPlayer.svelte';
 	import HomeAtmosphere from '$lib/HomeAtmosphere.svelte';
+	import SiteFooter from '$lib/SiteFooter.svelte';
 	import SubscribeForm from '$lib/SubscribeForm.svelte';
 
 	let notionPlaying = false;

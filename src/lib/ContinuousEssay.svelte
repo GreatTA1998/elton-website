@@ -79,7 +79,7 @@
 	$: nextChapter = essay.nextChapter || null;
 	$: nextHref = nextChapter && nextChapter.href ? nextChapter.href : '';
 	$: nextEnabled = Boolean(nextHref);
-	$: nextLabel = 'Next chapter →';
+	$: nextLabel = '→ Next chapter';
 	$: hasSeriesNav = Boolean(nextChapter);
 	$: isSeriesEnd =
 		Boolean(series) &&

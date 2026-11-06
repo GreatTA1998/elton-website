@@ -1,20 +1,10 @@
 <script>
-	import { page } from '$app/stores';
 	import CompactMusicPlayer from '$lib/CompactMusicPlayer.svelte';
-	import SiteFooter from '$lib/SiteFooter.svelte';
-
-	$: essayPath = ($page.url && $page.url.pathname) || $page.path || '';
-	$: onEssayReading =
-		essayPath.startsWith('/essays/') && essayPath !== '/essays/gohs-folly';
 </script>
 
 <CompactMusicPlayer />
 
 <slot />
-
-{#if !onEssayReading}
-	<SiteFooter />
-{/if}
 
 <style>
 	:global(body) {

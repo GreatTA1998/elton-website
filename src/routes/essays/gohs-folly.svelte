@@ -1,4 +1,5 @@
 <script>
+	import SiteFooter from '$lib/SiteFooter.svelte';
 	import { SERIES_PARTS, SERIES_TITLE } from '$lib/essays/series.js';
 </script>
 
@@ -49,6 +50,8 @@
 		{/each}
 	</ol>
 </div>
+
+<SiteFooter />
 
 <style>
 	.intro {

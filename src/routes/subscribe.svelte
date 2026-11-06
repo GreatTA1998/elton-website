@@ -1,4 +1,5 @@
 <script>
+	import SiteFooter from '$lib/SiteFooter.svelte';
 	import SubscribeForm from '$lib/SubscribeForm.svelte';
 </script>
 
@@ -17,6 +18,8 @@
 
 	<SubscribeForm />
 </div>
+
+<SiteFooter />
 
 <style>
 	.page {
