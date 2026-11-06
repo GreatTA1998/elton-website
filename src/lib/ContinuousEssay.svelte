@@ -75,17 +75,12 @@
 				: `Chapter ${series.chapter}`
 		: '';
 	$: seriesLabel = series ? `${series.title} · ${seriesChapterLabel}` : '';
-	$: prevChapter = essay.prevChapter || null;
-	$: prevHref = prevChapter && prevChapter.href ? prevChapter.href : '';
-	$: prevEnabled = Boolean(prevHref);
-	$: prevLabel = (prevChapter && prevChapter.label) || 'Previous';
-	$: prevTitle = (prevChapter && prevChapter.title) || '';
 	$: nextChapter = essay.nextChapter || null;
 	$: nextHref = nextChapter && nextChapter.href ? nextChapter.href : '';
 	$: nextEnabled = Boolean(nextHref);
 	$: nextLabel = (nextChapter && nextChapter.label) || 'Next chapter';
 	$: nextTitle = (nextChapter && nextChapter.title) || '';
-	$: hasSeriesNav = Boolean(prevChapter || nextChapter);
+	$: hasSeriesNav = Boolean(nextChapter);
 </script>
 
 <article class="essay" style="--essay-scale: {fontScale}">
@@ -220,44 +215,22 @@
 
 	{#if hasSeriesNav}
 		<nav class="chapter-nav" aria-label="Series navigation">
-			{#if prevChapter}
-				{#if prevEnabled}
-					<a class="nav-link prev" href={prevHref}>
-						<span class="nav-kicker">{prevLabel}</span>
-						{#if prevTitle}
-							<span class="nav-title">{prevTitle}</span>
-						{/if}
-					</a>
-				{:else}
-					<span class="nav-link prev is-disabled" aria-disabled="true">
-						<span class="nav-kicker">{prevLabel}</span>
-						{#if prevTitle}
-							<span class="nav-title">{prevTitle}</span>
-						{/if}
-					</span>
-				{/if}
+			{#if nextEnabled}
+				<a class="nav-link next" href={nextHref}>
+					<span class="nav-kicker">{nextLabel}</span>
+					{#if nextTitle}
+						<span class="nav-title">{nextTitle}</span>
+					{/if}
+				</a>
 			{:else}
-				<span class="nav-spacer" aria-hidden="true"></span>
-			{/if}
-
-			{#if nextChapter}
-				{#if nextEnabled}
-					<a class="nav-link next" href={nextHref}>
-						<span class="nav-kicker">{nextLabel}</span>
-						{#if nextTitle}
-							<span class="nav-title">{nextTitle}</span>
-						{/if}
-					</a>
-				{:else}
-					<span class="nav-link next is-disabled" aria-disabled="true" title="Coming soon">
-						<span class="nav-kicker">{nextLabel}</span>
-						{#if nextTitle}
-							<span class="nav-title">{nextTitle}</span>
-						{:else}
-							<span class="nav-soon">Coming soon</span>
-						{/if}
-					</span>
-				{/if}
+				<span class="nav-link next is-disabled" aria-disabled="true" title="Coming soon">
+					<span class="nav-kicker">{nextLabel}</span>
+					{#if nextTitle}
+						<span class="nav-title">{nextTitle}</span>
+					{:else}
+						<span class="nav-soon">Coming soon</span>
+					{/if}
+				</span>
 			{/if}
 		</nav>
 	{/if}
@@ -605,19 +578,13 @@
 	}
 
 	.chapter-nav {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
+		display: block;
 		margin: 1.75rem 0 calc(1.25rem + env(safe-area-inset-bottom, 0px));
 		max-width: min(62rem, 100%);
 		padding-top: 1rem;
 		padding-bottom: 0.35rem;
 		border-top: 1px solid #ececec;
 		box-sizing: border-box;
-	}
-
-	.nav-spacer {
-		display: block;
 	}
 
 	.nav-link {
@@ -641,9 +608,8 @@
 	}
 
 	.nav-link.next {
-		align-items: flex-end;
-		text-align: right;
-		justify-self: end;
+		align-items: flex-start;
+		text-align: left;
 	}
 
 	a.nav-link:hover {
@@ -704,16 +670,8 @@
 		}
 
 		.chapter-nav {
-			grid-template-columns: 1fr;
-			gap: 0.85rem;
 			margin-bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
 			padding-bottom: 0.5rem;
-		}
-
-		.nav-link.next {
-			align-items: flex-start;
-			text-align: left;
-			justify-self: start;
 		}
 
 		.section {
