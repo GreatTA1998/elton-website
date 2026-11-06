@@ -28,7 +28,10 @@
 		<img class="app-card-logo" src="/explanations-logo.png" alt="explanations.io logo" />
 		<div class="app-card-text">
 			<strong>explanations.io</strong>
-			<span class="app-desc">Blackboard-video explanations.</span>
+			<span class="app-desc"
+				>Blackboard-video explanations. Previously explain.mit.edu — ~800 students/teachers across
+				~10 MIT classes during COVID-19.</span
+			>
 			<span class="app-status">2018 (under rework) – current</span>
 		</div>
 	</a>
