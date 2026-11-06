@@ -128,18 +128,33 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		padding: 4px 10px;
+		padding: 18px 10px 5px;
 		min-height: 0;
 		border-radius: 0 0 10px 10px;
 		background: linear-gradient(
 			180deg,
-			rgba(255, 255, 255, 0.22) 0%,
-			rgba(255, 255, 255, 0.12) 100%
+			rgba(255, 255, 255, 0) 0%,
+			rgba(255, 255, 255, 0.04) 42%,
+			rgba(255, 255, 255, 0.14) 100%
 		);
 		border: none;
 		box-shadow: none;
-		backdrop-filter: blur(5px) saturate(1.15);
-		-webkit-backdrop-filter: blur(5px) saturate(1.15);
+		backdrop-filter: blur(3px) saturate(1.08);
+		-webkit-backdrop-filter: blur(3px) saturate(1.08);
+		-webkit-mask-image: linear-gradient(
+			to bottom,
+			transparent 0%,
+			rgba(0, 0, 0, 0.55) 28%,
+			#000 52%,
+			#000 100%
+		);
+		mask-image: linear-gradient(
+			to bottom,
+			transparent 0%,
+			rgba(0, 0, 0, 0.55) 28%,
+			#000 52%,
+			#000 100%
+		);
 		box-sizing: border-box;
 	}
 
@@ -186,15 +201,15 @@
 		width: 100%;
 		height: 3px;
 		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.28);
+		background: rgba(255, 255, 255, 0.26);
 		overflow: hidden;
-		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+		box-shadow: none;
 	}
 
 	.scrub-fill {
 		height: 100%;
 		border-radius: inherit;
-		background: rgba(255, 255, 255, 0.88);
-		box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+		background: rgba(255, 255, 255, 0.92);
+		box-shadow: none;
 	}
 </style>
