@@ -6,8 +6,20 @@
 <div class="atmosphere" aria-hidden="true">
 	<div class="plane">
 		<picture>
+			<!-- Landscape desktop: pre-cropped full-res band — no upscale blur -->
+			<source
+				media="(min-width: 900px)"
+				srcset="/home-wisteria-desktop.webp"
+				type="image/webp"
+			/>
+			<source
+				media="(min-width: 900px)"
+				srcset="/home-wisteria-desktop.jpg"
+				type="image/jpeg"
+			/>
 			<source srcset="/home-wisteria.webp" type="image/webp" />
 			<img
+				class="photo"
 				src="/home-wisteria.jpg"
 				alt=""
 				width="1400"
@@ -16,7 +28,6 @@
 				fetchpriority="high"
 			/>
 		</picture>
-		<div class="veil"></div>
 		<div class="ground"></div>
 	</div>
 </div>
@@ -26,7 +37,7 @@
 		position: relative;
 		/* Bleed out of .home horizontal padding; reversible by removing component */
 		margin: -2.25rem -2rem 0;
-		min-height: min(78vh, 860px);
+		min-height: min(72vh, 780px);
 		overflow: hidden;
 		isolation: isolate;
 	}
@@ -37,36 +48,16 @@
 	}
 
 	.plane picture,
-	.plane img {
+	.plane .photo {
 		display: block;
 		width: 100%;
 		height: 100%;
 	}
 
-	.plane img {
+	.plane .photo {
 		object-fit: cover;
-		object-position: 58% 42%;
-		transform: scale(1.02);
-		animation: drift 28s ease-in-out infinite alternate;
-	}
-
-	.veil {
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		background:
-			linear-gradient(
-				180deg,
-				rgba(255, 255, 255, 0.12) 0%,
-				rgba(255, 255, 255, 0.02) 35%,
-				rgba(255, 255, 255, 0.04) 70%,
-				rgba(255, 255, 255, 0) 100%
-			),
-			radial-gradient(
-				120% 70% at 70% 18%,
-				rgba(170, 140, 210, 0.14) 0%,
-				transparent 55%
-			);
+		/* Portrait mobile: keep chairs + hanging blooms in frame */
+		object-position: 62% 40%;
 	}
 
 	.ground {
@@ -74,33 +65,29 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		height: 32%;
+		height: 22%;
 		pointer-events: none;
 		background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
 	}
 
-	@keyframes drift {
-		from {
-			transform: scale(1.02) translate3d(0, 0, 0);
+	@media (min-width: 900px) {
+		.atmosphere {
+			min-height: min(68vh, 820px);
 		}
-		to {
-			transform: scale(1.055) translate3d(-1.2%, 0.8%, 0);
-		}
-	}
 
-	@media (prefers-reduced-motion: reduce) {
-		.plane img {
-			animation: none;
+		.plane .photo {
+			/* Desktop landscape crop already framed; nudge to the patio heart */
+			object-position: 52% 46%;
 		}
 	}
 
 	@media (max-width: 720px) {
 		.atmosphere {
-			min-height: min(68vh, 640px);
+			min-height: min(64vh, 620px);
 		}
 
-		.plane img {
-			object-position: 62% 38%;
+		.plane .photo {
+			object-position: 64% 36%;
 		}
 	}
 </style>
