@@ -86,9 +86,7 @@
 	<div class="essay-item">
 		<div class="essay-thumb essay-thumb-placeholder" aria-hidden="true"></div>
 		<p class="essay-title">《童年回憶：拜訪 Nero——忍鬥風雲 2 開發者》</p>
-		<p class="essay-sentence">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud.
-		</p>
+		<p class="essay-sentence">coming soon</p>
 	</div>
 </div>
 
