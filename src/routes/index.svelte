@@ -410,22 +410,31 @@
 	.music-cover {
 		position: relative;
 		width: 200px;
+		height: 200px;
 		border-radius: 10px;
 		overflow: hidden;
-		isolation: isolate;
-		background: #f0f0f0;
+		background: transparent;
+		transform: translateZ(0);
+		-webkit-mask-image: -webkit-radial-gradient(white, black);
+		mask-image: radial-gradient(white, black);
 	}
 
 	.music-cover-link {
 		display: block;
+		width: 100%;
+		height: 100%;
 		line-height: 0;
+		border-radius: 10px;
+		overflow: hidden;
 	}
 
 	.music-cover img {
 		display: block;
-		width: 100%;
-		aspect-ratio: 1 / 1;
+		width: 200px;
+		height: 200px;
 		object-fit: cover;
+		object-position: center;
+		border-radius: 10px;
 	}
 
 	.bach-cover {

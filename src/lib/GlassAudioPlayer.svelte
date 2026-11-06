@@ -127,8 +127,8 @@
 		z-index: 2;
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		padding: 7px 9px;
+		gap: 10px;
+		padding: 8px 12px 8px 11px;
 		border-radius: 999px;
 		background: linear-gradient(
 			180deg,
@@ -147,23 +147,24 @@
 	.play-btn {
 		appearance: none;
 		flex: 0 0 auto;
-		width: 28px;
-		height: 28px;
+		width: 22px;
+		height: 22px;
 		margin: 0;
 		padding: 0;
-		border: 1px solid rgba(255, 255, 255, 0.5);
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.22);
-		color: #1a1a1a;
+		border: none;
+		border-radius: 0;
+		background: transparent;
+		color: rgba(18, 18, 18, 0.92);
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
-		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+		box-shadow: none;
 	}
 
 	.play-btn:hover {
-		background: rgba(255, 255, 255, 0.34);
+		color: #000;
+		background: transparent;
 	}
 
 	.play-btn svg {
@@ -173,7 +174,7 @@
 	.scrub {
 		flex: 1 1 auto;
 		min-width: 0;
-		height: 28px;
+		height: 22px;
 		display: flex;
 		align-items: center;
 		cursor: pointer;
