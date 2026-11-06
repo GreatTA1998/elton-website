@@ -97,7 +97,7 @@
 		{/if}
 		<p class="essay-title">Beyond the features: what is the point of Notion?</p>
 		<p class="essay-sentence">
-			Notion's two innovations: navigating your own content freely, and organizing it beyond folders and notes.
+			True freedom to customize the UI by drag-and-drop, and databases
 		</p>
 	</div>
 	<div class="essay-item">
