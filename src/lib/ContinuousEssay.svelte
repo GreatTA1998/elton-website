@@ -79,21 +79,7 @@
 	$: nextChapter = essay.nextChapter || null;
 	$: nextHref = nextChapter && nextChapter.href ? nextChapter.href : '';
 	$: nextEnabled = Boolean(nextHref);
-	$: nextTitle = (nextChapter && nextChapter.title) || '';
-	$: nextChapterNumber =
-		series && series.chapterCount
-			? series.part === 'preface'
-				? 1
-				: typeof series.chapter === 'number' && series.chapter < series.chapterCount
-					? series.chapter + 1
-					: null
-			: null;
-	$: nextLabel =
-		nextChapterNumber && series && series.chapterCount && nextTitle
-			? `Chapter ${nextChapterNumber} of ${series.chapterCount}: ${nextTitle}`
-			: nextTitle
-				? nextTitle
-				: (nextChapter && nextChapter.label) || 'Next chapter';
+	$: nextLabel = 'Next chapter →';
 	$: hasSeriesNav = Boolean(nextChapter);
 	$: isSeriesEnd =
 		Boolean(series) &&
@@ -771,16 +757,16 @@
 		align-items: center;
 		width: auto;
 		max-width: 100%;
-		padding: 0.85rem 1.35rem;
-		color: #fff;
+		padding: 0.35rem 0;
+		color: #2c2c2c;
 		text-decoration: none;
 		box-sizing: border-box;
 		min-width: 0;
-		border: 1px solid #3f6f66;
-		border-radius: 999px;
-		background: #3f6f66;
-		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
-		transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+		border: none;
+		border-radius: 0;
+		background: transparent;
+		box-shadow: none;
+		transition: color 0.15s ease, opacity 0.15s ease;
 	}
 
 	.nav-link.next {
@@ -788,22 +774,19 @@
 	}
 
 	a.nav-link:hover {
-		background: #355c55;
-		border-color: #355c55;
+		color: #111;
 	}
 
 	a.nav-link:hover .nav-title {
-		text-decoration: none;
-	}
-
-	a.nav-link:active {
-		transform: translateY(1px);
+		text-decoration: underline;
+		text-decoration-color: #c8c8c8;
+		text-underline-offset: 0.18em;
 	}
 
 	.nav-link.is-disabled {
 		color: #9a9a9a;
-		background: #ececec;
-		border-color: #ececec;
+		background: transparent;
+		border: none;
 		box-shadow: none;
 		cursor: not-allowed;
 		pointer-events: none;
@@ -813,10 +796,10 @@
 	.nav-title,
 	.nav-soon {
 		display: block;
-		font-size: 1.05rem;
-		line-height: 1.35;
-		color: #fff;
-		font-weight: 600;
+		font-size: 1rem;
+		line-height: 1.4;
+		color: inherit;
+		font-weight: 500;
 		white-space: normal;
 	}
 
