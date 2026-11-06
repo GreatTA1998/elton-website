@@ -38,7 +38,7 @@
 		/* Bleed out of .home horizontal padding; reversible by removing component */
 		margin: -2.25rem -2rem 0;
 		display: flex;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: stretch;
 		overflow: hidden;
 		isolation: isolate;
