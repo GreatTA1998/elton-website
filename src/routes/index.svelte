@@ -4,6 +4,9 @@
 <p class="welcome">
 	Welcome to my absolutely EPIC website, it's INSANE:
 </p>
+<p class="welcome-sub">
+	I'm a solo founder who dreams of being useful and making it big some day.
+</p>
 
 <h2 class="section-label">software apps</h2>
 
@@ -171,6 +174,15 @@
 		line-height: 1.5;
 	}
 
+	.welcome-sub {
+		margin: 0.35em 0 0;
+		max-width: 34rem;
+		font-size: 0.95rem;
+		font-weight: 400;
+		color: #6a6a6a;
+		line-height: 1.55;
+	}
+
 	.section-label {
 		margin: 2.75em 0 0.85em;
 		font-size: 1.05rem;
@@ -181,7 +193,7 @@
 		line-height: 1.3;
 	}
 
-	.welcome + .section-label {
+	.welcome-sub + .section-label {
 		margin-top: 2em;
 	}
 
