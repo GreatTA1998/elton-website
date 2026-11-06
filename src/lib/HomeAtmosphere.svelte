@@ -1,11 +1,11 @@
 <!--
   Reversible homepage place-atmosphere (vibe-only photo + quiet lived places).
-  Portrait composition is the target (chairs + wisteria + fade).
+  Portrait composition is the target (chairs + wisteria). No white fade overlay.
   Delete this component (and its import/usage in index.svelte) to remove it.
 -->
 <script>
-	// Timeline only for now. Later: selecting a place can swap scenery;
-	// Hsinchu maps to the current home-wisteria patio photo.
+	// Cities only (>short stops omitted). No country suffixes, no London/Taipei.
+	// Later: selecting a place can swap scenery; Hsinchu = current home-wisteria photo.
 	const places = [
 		'Hsinchu',
 		'Shanghai',
@@ -43,7 +43,7 @@
 	</div>
 
 	<ol class="places" aria-label="Places lived">
-		{#each places as place, i}
+		{#each places as place, i (place)}
 			<li>
 				{#if i > 0}
 					<span class="sep" aria-hidden="true">→</span>
@@ -52,8 +52,6 @@
 			</li>
 		{/each}
 	</ol>
-
-	<div class="ground" aria-hidden="true"></div>
 </div>
 
 <style>
@@ -99,7 +97,6 @@
 
 	.places {
 		position: relative;
-		z-index: 2;
 		list-style: none;
 		margin: 0;
 		padding: 0 0 0.15rem;
@@ -132,24 +129,6 @@
 		line-height: 1;
 		color: #c4c4c4;
 		padding: 0 0.05rem;
-	}
-
-	.ground {
-		position: absolute;
-		left: 0;
-		right: 0;
-		/* Sit over the photo bottom, not the places row */
-		top: 0;
-		height: min(78vh, 760px);
-		max-height: 100%;
-		pointer-events: none;
-		z-index: 1;
-		background: linear-gradient(
-			180deg,
-			rgba(255, 255, 255, 0) 72%,
-			rgba(255, 255, 255, 0.55) 88%,
-			#ffffff 100%
-		);
 	}
 
 	@media (min-width: 900px) {
@@ -205,19 +184,6 @@
 
 		.place {
 			font-size: 0.8rem;
-		}
-
-		.ground {
-			width: min(100%, calc(min(86vh, 980px) * 0.75));
-			margin-left: -2rem;
-			height: min(86vh, 980px);
-			/* Short, soft edge only — keep petals/chairs readable on laptop */
-			background: linear-gradient(
-				180deg,
-				rgba(255, 255, 255, 0) 90%,
-				rgba(255, 255, 255, 0.18) 97%,
-				#ffffff 100%
-			);
 		}
 	}
 </style>
