@@ -83,9 +83,9 @@
 	$: nextProgress =
 		series && series.chapterCount
 			? series.part === 'preface'
-				? `1 of ${series.chapterCount}`
+				? `chapter 1 of ${series.chapterCount}`
 				: typeof series.chapter === 'number' && series.chapter < series.chapterCount
-					? `${series.chapter + 1} of ${series.chapterCount}`
+					? `chapter ${series.chapter + 1} of ${series.chapterCount}`
 					: ''
 			: '';
 	$: nextLabel = nextProgress ? `Next · ${nextProgress}` : (nextChapter && nextChapter.label) || 'Next chapter';
@@ -772,10 +772,10 @@
 		display: inline-flex;
 		flex-direction: column;
 		align-items: flex-start;
-		gap: 0.25rem;
+		gap: 0.35rem;
 		width: 100%;
 		max-width: 100%;
-		padding: 0.85rem 1rem;
+		padding: 1.15rem 1.25rem;
 		color: #2c2c2c;
 		text-decoration: none;
 		overflow-wrap: anywhere;
@@ -813,10 +813,10 @@
 	}
 
 	.nav-kicker {
-		font-size: 0.72rem;
-		letter-spacing: 0.03em;
-		text-transform: uppercase;
-		color: #6a6a6a;
+		font-size: 0.92rem;
+		letter-spacing: 0.02em;
+		text-transform: none;
+		color: #5a5a5a;
 		font-weight: 500;
 	}
 
@@ -826,7 +826,7 @@
 
 	.nav-title,
 	.nav-soon {
-		font-size: 0.95rem;
+		font-size: 1.2rem;
 		line-height: 1.35;
 		color: inherit;
 		font-weight: 500;
