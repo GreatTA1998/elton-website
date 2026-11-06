@@ -11,7 +11,8 @@
 
 	<h1 class="title">Email updates</h1>
 	<p class="sub">
-		Two quiet options. Pick what fits — you can change your mind later by writing me.
+		Pick essays, music, and the software apps you care about — you can change your mind later by
+		writing me.
 	</p>
 
 	<SubscribeForm />

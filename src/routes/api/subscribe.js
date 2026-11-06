@@ -1,3 +1,12 @@
+const ALLOWED_INTERESTS = new Set([
+	'essays',
+	'music',
+	'actions.life',
+	'explanations.io',
+	'zetteldraw',
+	'zen-message'
+]);
+
 /** @type {import('@sveltejs/kit').RequestHandler} */
 export async function post({ request }) {
 	let data;
@@ -13,7 +22,14 @@ export async function post({ request }) {
 	const email = String((data && data.email) || '')
 		.trim()
 		.toLowerCase();
-	const preference = data && data.preference;
+	const rawInterests = Array.isArray(data && data.interests) ? data.interests : [];
+	const interests = [
+		...new Set(
+			rawInterests
+				.map((value) => String(value || '').trim())
+				.filter((value) => ALLOWED_INTERESTS.has(value))
+		)
+	];
 
 	if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
 		return {
@@ -22,10 +38,10 @@ export async function post({ request }) {
 		};
 	}
 
-	if (preference !== 'digest' && preference !== 'posts') {
+	if (!interests.length) {
 		return {
 			status: 400,
-			body: { ok: false, error: 'invalid_preference' }
+			body: { ok: false, error: 'invalid_interests' }
 		};
 	}
 
@@ -41,13 +57,12 @@ export async function post({ request }) {
 				ok: false,
 				error: 'not_configured',
 				message:
-					'Email isn’t configured yet. Set RESEND_API_KEY and SUBSCRIBE_NOTIFY_TO on Vercel (optional: SUBSCRIBE_FROM_EMAIL, RESEND_AUDIENCE_ID).'
+					'Email isn’t configured yet. Set RESEND_API_KEY and SUBSCRIBE_NOTIFY_TO on the host (optional: SUBSCRIBE_FROM_EMAIL, RESEND_AUDIENCE_ID).'
 			}
 		};
 	}
 
-	const preferenceLabel =
-		preference === 'digest' ? 'Quarterly digest' : 'Every new post';
+	const interestsLabel = interests.join(', ');
 
 	if (audienceId) {
 		try {
@@ -61,7 +76,7 @@ export async function post({ request }) {
 					email,
 					audience_id: audienceId,
 					unsubscribed: false,
-					first_name: preferenceLabel
+					first_name: interestsLabel.slice(0, 120)
 				})
 			});
 
@@ -90,12 +105,12 @@ export async function post({ request }) {
 			body: JSON.stringify({
 				from,
 				to: [notifyTo],
-				subject: `Subscribe · ${preferenceLabel}`,
+				subject: `Subscribe · ${interestsLabel}`,
 				text: [
 					`New subscriber on elton-website`,
 					``,
 					`Email: ${email}`,
-					`Preference: ${preferenceLabel} (${preference})`,
+					`Interests: ${interestsLabel}`,
 					``,
 					audienceId
 						? `Also added to Resend audience ${audienceId}.`
@@ -120,6 +135,6 @@ export async function post({ request }) {
 
 	return {
 		status: 200,
-		body: { ok: true }
+		body: { ok: true, interests }
 	};
 }

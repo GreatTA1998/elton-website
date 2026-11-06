@@ -1,10 +1,36 @@
 <script>
 	export let compact = false;
 
+	const APPS = [
+		{ id: 'actions.life', label: 'actions.life', src: '/actions-life-logo.png' },
+		{ id: 'explanations.io', label: 'explanations.io', src: '/explanations-logo.png' },
+		{ id: 'zetteldraw', label: 'zetteldraw', src: '/zetteldraw-logo.png' },
+		{ id: 'zen-message', label: 'zen-message', src: '/zen-message-logo.jpg' }
+	];
+
 	let email = '';
-	let preference = 'digest';
+	let essays = false;
+	let music = false;
+	/** @type {Record<string, boolean>} */
+	let apps = {
+		'actions.life': false,
+		'explanations.io': false,
+		zetteldraw: false,
+		'zen-message': false
+	};
 	let status = 'idle'; // idle | submitting | success | error | not_configured
 	let errorMessage = '';
+
+	$: interests = [
+		...(essays ? ['essays'] : []),
+		...(music ? ['music'] : []),
+		...APPS.map((app) => app.id).filter((id) => apps[id])
+	];
+	$: hasInterest = interests.length > 0;
+
+	function toggleApp(id) {
+		apps = { ...apps, [id]: !apps[id] };
+	}
 
 	async function handleSubmit() {
 		if (status === 'submitting') return;
@@ -16,7 +42,7 @@
 			const res = await fetch('/api/subscribe', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email, preference })
+				body: JSON.stringify({ email, interests })
 			});
 
 			const data = await res.json().catch(() => ({}));
@@ -38,8 +64,8 @@
 			status = 'error';
 			if (data.error === 'invalid_email') {
 				errorMessage = 'That email doesn’t look right.';
-			} else if (data.error === 'invalid_preference') {
-				errorMessage = 'Choose how often you’d like to hear from me.';
+			} else if (data.error === 'invalid_interests') {
+				errorMessage = 'Pick at least one interest.';
 			} else {
 				errorMessage = 'Something went wrong. Try again in a bit.';
 			}
@@ -56,26 +82,42 @@
 </script>
 
 <form class="subscribe" class:compact on:submit={onSubmit} novalidate>
-	<fieldset class="prefs" disabled={status === 'submitting' || status === 'success'}>
-		<legend class="sr-only">How often</legend>
+	<fieldset class="interests" disabled={status === 'submitting' || status === 'success'}>
+		<legend class="sr-only">Interests</legend>
 
-		<label class="pref" class:selected={preference === 'digest'}>
-			<input type="radio" bind:group={preference} value="digest" />
-			<span class="pref-copy">
-				<span class="pref-title">Quarterly digest</span>
-				<span class="pref-help">a summary email every quarter</span>
-			</span>
-		</label>
+		<div class="topic-row">
+			<label class="topic" class:selected={essays}>
+				<input type="checkbox" bind:checked={essays} />
+				<span>Essays</span>
+			</label>
+			<label class="topic" class:selected={music}>
+				<input type="checkbox" bind:checked={music} />
+				<span>Music</span>
+			</label>
+		</div>
 
-		<label class="pref" class:selected={preference === 'posts'}>
-			<input type="radio" bind:group={preference} value="posts" />
-			<span class="pref-copy">
-				<span class="pref-title">Every new post</span>
-				<span class="pref-help"
-					>an email on each new essay, music recording or major software update</span
-				>
-			</span>
-		</label>
+		<div class="software">
+			<p class="software-label" id="software-interests-label">Software</p>
+			<div
+				class="app-icons"
+				role="group"
+				aria-labelledby="software-interests-label"
+			>
+				{#each APPS as app}
+					<button
+						type="button"
+						class="app-icon"
+						class:selected={apps[app.id]}
+						aria-pressed={apps[app.id]}
+						aria-label={app.label}
+						title={app.label}
+						on:click={() => toggleApp(app.id)}
+					>
+						<img src={app.src} alt="" />
+					</button>
+				{/each}
+			</div>
+		</div>
 	</fieldset>
 
 	<div class="row">
@@ -91,7 +133,10 @@
 			required
 			disabled={status === 'submitting' || status === 'success'}
 		/>
-		<button type="submit" disabled={status === 'submitting' || status === 'success' || !email}>
+		<button
+			type="submit"
+			disabled={status === 'submitting' || status === 'success' || !email || !hasInterest}
+		>
 			{#if status === 'submitting'}
 				Sending…
 			{:else if status === 'success'}
@@ -123,60 +168,110 @@
 		max-width: 32rem;
 	}
 
-	.prefs {
+	.interests {
 		margin: 0;
 		padding: 0;
 		border: none;
 		display: flex;
 		flex-direction: column;
+		gap: 12px;
+	}
+
+	.topic-row {
+		display: flex;
+		flex-wrap: wrap;
 		gap: 8px;
 	}
 
-	.pref {
-		display: flex;
-		align-items: flex-start;
-		gap: 10px;
-		padding: 10px 12px;
+	.topic {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 12px;
 		border: 1px solid #ececec;
 		border-radius: 10px;
 		cursor: pointer;
 		background: transparent;
+		font-size: 0.92rem;
+		font-weight: 500;
+		color: #2c2c2c;
+		line-height: 1.3;
 		transition: background-color 0.15s ease, border-color 0.15s ease;
 	}
 
-	.pref:hover {
+	.topic:hover {
 		background: #f7f7f7;
 		border-color: #e0e0e0;
 	}
 
-	.pref.selected {
+	.topic.selected {
 		border-color: #d0d0d0;
 		background: #fafafa;
 	}
 
-	.pref input {
-		margin-top: 3px;
+	.topic input {
+		margin: 0;
 		accent-color: #2c2c2c;
 	}
 
-	.pref-copy {
+	.software {
 		display: flex;
 		flex-direction: column;
-		gap: 2px;
-		min-width: 0;
+		gap: 8px;
 	}
 
-	.pref-title {
-		font-size: 0.95rem;
-		font-weight: 500;
-		color: #2c2c2c;
-		line-height: 1.35;
-	}
-
-	.pref-help {
+	.software-label {
+		margin: 0;
 		font-size: 0.84rem;
+		font-weight: 500;
 		color: #6a6a6a;
-		line-height: 1.4;
+		line-height: 1.3;
+	}
+
+	.app-icons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.app-icon {
+		appearance: none;
+		width: 44px;
+		height: 44px;
+		margin: 0;
+		padding: 0;
+		border: 1px solid #ececec;
+		border-radius: 10px;
+		background: #fff;
+		overflow: hidden;
+		cursor: pointer;
+		line-height: 0;
+		transition: border-color 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+	}
+
+	.app-icon:hover {
+		border-color: #d8d8d8;
+		background: #fafafa;
+	}
+
+	.app-icon.selected {
+		border-color: #2c2c2c;
+		background: #f7f7f7;
+	}
+
+	.app-icon:not(.selected) {
+		opacity: 0.72;
+	}
+
+	.app-icon:not(.selected):hover {
+		opacity: 0.9;
+	}
+
+	.app-icon img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 
 	.row {
@@ -207,7 +302,7 @@
 		opacity: 0.7;
 	}
 
-	button {
+	button[type='submit'] {
 		flex-shrink: 0;
 		padding: 10px 14px;
 		border: 1px solid #2c2c2c;
@@ -221,11 +316,11 @@
 		transition: opacity 0.15s ease, background-color 0.15s ease;
 	}
 
-	button:hover:not(:disabled) {
+	button[type='submit']:hover:not(:disabled) {
 		background: #1f1f1f;
 	}
 
-	button:disabled {
+	button[type='submit']:disabled {
 		opacity: 0.55;
 		cursor: default;
 	}
@@ -266,7 +361,7 @@
 			flex-direction: column;
 		}
 
-		button {
+		button[type='submit'] {
 			width: 100%;
 		}
 	}

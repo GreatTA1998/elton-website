@@ -1,10 +1,13 @@
 <script>
 	import CompactMusicPlayer from '$lib/CompactMusicPlayer.svelte';
+	import SiteFooter from '$lib/SiteFooter.svelte';
 </script>
 
 <CompactMusicPlayer />
 
 <slot />
+
+<SiteFooter />
 
 <style>
 	:global(body) {
