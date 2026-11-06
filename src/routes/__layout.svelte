@@ -1,3 +1,9 @@
+<script>
+	import CompactMusicPlayer from '$lib/CompactMusicPlayer.svelte';
+</script>
+
+<CompactMusicPlayer />
+
 <slot />
 
 <style>
