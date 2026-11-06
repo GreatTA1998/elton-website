@@ -94,13 +94,6 @@
 
 <div class="music-row">
 	<div class="music-item">
-		<img src="david-goggins.png" alt="David Goggins running" />
-		<div class="music-audio">
-			<audio controls src="chopin-etude-1.mp3" type="audio/mp3"></audio>
-		</div>
-	</div>
-
-	<div class="music-item">
 		<img
 			src="https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg"
 			alt="Ghost in a Flower album cover"
