@@ -91,12 +91,12 @@
 		on:click={togglePlay}
 	>
 		{#if playing}
-			<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
+			<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
 				<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" />
 				<rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
 			</svg>
 		{:else}
-			<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
+			<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
 				<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
 			</svg>
 		{/if}
@@ -147,8 +147,8 @@
 	.play-btn {
 		appearance: none;
 		flex: 0 0 auto;
-		width: 16px;
-		height: 16px;
+		width: 18px;
+		height: 18px;
 		margin: 0;
 		padding: 0;
 		border: none;
