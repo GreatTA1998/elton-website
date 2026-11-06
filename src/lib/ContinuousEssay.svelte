@@ -96,6 +96,7 @@
 		typeof series.chapter === 'number' &&
 		series.chapterCount &&
 		series.chapter >= series.chapterCount;
+	$: showSeriesOpener = Boolean(series && series.part === 'preface');
 </script>
 
 <article class="essay" style="--essay-scale: {fontScale}">
@@ -140,35 +141,76 @@
 			</div>
 		</div>
 
-		<h1 class="essay-title">{essay.title}</h1>
+		{#if showSeriesOpener}
+			<div class="series-opener">
+				<h1 class="series-hero-title">{seriesName}</h1>
+				{#if essay.heroImage}
+					<figure class="series-cover">
+						<button
+							type="button"
+							class="image-button"
+							on:click={() =>
+								openLightbox(
+									essay.heroImage.avif || essay.heroImage.webp || essay.heroImage.src,
+									essay.heroImage.alt
+								)}
+							aria-label="Expand cover image"
+						>
+							<picture>
+								{#if essay.heroImage.avif}
+									<source srcset={essay.heroImage.avif} type="image/avif" />
+								{/if}
+								{#if essay.heroImage.webp}
+									<source srcset={essay.heroImage.webp} type="image/webp" />
+								{/if}
+								<img
+									src={essay.heroImage.src}
+									alt={essay.heroImage.alt}
+									loading="eager"
+									decoding="async"
+								/>
+							</picture>
+						</button>
+					</figure>
+				{/if}
+			</div>
+			<h2 class="essay-title">{essay.title}</h2>
+		{:else}
+			<h1 class="essay-title">{essay.title}</h1>
 
-		{#if essay.lede}
-			<p class="essay-lede">{essay.lede}</p>
-		{/if}
+			{#if essay.lede}
+				<p class="essay-lede">{essay.lede}</p>
+			{/if}
 
-		{#if essay.heroImage}
-			<figure class="hero-figure">
-				<button
-					type="button"
-					class="image-button"
-					on:click={() =>
-						openLightbox(
-							essay.heroImage.avif || essay.heroImage.webp || essay.heroImage.src,
-							essay.heroImage.alt
-						)}
-					aria-label="Expand chart"
-				>
-					<picture>
-						{#if essay.heroImage.avif}
-							<source srcset={essay.heroImage.avif} type="image/avif" />
-						{/if}
-						{#if essay.heroImage.webp}
-							<source srcset={essay.heroImage.webp} type="image/webp" />
-						{/if}
-						<img src={essay.heroImage.src} alt={essay.heroImage.alt} loading="lazy" decoding="async" />
-					</picture>
-				</button>
-			</figure>
+			{#if essay.heroImage}
+				<figure class="hero-figure">
+					<button
+						type="button"
+						class="image-button"
+						on:click={() =>
+							openLightbox(
+								essay.heroImage.avif || essay.heroImage.webp || essay.heroImage.src,
+								essay.heroImage.alt
+							)}
+						aria-label="Expand chart"
+					>
+						<picture>
+							{#if essay.heroImage.avif}
+								<source srcset={essay.heroImage.avif} type="image/avif" />
+							{/if}
+							{#if essay.heroImage.webp}
+								<source srcset={essay.heroImage.webp} type="image/webp" />
+							{/if}
+							<img
+								src={essay.heroImage.src}
+								alt={essay.heroImage.alt}
+								loading="lazy"
+								decoding="async"
+							/>
+						</picture>
+					</button>
+				</figure>
+			{/if}
 		{/if}
 	</header>
 
@@ -410,6 +452,41 @@
 		outline: 2px solid #2c2c2c;
 		outline-offset: 2px;
 		z-index: 1;
+	}
+
+	.series-opener {
+		margin: 0 0 1.65rem;
+		max-width: min(62rem, 100%);
+	}
+
+	.series-hero-title {
+		margin: 0 0 1rem;
+		font-size: calc(clamp(1.9rem, 3.4vw, 2.75rem) * var(--essay-scale));
+		font-weight: 600;
+		letter-spacing: -0.035em;
+		line-height: 1.15;
+		color: #1f1f1f;
+		max-width: 100%;
+		overflow-wrap: anywhere;
+		word-break: break-word;
+	}
+
+	.series-cover {
+		margin: 0;
+		max-width: min(22rem, 100%);
+		width: 100%;
+		min-width: 0;
+		box-sizing: border-box;
+	}
+
+	.series-cover img {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		border-radius: 0;
+		border: 1px solid #ececec;
+		background: #fff;
 	}
 
 	.essay-title {
