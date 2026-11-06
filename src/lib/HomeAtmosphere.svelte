@@ -211,10 +211,11 @@
 			width: min(100%, calc(min(86vh, 980px) * 0.75));
 			margin-left: -2rem;
 			height: min(86vh, 980px);
+			/* Short, soft edge only — keep petals/chairs readable on laptop */
 			background: linear-gradient(
 				180deg,
-				rgba(255, 255, 255, 0) 78%,
-				rgba(255, 255, 255, 0.5) 90%,
+				rgba(255, 255, 255, 0) 90%,
+				rgba(255, 255, 255, 0.18) 97%,
 				#ffffff 100%
 			);
 		}
