@@ -1,6 +1,10 @@
 <div class="home">
 <HomeAtmosphere />
 
+<p class="welcome">
+	Welcome to my absolutely EPIC website, it's INSANE:
+</p>
+
 <h2 class="section-label">software apps</h2>
 
 <div class="app-cards">
@@ -159,6 +163,14 @@
 		box-sizing: border-box;
 	}
 
+	.welcome {
+		margin: 1.35rem 0 0.15em;
+		font-size: 1.05rem;
+		font-weight: 500;
+		color: #2c2c2c;
+		line-height: 1.5;
+	}
+
 	.section-label {
 		margin: 2.75em 0 0.85em;
 		font-size: 1.05rem;
@@ -169,7 +181,7 @@
 		line-height: 1.3;
 	}
 
-	:global(.atmosphere) + .section-label {
+	.welcome + .section-label {
 		margin-top: 2em;
 	}
 
