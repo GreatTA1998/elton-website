@@ -15,6 +15,7 @@
 		<img class="app-card-logo" src="/actions-life-logo.png" alt="actions.life logo" />
 		<div class="app-card-text">
 			<strong>actions.life</strong>
+			<span class="app-desc">Put to-do lists on the calendar.</span>
 			<span class="app-status">2022 – current · fully active / usable</span>
 		</div>
 	</a>
@@ -22,6 +23,7 @@
 		<img class="app-card-logo" src="/explanations-logo.png" alt="explanations.io logo" />
 		<div class="app-card-text">
 			<strong>explanations.io</strong>
+			<span class="app-desc">Blackboard-video explanations.</span>
 			<span class="app-status">2018 (under rework) – current</span>
 		</div>
 	</a>
@@ -29,6 +31,7 @@
 		<img class="app-card-logo" src="/zetteldraw-logo.png" alt="zetteldraw logo" />
 		<div class="app-card-text">
 			<strong>zetteldraw</strong>
+			<span class="app-desc">Handwriting-first notes on a Boox.</span>
 			<span class="app-status">2026 (in private testing) – current</span>
 		</div>
 	</a>
@@ -36,6 +39,7 @@
 		<img class="app-card-logo" src="/zen-message-logo.jpg" alt="zen-message logo" />
 		<div class="app-card-text">
 			<strong>zen-message</strong>
+			<span class="app-desc">A calmer, less interruptive messaging system.</span>
 			<span class="app-status">2024 (in development)</span>
 		</div>
 	</a>
@@ -260,9 +264,20 @@
 		color: #1a1a1a;
 	}
 
+	.app-desc {
+		font-size: 0.875rem;
+		color: #6a6a6a;
+		line-height: 1.4;
+		font-weight: 400;
+	}
+
+	.app-card-active .app-desc {
+		color: #4a4a4a;
+	}
+
 	.app-status {
-		font-size: 0.82rem;
-		color: #8a8a8a;
+		font-size: 0.78rem;
+		color: #9a9a9a;
 		line-height: 1.4;
 		font-weight: 400;
 	}
