@@ -12,14 +12,29 @@
 
 <div class="app-cards">
 	<a
-		class="app-card app-card-active"
+		class="app-card app-card-ready"
 		target="_blank"
 		rel="noopener noreferrer"
 		href="https://actions.life"
 	>
 		<img class="app-card-logo" src="/actions-life-logo.png" alt="actions.life logo" />
 		<div class="app-card-text">
-			<strong>actions.life</strong>
+			<strong>
+				actions.life
+				<span class="ready-tick" title="Ready" aria-label="Ready">
+					<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+						<circle cx="8" cy="8" r="8" fill="#2f9e44" />
+						<path
+							d="M4.6 8.2l2.1 2.1 4.7-4.7"
+							fill="none"
+							stroke="#fff"
+							stroke-width="1.7"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+					</svg>
+				</span>
+			</strong>
 			<span class="app-desc"
 				>Put to-do lists on the calendar. Fully using since 2024; currently v2 after 2380
 				commits.</span
@@ -27,10 +42,15 @@
 			<span class="app-status">2022 – current · fully active / usable</span>
 		</div>
 	</a>
-	<a class="app-card app-card-quiet" target="_blank" rel="noopener noreferrer" href="https://explanations.io">
-		<img class="app-card-logo" src="/explanations-logo.png" alt="explanations.io logo" />
+	<a
+		class="app-card"
+		target="_blank"
+		rel="noopener noreferrer"
+		href="https://blackboards.io"
+	>
+		<img class="app-card-logo" src="/explanations-logo.png" alt="blackboards.io logo" />
 		<div class="app-card-text">
-			<strong>explanations.io</strong>
+			<strong>blackboards.io</strong>
 			<span class="app-desc"
 				>Blackboard-video explanations. Previously explain.mit.edu — ~800 students/teachers across
 				~10 MIT classes during COVID-19.</span
@@ -38,22 +58,22 @@
 			<span class="app-status">2018 (under rework) – current</span>
 		</div>
 	</a>
-	<a class="app-card app-card-quiet" target="_blank" rel="noopener noreferrer" href="https://zetteldraw.com">
+	<div class="app-card app-card-quiet" aria-disabled="true">
 		<img class="app-card-logo" src="/zetteldraw-logo.png" alt="zetteldraw logo" />
 		<div class="app-card-text">
 			<strong>zetteldraw</strong>
 			<span class="app-desc">Handwriting-first notes on a Boox.</span>
 			<span class="app-status">2026 (in private testing) – current</span>
 		</div>
-	</a>
-	<a class="app-card app-card-quiet" target="_blank" rel="noopener noreferrer" href="https://zen-message.com">
+	</div>
+	<div class="app-card app-card-quiet" aria-disabled="true">
 		<img class="app-card-logo" src="/zen-message-logo.jpg" alt="zen-message logo" />
 		<div class="app-card-text">
 			<strong>zen-message</strong>
 			<span class="app-desc">A calmer, less interruptive messaging system.</span>
 			<span class="app-status">2024 (in development)</span>
 		</div>
-	</a>
+	</div>
 </div>
 
 <h2 class="section-label">video essays</h2>
@@ -227,29 +247,27 @@
 		transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 	}
 
-	.app-card:hover {
+	a.app-card:hover {
 		background: #f7f7f7;
 		border-color: #e0e0e0;
 	}
 
-	.app-card-active {
-		border-color: #d0d0d0;
-		background: #fafafa;
+	.app-card-ready .app-card-text strong {
+		font-weight: 600;
+		color: #1a1a1a;
 	}
 
-	.app-card-active:hover {
-		background: #f3f3f3;
-		border-color: #c4c4c4;
+	.ready-tick {
+		display: inline-flex;
+		align-items: center;
+		margin-left: 6px;
+		vertical-align: -1px;
 	}
 
 	.app-card-quiet {
 		opacity: 0.62;
-	}
-
-	.app-card-quiet:hover {
-		opacity: 0.78;
-		background: #fafafa;
-		border-color: #ececec;
+		cursor: default;
+		pointer-events: none;
 	}
 
 	.app-card-logo {
@@ -272,14 +290,11 @@
 	}
 
 	.app-card-text strong {
+		display: inline-flex;
+		align-items: center;
 		font-weight: 500;
 		font-size: 0.95rem;
 		color: #2c2c2c;
-	}
-
-	.app-card-active .app-card-text strong {
-		font-weight: 600;
-		color: #1a1a1a;
 	}
 
 	.app-desc {
@@ -289,20 +304,11 @@
 		font-weight: 400;
 	}
 
-	.app-card-active .app-desc {
-		color: #4a4a4a;
-	}
-
 	.app-status {
 		font-size: 0.78rem;
 		color: #9a9a9a;
 		line-height: 1.4;
 		font-weight: 400;
-	}
-
-	.app-card-active .app-status {
-		color: #2c2c2c;
-		font-weight: 500;
 	}
 
 	.essay-grid {

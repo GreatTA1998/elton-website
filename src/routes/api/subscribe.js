@@ -2,7 +2,7 @@ const ALLOWED_INTERESTS = new Set([
 	'essays',
 	'music',
 	'actions.life',
-	'explanations.io',
+	'blackboards.io',
 	'zetteldraw',
 	'zen-message'
 ]);

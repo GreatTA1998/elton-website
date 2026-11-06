@@ -3,7 +3,7 @@
 
 	const APPS = [
 		{ id: 'actions.life', label: 'actions.life', src: '/actions-life-logo.png' },
-		{ id: 'explanations.io', label: 'explanations.io', src: '/explanations-logo.png' },
+		{ id: 'blackboards.io', label: 'blackboards.io', src: '/explanations-logo.png' },
 		{ id: 'zetteldraw', label: 'zetteldraw', src: '/zetteldraw-logo.png' },
 		{ id: 'zen-message', label: 'zen-message', src: '/zen-message-logo.jpg' }
 	];
@@ -14,7 +14,7 @@
 	/** @type {Record<string, boolean>} */
 	let apps = {
 		'actions.life': false,
-		'explanations.io': false,
+		'blackboards.io': false,
 		zetteldraw: false,
 		'zen-message': false
 	};
