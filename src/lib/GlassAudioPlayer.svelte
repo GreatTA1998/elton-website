@@ -137,8 +137,7 @@
 			rgba(255, 255, 255, 0.12) 100%
 		);
 		border: none;
-		border-top: 1px solid rgba(255, 255, 255, 0.42);
-		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+		box-shadow: none;
 		backdrop-filter: blur(5px) saturate(1.15);
 		-webkit-backdrop-filter: blur(5px) saturate(1.15);
 		box-sizing: border-box;
