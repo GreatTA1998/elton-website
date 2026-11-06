@@ -78,8 +78,16 @@
 	$: nextChapter = essay.nextChapter || null;
 	$: nextHref = nextChapter && nextChapter.href ? nextChapter.href : '';
 	$: nextEnabled = Boolean(nextHref);
-	$: nextLabel = (nextChapter && nextChapter.label) || 'Next chapter';
 	$: nextTitle = (nextChapter && nextChapter.title) || '';
+	$: nextProgress =
+		series && series.chapterCount
+			? series.part === 'preface'
+				? `1 of ${series.chapterCount}`
+				: typeof series.chapter === 'number' && series.chapter < series.chapterCount
+					? `${series.chapter + 1} of ${series.chapterCount}`
+					: ''
+			: '';
+	$: nextLabel = nextProgress ? `Next · ${nextProgress}` : (nextChapter && nextChapter.label) || 'Next chapter';
 	$: hasSeriesNav = Boolean(nextChapter);
 </script>
 
