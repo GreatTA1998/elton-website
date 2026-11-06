@@ -1,35 +1,35 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 
-	/** Other people’s recordings — not Elton’s. */
-	const tracks = [
-		{
-			videoId: 'J7FNWtUwBD0',
-			title: 'Rachmaninoff: 10 Preludes, Op. 23: No. 4 in D Major (Andante cantabile)',
-			credit: 'Ashkenazy'
-		},
-		{
-			videoId: '20Gb0JcviRA',
-			title: 'Brahms - Intermezzo in A major, Op. 118 No. 2 (Stephen Kovacevich) - 1981',
-			credit: 'Kovacevich, 1981'
-		}
-	];
+	/** Other people’s recordings — not Elton’s. Brahms deprecated; Rachmaninoff only. */
+	const track = {
+		videoId: 'J7FNWtUwBD0',
+		title: 'Rachmaninoff: 10 Preludes, Op. 23: No. 4 in D Major (Andante cantabile)',
+		credit: 'Ashkenazy'
+	};
 
-	let trackIndex = 0;
 	let playing = false;
 	let ready = false;
 	let embedBlocked = false;
 	let playAttempted = false;
-	let titleKey = 0;
 
-	/** @type {HTMLElement} */
-	let hostEl;
+	/** @type {HTMLElement | null} */
+	let hostEl = null;
 	/** @type {any} */
 	let player;
 	let destroyed = false;
 
-	$: track = tracks[trackIndex];
-	$: watchUrl = `https://www.youtube.com/watch?v=${track.videoId}`;
+	const watchUrl = `https://www.youtube.com/watch?v=${track.videoId}`;
+
+	/** @param {HTMLElement} node */
+	function ytHost(node) {
+		hostEl = node;
+		return {
+			destroy() {
+				if (hostEl === node) hostEl = null;
+			}
+		};
+	}
 
 	function loadApi() {
 		return new Promise((resolve) => {
@@ -57,7 +57,7 @@
 		player = new window.YT.Player(hostEl, {
 			width: 200,
 			height: 200,
-			videoId: tracks[trackIndex].videoId,
+			videoId: track.videoId,
 			playerVars: {
 				autoplay: 0,
 				controls: 0,
@@ -92,9 +92,6 @@
 						state === window.YT.PlayerState.ENDED
 					) {
 						playing = false;
-						if (state === window.YT.PlayerState.ENDED) {
-							nextTrack(true);
-						}
 					}
 				},
 				onError: () => {
@@ -130,41 +127,6 @@
 		}, 2500);
 	}
 
-	/**
-	 * @param {boolean} [autoplay]
-	 */
-	function selectTrack(nextIndex, autoplay = playing) {
-		embedBlocked = false;
-		playAttempted = false;
-		titleKey += 1;
-		if (!player || !ready) {
-			trackIndex = nextIndex;
-			return;
-		}
-		trackIndex = nextIndex;
-		const id = tracks[trackIndex].videoId;
-		if (autoplay) {
-			player.loadVideoById(id);
-		} else {
-			player.cueVideoById(id);
-			playing = false;
-		}
-	}
-
-	/**
-	 * @param {boolean} [autoplay]
-	 */
-	function nextTrack(autoplay = playing) {
-		selectTrack((trackIndex + 1) % tracks.length, autoplay);
-	}
-
-	/**
-	 * @param {boolean} [autoplay]
-	 */
-	function prevTrack(autoplay = playing) {
-		selectTrack((trackIndex - 1 + tracks.length) % tracks.length, autoplay);
-	}
-
 	onMount(async () => {
 		await loadApi();
 		if (!destroyed) createPlayer();
@@ -188,7 +150,7 @@
 	aria-label="Music player — recordings by other musicians"
 >
 	<div class="yt-host" aria-hidden="true">
-		<div bind:this={hostEl}></div>
+		<div use:ytHost></div>
 	</div>
 
 	<div class="row">
@@ -211,35 +173,8 @@
 		</button>
 
 		<div class="meta">
-			{#key titleKey}
-				<p class="title" title={track.title}>{track.title}</p>
-				<p class="credit">{track.credit}</p>
-			{/key}
-		</div>
-
-		<div class="nav">
-			<button
-				type="button"
-				class="icon-btn"
-				on:click={() => prevTrack()}
-				disabled={!ready}
-				aria-label="Previous piece"
-			>
-				<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-					<path fill="currentColor" d="M6.5 6h1.6v12H6.5V6zm3.2 6 8.3 5.7V6.3L9.7 12z" />
-				</svg>
-			</button>
-			<button
-				type="button"
-				class="icon-btn"
-				on:click={() => nextTrack()}
-				disabled={!ready}
-				aria-label="Next piece"
-			>
-				<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-					<path fill="currentColor" d="M16 6h1.6v12H16V6zM6 17.7 14.3 12 6 6.3v11.4z" />
-				</svg>
-			</button>
+			<p class="title" title={track.title}>{track.title}</p>
+			<p class="credit">{track.credit}</p>
 		</div>
 	</div>
 
@@ -340,19 +275,6 @@
 		}
 	}
 
-	.nav {
-		display: flex;
-		align-items: center;
-		flex-shrink: 0;
-		gap: 0.05rem;
-		opacity: 0.72;
-		transition: opacity 0.25s ease;
-	}
-
-	.player:hover .nav {
-		opacity: 1;
-	}
-
 	.icon-btn {
 		appearance: none;
 		border: none;
@@ -432,10 +354,6 @@
 			padding: 0.62rem;
 		}
 
-		.nav button:first-child {
-			display: none;
-		}
-
 		.title {
 			font-size: 0.72rem;
 		}
@@ -452,7 +370,6 @@
 		}
 
 		.icon-btn,
-		.nav,
 		.player {
 			transition: none;
 		}
