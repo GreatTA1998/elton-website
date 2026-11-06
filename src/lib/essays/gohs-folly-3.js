@@ -9,7 +9,9 @@ const essay = {
 	layout: 'continuous',
 	series: seriesMeta(3),
 	heroImage: {
-		src: '/gohs-folly-ch3-chart.png',
+		src: '/gohs-folly-ch3-chart.jpg',
+		webp: '/gohs-folly-ch3-chart.webp',
+		avif: '/gohs-folly-ch3-chart.avif',
 		alt: 'Chart accompanying Thinking from First Principles'
 	},
 	prevChapter: {
@@ -40,7 +42,9 @@ const essay = {
 				},
 				{
 					type: 'image',
-					src: '/gohs-folly-excerpt-government-clean.png',
+					src: '/gohs-folly-excerpt-government-clean.jpg',
+					webp: '/gohs-folly-excerpt-government-clean.webp',
+					avif: '/gohs-folly-excerpt-government-clean.avif',
 					alt: 'Excerpt from Keeping the Government Clean, From Third World to First'
 				},
 				{

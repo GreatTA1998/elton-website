@@ -40,7 +40,9 @@ const essay = {
 				},
 				{
 					type: 'image',
-					src: '/gohs-folly-excerpt-surviving.png',
+					src: '/gohs-folly-excerpt-surviving.jpg',
+					webp: '/gohs-folly-excerpt-surviving.webp',
+					avif: '/gohs-folly-excerpt-surviving.avif',
 					alt: 'Excerpt from Surviving Without a Winterland, From Third World to First'
 				},
 				{

@@ -36,6 +36,8 @@ const essay = {
 				{
 					type: 'image',
 					src: '/gohs-folly-ch4-closing.jpg',
+					webp: '/gohs-folly-ch4-closing.webp',
+					avif: '/gohs-folly-ch4-closing.avif',
 					alt: 'Closing image for Acting with courage'
 				}
 			]

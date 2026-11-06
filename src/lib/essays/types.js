@@ -1,5 +1,5 @@
 /**
- * @typedef {{ src: string, alt: string }} EssayImage
+ * @typedef {{ src: string, alt: string, avif?: string, webp?: string }} EssayImage
  * @typedef {{ paragraphs: string[], attribution?: string }} EssayQuote
  * @typedef {{
  *   id: string,
@@ -11,7 +11,7 @@
  * @typedef {{ text: string, highlight?: boolean }} EssayTextPart
  * @typedef {{ type: 'p', text?: string, parts?: EssayTextPart[] }} EssayParagraphBlock
  * @typedef {{ type: 'quote', paragraphs: string[], attribution?: string }} EssayQuoteBlock
- * @typedef {{ type: 'image', src: string, alt: string }} EssayImageBlock
+ * @typedef {{ type: 'image', src: string, alt: string, avif?: string, webp?: string }} EssayImageBlock
  * @typedef {{ type: 'excerpt', text: string }} EssayExcerptBlock
  * @typedef {EssayParagraphBlock | EssayQuoteBlock | EssayImageBlock | EssayExcerptBlock} EssayBlock
  * @typedef {{ id: string, title?: string, blocks: EssayBlock[] }} EssaySection

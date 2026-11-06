@@ -44,7 +44,9 @@ const essay = {
 				},
 				{
 					type: 'image',
-					src: '/gohs-folly-excerpt-epilogue.png',
+					src: '/gohs-folly-excerpt-epilogue.jpg',
+					webp: '/gohs-folly-excerpt-epilogue.webp',
+					avif: '/gohs-folly-excerpt-epilogue.avif',
 					alt: 'Excerpt from Epilogue, From Third World to First'
 				},
 				{

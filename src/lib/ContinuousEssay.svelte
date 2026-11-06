@@ -141,10 +141,22 @@
 				<button
 					type="button"
 					class="image-button"
-					on:click={() => openLightbox(essay.heroImage.src, essay.heroImage.alt)}
+					on:click={() =>
+						openLightbox(
+							essay.heroImage.avif || essay.heroImage.webp || essay.heroImage.src,
+							essay.heroImage.alt
+						)}
 					aria-label="Expand chart"
 				>
-					<img src={essay.heroImage.src} alt={essay.heroImage.alt} />
+					<picture>
+						{#if essay.heroImage.avif}
+							<source srcset={essay.heroImage.avif} type="image/avif" />
+						{/if}
+						{#if essay.heroImage.webp}
+							<source srcset={essay.heroImage.webp} type="image/webp" />
+						{/if}
+						<img src={essay.heroImage.src} alt={essay.heroImage.alt} loading="lazy" decoding="async" />
+					</picture>
 				</button>
 			</figure>
 		{/if}
@@ -187,10 +199,18 @@
 						<button
 							type="button"
 							class="image-button"
-							on:click={() => openLightbox(block.src, block.alt)}
+							on:click={() => openLightbox(block.avif || block.webp || block.src, block.alt)}
 							aria-label="Expand image"
 						>
-							<img src={block.src} alt={block.alt} />
+							<picture>
+								{#if block.avif}
+									<source srcset={block.avif} type="image/avif" />
+								{/if}
+								{#if block.webp}
+									<source srcset={block.webp} type="image/webp" />
+								{/if}
+								<img src={block.src} alt={block.alt} loading="lazy" decoding="async" />
+							</picture>
 						</button>
 					</figure>
 				{/if}
@@ -260,7 +280,7 @@
 		width: 100%;
 		max-width: 100%;
 		margin: 0;
-		padding: 1.35rem 2.5rem 2.75rem;
+		padding: 1.35rem 2.5rem calc(3.25rem + env(safe-area-inset-bottom, 0px));
 		box-sizing: border-box;
 		overflow-x: clip;
 		min-width: 0;
@@ -415,7 +435,7 @@
 	.hero-figure,
 	.figure {
 		margin: 0 0 0.95rem;
-		max-width: min(36rem, 100%);
+		max-width: min(62rem, 100%);
 		width: 100%;
 		min-width: 0;
 		box-sizing: border-box;
@@ -438,14 +458,19 @@
 		box-sizing: border-box;
 	}
 
+	.image-button picture {
+		display: block;
+		width: 100%;
+	}
+
 	.hero-figure img,
 	.figure img {
 		display: block;
 		width: 100%;
 		max-width: 100%;
 		height: auto;
-		border-radius: 8px;
-		border: 1px solid #ececec;
+		border-radius: 0;
+		border: none;
 		background: #fff;
 	}
 
@@ -583,9 +608,10 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 1rem;
-		margin: 1.75rem 0 0;
+		margin: 1.75rem 0 calc(1.25rem + env(safe-area-inset-bottom, 0px));
 		max-width: min(62rem, 100%);
 		padding-top: 1rem;
+		padding-bottom: 0.35rem;
 		border-top: 1px solid #ececec;
 		box-sizing: border-box;
 	}
@@ -666,7 +692,7 @@
 
 	@media (max-width: 720px) {
 		.essay {
-			padding: 1.15rem 1rem 2.25rem;
+			padding: 1.15rem 1rem calc(4.25rem + env(safe-area-inset-bottom, 0px));
 		}
 
 		.top-bar {
@@ -680,6 +706,8 @@
 		.chapter-nav {
 			grid-template-columns: 1fr;
 			gap: 0.85rem;
+			margin-bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+			padding-bottom: 0.5rem;
 		}
 
 		.nav-link.next {

@@ -9,7 +9,9 @@ const essay = {
 	layout: 'continuous',
 	series: seriesMeta('preface'),
 	heroImage: {
-		src: '/gohs-folly-cover.png',
+		src: '/gohs-folly-cover.jpg',
+		webp: '/gohs-folly-cover.webp',
+		avif: '/gohs-folly-cover.avif',
 		alt: "Goh's Folly series cover"
 	},
 	nextChapter: {
