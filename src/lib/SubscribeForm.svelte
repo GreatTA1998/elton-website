@@ -28,6 +28,11 @@
 	];
 	$: hasInterest = interests.length > 0;
 
+	function toggleTopic(topic) {
+		if (topic === 'essays') essays = !essays;
+		if (topic === 'music') music = !music;
+	}
+
 	function toggleApp(id) {
 		apps = { ...apps, [id]: !apps[id] };
 	}
@@ -85,15 +90,25 @@
 	<fieldset class="interests" disabled={status === 'submitting' || status === 'success'}>
 		<legend class="sr-only">Interests</legend>
 
-		<div class="topic-row">
-			<label class="topic" class:selected={essays}>
-				<input type="checkbox" bind:checked={essays} />
-				<span>Essays</span>
-			</label>
-			<label class="topic" class:selected={music}>
-				<input type="checkbox" bind:checked={music} />
-				<span>Music</span>
-			</label>
+		<div class="topic-row" role="group" aria-label="Topics">
+			<button
+				type="button"
+				class="chip"
+				class:selected={essays}
+				aria-pressed={essays}
+				on:click={() => toggleTopic('essays')}
+			>
+				Essays
+			</button>
+			<button
+				type="button"
+				class="chip"
+				class:selected={music}
+				aria-pressed={music}
+				on:click={() => toggleTopic('music')}
+			>
+				Music
+			</button>
 		</div>
 
 		<div class="software">
@@ -183,35 +198,40 @@
 		gap: 8px;
 	}
 
-	.topic {
+	.chip {
+		appearance: none;
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
+		margin: 0;
 		padding: 8px 12px;
 		border: 1px solid #ececec;
 		border-radius: 10px;
 		cursor: pointer;
-		background: transparent;
+		background: #fff;
+		font: inherit;
 		font-size: 0.92rem;
 		font-weight: 500;
 		color: #2c2c2c;
 		line-height: 1.3;
-		transition: background-color 0.15s ease, border-color 0.15s ease;
+		transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 	}
 
-	.topic:hover {
+	.chip:hover {
 		background: #f7f7f7;
 		border-color: #e0e0e0;
 	}
 
-	.topic.selected {
-		border-color: #d0d0d0;
-		background: #fafafa;
+	.chip.selected {
+		border-color: #2c2c2c;
+		background: #f7f7f7;
 	}
 
-	.topic input {
-		margin: 0;
-		accent-color: #2c2c2c;
+	.chip:not(.selected) {
+		opacity: 0.78;
+	}
+
+	.chip:not(.selected):hover {
+		opacity: 0.92;
 	}
 
 	.software {
