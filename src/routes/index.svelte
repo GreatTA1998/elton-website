@@ -63,9 +63,17 @@
 	</div>
 	<div class="essay-item">
 		<a class="essay-thumb-link" href="/essays/gohs-folly">
-			<div class="essay-thumb essay-thumb-placeholder essay-thumb-written" aria-hidden="true">
-				<span>written</span>
-			</div>
+			<picture>
+				<source srcset="/gohs-folly-cover.avif" type="image/avif" />
+				<source srcset="/gohs-folly-cover.webp" type="image/webp" />
+				<img
+					class="essay-thumb"
+					src="/gohs-folly-cover.jpg"
+					alt="Goh's Folly: Seeing What Others Couldn't"
+					loading="lazy"
+					decoding="async"
+				/>
+			</picture>
 		</a>
 		<p class="essay-title">
 			<a href="/essays/gohs-folly">Goh's Folly: Seeing What Others Couldn't</a>
