@@ -80,15 +80,20 @@
 	$: nextHref = nextChapter && nextChapter.href ? nextChapter.href : '';
 	$: nextEnabled = Boolean(nextHref);
 	$: nextTitle = (nextChapter && nextChapter.title) || '';
-	$: nextProgress =
+	$: nextChapterNumber =
 		series && series.chapterCount
 			? series.part === 'preface'
-				? `chapter 1 of ${series.chapterCount}`
+				? 1
 				: typeof series.chapter === 'number' && series.chapter < series.chapterCount
-					? `chapter ${series.chapter + 1} of ${series.chapterCount}`
-					: ''
-			: '';
-	$: nextLabel = nextProgress ? `Next · ${nextProgress}` : (nextChapter && nextChapter.label) || 'Next chapter';
+					? series.chapter + 1
+					: null
+			: null;
+	$: nextLabel =
+		nextChapterNumber && series && series.chapterCount && nextTitle
+			? `Chapter ${nextChapterNumber} of ${series.chapterCount}: ${nextTitle}`
+			: nextTitle
+				? nextTitle
+				: (nextChapter && nextChapter.label) || 'Next chapter';
 	$: hasSeriesNav = Boolean(nextChapter);
 	$: isSeriesEnd =
 		Boolean(series) &&
@@ -279,19 +284,11 @@
 		<nav class="chapter-nav" aria-label="Series navigation">
 			{#if nextEnabled}
 				<a class="nav-link next" href={nextHref}>
-					<span class="nav-kicker">{nextLabel}</span>
-					{#if nextTitle}
-						<span class="nav-title">{nextTitle}</span>
-					{/if}
+					<span class="nav-title">{nextLabel}</span>
 				</a>
 			{:else}
 				<span class="nav-link next is-disabled" aria-disabled="true" title="Coming soon">
-					<span class="nav-kicker">{nextLabel}</span>
-					{#if nextTitle}
-						<span class="nav-title">{nextTitle}</span>
-					{:else}
-						<span class="nav-soon">Coming soon</span>
-					{/if}
+					<span class="nav-soon">Coming soon</span>
 				</span>
 			{/if}
 		</nav>
@@ -769,10 +766,7 @@
 	}
 
 	.nav-link {
-		display: inline-flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 0.35rem;
+		display: block;
 		width: 100%;
 		max-width: 100%;
 		padding: 1.15rem 1.25rem;
@@ -789,7 +783,6 @@
 	}
 
 	.nav-link.next {
-		align-items: flex-start;
 		text-align: left;
 	}
 
@@ -798,7 +791,6 @@
 		border-color: #bdbdbd;
 	}
 
-	a.nav-link:hover .nav-kicker,
 	a.nav-link:hover .nav-title {
 		text-decoration: none;
 	}
@@ -812,22 +804,11 @@
 		user-select: none;
 	}
 
-	.nav-kicker {
-		font-size: 0.95rem;
-		letter-spacing: 0.01em;
-		text-transform: none;
-		color: #2c2c2c;
-		font-weight: 500;
-	}
-
-	.nav-link.is-disabled .nav-kicker {
-		color: inherit;
-	}
-
 	.nav-title,
 	.nav-soon {
+		display: block;
 		font-size: 1.22rem;
-		line-height: 1.35;
+		line-height: 1.4;
 		color: #1a1a1a;
 		font-weight: 600;
 	}
