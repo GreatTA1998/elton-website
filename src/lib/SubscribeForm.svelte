@@ -63,7 +63,7 @@
 			<input type="radio" bind:group={preference} value="digest" />
 			<span class="pref-copy">
 				<span class="pref-title">Quarterly digest</span>
-				<span class="pref-help">A short note a few times a year</span>
+				<span class="pref-help">a summary email every quarter</span>
 			</span>
 		</label>
 
@@ -71,7 +71,9 @@
 			<input type="radio" bind:group={preference} value="posts" />
 			<span class="pref-copy">
 				<span class="pref-title">Every new post</span>
-				<span class="pref-help">When something is published</span>
+				<span class="pref-help"
+					>an email on each new essay, music recording or major software update</span
+				>
 			</span>
 		</label>
 	</fieldset>
