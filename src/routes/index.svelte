@@ -10,28 +10,28 @@
 		<img class="app-card-logo" src="/actions-life-logo.png" alt="actions.life logo" />
 		<div class="app-card-text">
 			<strong>actions.life</strong>
-			<span>Put to-do lists on the calendar.</span>
+			<span>2022 – current (fully active)</span>
 		</div>
 	</a>
 	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://explanations.io">
 		<img class="app-card-logo" src="/explanations-logo.png" alt="explanations.io logo" />
 		<div class="app-card-text">
 			<strong>explanations.io</strong>
-			<span>Blackboard-video explanations.</span>
+			<span>2018 (in development) – current</span>
 		</div>
 	</a>
 	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://zetteldraw.com">
 		<img class="app-card-logo" src="/zetteldraw-logo.png" alt="zetteldraw logo" />
 		<div class="app-card-text">
 			<strong>zetteldraw</strong>
-			<span>Handwriting-first notes on a Boox.</span>
+			<span>2026 (in private testing) – current</span>
 		</div>
 	</a>
 	<a class="app-card" target="_blank" rel="noopener noreferrer" href="https://zen-message.com">
 		<img class="app-card-logo" src="/zen-message-logo.jpg" alt="zen-message logo" />
 		<div class="app-card-text">
 			<strong>zen-message</strong>
-			<span>A calmer, less interruptive messaging system.</span>
+			<span>2024 (in development)</span>
 		</div>
 	</a>
 </div>
@@ -39,34 +39,6 @@
 <h2 class="section-label">video essays</h2>
 
 <div class="essay-grid">
-	<div class="essay-item">
-		<a
-			class="essay-thumb-link essay-thumb-link-video"
-			target="_blank"
-			rel="noopener noreferrer"
-			href="https://www.youtube.com/watch?v=DhyhHdN02xc"
-			aria-label="Watch video: Beyond the features: what is the point of Notion?"
-		>
-			<img
-				class="essay-thumb"
-				src="/notion-essay-thumb.jpg"
-				alt="Beyond the features: what is the point of Notion?"
-			/>
-			<span class="essay-play" aria-hidden="true">
-				<svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
-					<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
-				</svg>
-			</span>
-		</a>
-		<p class="essay-title">
-			<a target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/watch?v=DhyhHdN02xc">
-				Beyond the features: what is the point of Notion?
-			</a>
-		</p>
-		<p class="essay-sentence">
-			Notion's two innovations: navigating your own content freely, and organizing it beyond folders and notes.
-		</p>
-	</div>
 	<div class="essay-item">
 		<a class="essay-thumb-link" href="/essays/gohs-folly">
 			<picture>
@@ -87,6 +59,40 @@
 		<p class="essay-sentence">
 			Sometimes, we have to devote many years of our life into something that might not work — a
 			four-chapter essay on Singapore, originality, and courage.
+		</p>
+	</div>
+	<div class="essay-item">
+		{#if notionPlaying}
+			<div class="essay-video-frame">
+				<iframe
+					src="https://www.youtube-nocookie.com/embed/DhyhHdN02xc?autoplay=1&rel=0"
+					title="Beyond the features: what is the point of Notion?"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+					allowfullscreen
+				></iframe>
+			</div>
+		{:else}
+			<button
+				type="button"
+				class="essay-thumb-link essay-thumb-link-video"
+				aria-label="Play video: Beyond the features: what is the point of Notion?"
+				on:click={() => (notionPlaying = true)}
+			>
+				<img
+					class="essay-thumb"
+					src="/notion-essay-thumb.jpg"
+					alt="Beyond the features: what is the point of Notion?"
+				/>
+				<span class="essay-play" aria-hidden="true">
+					<svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
+						<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
+					</svg>
+				</span>
+			</button>
+		{/if}
+		<p class="essay-title">Beyond the features: what is the point of Notion?</p>
+		<p class="essay-sentence">
+			Notion's two innovations: navigating your own content freely, and organizing it beyond folders and notes.
 		</p>
 	</div>
 	<div class="essay-item">
@@ -142,6 +148,8 @@
 
 <script>
 	import SubscribeForm from '$lib/SubscribeForm.svelte';
+
+	let notionPlaying = false;
 </script>
 
 <style>
@@ -246,6 +254,12 @@
 	.essay-thumb-link {
 		display: block;
 		position: relative;
+		width: 100%;
+		padding: 0;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		text-align: left;
 	}
 
 	.essay-thumb {
@@ -256,8 +270,21 @@
 		border-radius: 8px;
 	}
 
-	.essay-thumb-link-video .essay-thumb {
-		display: block;
+	.essay-video-frame {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		border-radius: 8px;
+		overflow: hidden;
+		background: #111;
+	}
+
+	.essay-video-frame iframe {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
 	}
 
 	.essay-play {
