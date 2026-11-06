@@ -32,6 +32,11 @@ const essay = {
 				{
 					type: 'p',
 					text: 'It says, no matter the difficulties, if we persevere, see the world clearly, and do the right things even if they’re painful, the future can be brighter than ever.'
+				},
+				{
+					type: 'image',
+					src: '/gohs-folly-ch4-closing.jpg',
+					alt: 'Closing image for Acting with courage'
 				}
 			]
 		}

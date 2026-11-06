@@ -598,15 +598,20 @@
 		display: inline-flex;
 		flex-direction: column;
 		align-items: flex-start;
-		gap: 0.2rem;
+		gap: 0.25rem;
+		width: 100%;
 		max-width: 100%;
-		padding: 0.15rem 0;
+		padding: 0.85rem 1rem;
 		color: #2c2c2c;
 		text-decoration: none;
 		overflow-wrap: anywhere;
 		word-break: break-word;
 		box-sizing: border-box;
 		min-width: 0;
+		border: 1px solid #e4e4e4;
+		border-radius: 10px;
+		background: #fafafa;
+		transition: background-color 0.15s ease, border-color 0.15s ease;
 	}
 
 	.nav-link.next {
@@ -615,22 +620,34 @@
 		justify-self: end;
 	}
 
+	a.nav-link:hover {
+		background: #f3f3f3;
+		border-color: #d4d4d4;
+	}
+
 	a.nav-link:hover .nav-kicker,
 	a.nav-link:hover .nav-title {
-		text-decoration: underline;
+		text-decoration: none;
 	}
 
 	.nav-link.is-disabled {
 		color: #b0b0b0;
+		background: #fcfcfc;
+		border-color: #ececec;
 		cursor: not-allowed;
 		pointer-events: none;
 		user-select: none;
 	}
 
 	.nav-kicker {
-		font-size: 0.78rem;
-		letter-spacing: 0.02em;
+		font-size: 0.72rem;
+		letter-spacing: 0.03em;
 		text-transform: uppercase;
+		color: #6a6a6a;
+		font-weight: 500;
+	}
+
+	.nav-link.is-disabled .nav-kicker {
 		color: inherit;
 	}
 
@@ -639,10 +656,12 @@
 		font-size: 0.95rem;
 		line-height: 1.35;
 		color: inherit;
+		font-weight: 500;
 	}
 
 	.nav-soon {
 		font-style: italic;
+		font-weight: 400;
 	}
 
 	@media (max-width: 720px) {

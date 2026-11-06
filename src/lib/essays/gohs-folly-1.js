@@ -39,6 +39,11 @@ const essay = {
 					text: 'The particulars on how they succeeded is already well documented, so instead I’ll write my personal takeaways for why they are able to be original and daring without becoming delusional.'
 				},
 				{
+					type: 'image',
+					src: '/gohs-folly-excerpt-surviving.png',
+					alt: 'Excerpt from Surviving Without a Winterland, From Third World to First'
+				},
+				{
 					type: 'excerpt',
 					text: 'Excerpt from Surviving Without a Winterland, From Third World to First'
 				}

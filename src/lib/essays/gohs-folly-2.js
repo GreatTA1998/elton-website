@@ -43,6 +43,11 @@ const essay = {
 					text: 'It is this confluence of perspectives that lead to a more complete picture of reality, and what to do to change it.'
 				},
 				{
+					type: 'image',
+					src: '/gohs-folly-excerpt-epilogue.png',
+					alt: 'Excerpt from Epilogue, From Third World to First'
+				},
+				{
 					type: 'excerpt',
 					text: 'Excerpt from Epilogue, From Third World to First'
 				}

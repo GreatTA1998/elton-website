@@ -8,6 +8,10 @@ const essay = {
 		'It’s easy to have contrarian opinions when we don’t think much of others. The blindspot emerges when we have people we admire, whose words we accept as gospel.',
 	layout: 'continuous',
 	series: seriesMeta(3),
+	heroImage: {
+		src: '/gohs-folly-ch3-chart.png',
+		alt: 'Chart accompanying Thinking from First Principles'
+	},
 	prevChapter: {
 		label: 'Previous chapter',
 		title: SERIES_TITLES.chapter2,
@@ -33,6 +37,11 @@ const essay = {
 				{
 					type: 'p',
 					text: 'Ideology can induce lazy thinking. To see elegant ideas as true without wanting the inconvenience of engaging and debugging reality. If it’s inevitable that we take certain words as gospel, then equally, we must have the courage to be blasphemous sometimes, letting reality be the guiding star.'
+				},
+				{
+					type: 'image',
+					src: '/gohs-folly-excerpt-government-clean.png',
+					alt: 'Excerpt from Keeping the Government Clean, From Third World to First'
 				},
 				{
 					type: 'excerpt',

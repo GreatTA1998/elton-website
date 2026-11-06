@@ -8,6 +8,10 @@ const essay = {
 		'Sometimes, we have to devote many years of our life into something that might not work. A four-chapter essay on Singapore, originality, and courage.',
 	layout: 'continuous',
 	series: seriesMeta('preface'),
+	heroImage: {
+		src: '/gohs-folly-cover.png',
+		alt: "Goh's Folly series cover"
+	},
 	nextChapter: {
 		label: 'Next chapter',
 		title: SERIES_TITLES.chapter1,
