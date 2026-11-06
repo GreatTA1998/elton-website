@@ -67,6 +67,7 @@
 
 	$: series = essay.series || null;
 	$: seriesName = series ? series.title : '';
+	$: seriesHref = series && series.href ? series.href : '';
 	$: seriesChapterLabel = series
 		? series.part === 'preface'
 			? 'Preface'
@@ -106,7 +107,11 @@
 				<a href="/">Home</a><span class="sep">/</span>
 				{#if series}
 					<span class="series-label" title={seriesLabel}>
-						<span class="series-name">{seriesName}</span>
+						{#if seriesHref}
+							<a class="series-name" href={seriesHref}>{seriesName}</a>
+						{:else}
+							<span class="series-name">{seriesName}</span>
+						{/if}
 						<span class="series-sep" aria-hidden="true">·</span>
 						<span class="series-chapter">{seriesChapterLabel}</span>
 					</span>

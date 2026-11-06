@@ -24,12 +24,15 @@ export const SERIES_TITLES = {
  * @returns {import('./types').EssaySeries}
  */
 export function seriesMeta(part) {
+	const href = `/essays/${SERIES_SLUGS.preface}`;
+
 	if (part === 'preface') {
 		return {
 			title: SERIES_TITLE,
 			shortTitle: "Goh's Folly",
 			part: 'preface',
-			chapterCount: SERIES_CHAPTER_COUNT
+			chapterCount: SERIES_CHAPTER_COUNT,
+			href
 		};
 	}
 
@@ -38,6 +41,7 @@ export function seriesMeta(part) {
 		shortTitle: "Goh's Folly",
 		part: 'chapter',
 		chapter: part,
-		chapterCount: SERIES_CHAPTER_COUNT
+		chapterCount: SERIES_CHAPTER_COUNT,
+		href
 	};
 }
