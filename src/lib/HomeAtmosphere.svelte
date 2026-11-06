@@ -7,13 +7,13 @@
 	// Timeline only for now. Later: selecting a place can swap scenery;
 	// Hsinchu maps to the current home-wisteria patio photo.
 	const places = [
-		'Hsinchu',
-		'Shanghai',
-		'Eindhoven',
-		'Milton Keynes',
-		'London',
-		'Boston',
-		'Tokyo'
+		'Hsinchu, Taiwan',
+		'Shanghai, China',
+		'Eindhoven, Netherlands',
+		'Milton Keynes, UK',
+		'London, UK',
+		'Boston, USA',
+		'Tokyo, Japan'
 	];
 </script>
 
