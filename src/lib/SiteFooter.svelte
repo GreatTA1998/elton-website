@@ -1,5 +1,6 @@
 <footer class="site-footer">
-	<nav class="socials" aria-label="Social links">
+	<nav class="socials" aria-label="Contact and social links">
+		<a class="mail" href="mailto:eltonlin1998@gmail.com">eltonlin1998@gmail.com</a>
 		<a
 			href="https://github.com/GreatTA1998"
 			target="_blank"
@@ -69,6 +70,7 @@
 
 	.socials {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 14px;
 	}
@@ -84,6 +86,12 @@
 
 	.socials a:hover {
 		color: #2c2c2c;
+	}
+
+	.socials .mail {
+		font-size: 0.9rem;
+		line-height: 1.3;
+		margin-right: 4px;
 	}
 
 	.socials svg {
