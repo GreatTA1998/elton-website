@@ -1,8 +1,16 @@
 <script context="module">
-	import { getEssay } from '$lib/essays/index.js';
+	import { getEssay, getEssayRedirect } from '$lib/essays/index.js';
 
 	/** @type {import('@sveltejs/kit').Load} */
 	export function load({ params }) {
+		const redirectTo = getEssayRedirect(params.slug);
+		if (redirectTo) {
+			return {
+				status: 301,
+				redirect: redirectTo
+			};
+		}
+
 		const essay = getEssay(params.slug);
 
 		if (!essay) {

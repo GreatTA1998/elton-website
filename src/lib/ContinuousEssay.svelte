@@ -68,16 +68,24 @@
 	$: series = essay.series || null;
 	$: seriesName = series ? series.title : '';
 	$: seriesChapterLabel = series
-		? series.chapterCount
-			? `Chapter ${series.chapter} of ${series.chapterCount}`
-			: `Chapter ${series.chapter}`
+		? series.part === 'preface'
+			? 'Preface'
+			: series.chapterCount
+				? `Chapter ${series.chapter} of ${series.chapterCount}`
+				: `Chapter ${series.chapter}`
 		: '';
 	$: seriesLabel = series ? `${series.title} · ${seriesChapterLabel}` : '';
+	$: prevChapter = essay.prevChapter || null;
+	$: prevHref = prevChapter && prevChapter.href ? prevChapter.href : '';
+	$: prevEnabled = Boolean(prevHref);
+	$: prevLabel = (prevChapter && prevChapter.label) || 'Previous';
+	$: prevTitle = (prevChapter && prevChapter.title) || '';
 	$: nextChapter = essay.nextChapter || null;
 	$: nextHref = nextChapter && nextChapter.href ? nextChapter.href : '';
 	$: nextEnabled = Boolean(nextHref);
 	$: nextLabel = (nextChapter && nextChapter.label) || 'Next chapter';
 	$: nextTitle = (nextChapter && nextChapter.title) || '';
+	$: hasSeriesNav = Boolean(prevChapter || nextChapter);
 </script>
 
 <article class="essay" style="--essay-scale: {fontScale}">
@@ -144,7 +152,9 @@
 
 	{#each essay.sections as section (section.id)}
 		<section class="section" id={section.id}>
-			<h2 class="section-title">{section.title}</h2>
+			{#if section.title}
+				<h2 class="section-title">{section.title}</h2>
+			{/if}
 
 			{#each section.blocks as block, blockIndex (`${section.id}-${blockIndex}`)}
 				{#if block.type === 'p'}
@@ -170,6 +180,8 @@
 							<footer class="attribution">— {block.attribution}</footer>
 						{/if}
 					</blockquote>
+				{:else if block.type === 'excerpt'}
+					<p class="excerpt-note">{block.text}</p>
 				{:else if block.type === 'image'}
 					<figure class="figure">
 						<button
@@ -186,24 +198,46 @@
 		</section>
 	{/each}
 
-	{#if nextChapter}
+	{#if hasSeriesNav}
 		<nav class="chapter-nav" aria-label="Series navigation">
-			{#if nextEnabled}
-				<a class="next-chapter" href={nextHref}>
-					<span class="next-kicker">{nextLabel}</span>
-					{#if nextTitle}
-						<span class="next-title">{nextTitle}</span>
-					{/if}
-				</a>
+			{#if prevChapter}
+				{#if prevEnabled}
+					<a class="nav-link prev" href={prevHref}>
+						<span class="nav-kicker">{prevLabel}</span>
+						{#if prevTitle}
+							<span class="nav-title">{prevTitle}</span>
+						{/if}
+					</a>
+				{:else}
+					<span class="nav-link prev is-disabled" aria-disabled="true">
+						<span class="nav-kicker">{prevLabel}</span>
+						{#if prevTitle}
+							<span class="nav-title">{prevTitle}</span>
+						{/if}
+					</span>
+				{/if}
 			{:else}
-				<span class="next-chapter is-disabled" aria-disabled="true" title="Coming soon">
-					<span class="next-kicker">{nextLabel}</span>
-					{#if nextTitle}
-						<span class="next-title">{nextTitle}</span>
-					{:else}
-						<span class="next-soon">Coming soon</span>
-					{/if}
-				</span>
+				<span class="nav-spacer" aria-hidden="true"></span>
+			{/if}
+
+			{#if nextChapter}
+				{#if nextEnabled}
+					<a class="nav-link next" href={nextHref}>
+						<span class="nav-kicker">{nextLabel}</span>
+						{#if nextTitle}
+							<span class="nav-title">{nextTitle}</span>
+						{/if}
+					</a>
+				{:else}
+					<span class="nav-link next is-disabled" aria-disabled="true" title="Coming soon">
+						<span class="nav-kicker">{nextLabel}</span>
+						{#if nextTitle}
+							<span class="nav-title">{nextTitle}</span>
+						{:else}
+							<span class="nav-soon">Coming soon</span>
+						{/if}
+					</span>
+				{/if}
 			{/if}
 		</nav>
 	{/if}
@@ -534,14 +568,33 @@
 		font-style: normal;
 	}
 
+	.excerpt-note {
+		margin: 1rem 0 0;
+		font-size: calc(0.82rem * var(--essay-scale));
+		line-height: 1.45;
+		color: #8a8a8a;
+		font-style: italic;
+		max-width: min(62rem, 100%);
+		overflow-wrap: anywhere;
+		word-break: break-word;
+	}
+
 	.chapter-nav {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
 		margin: 1.75rem 0 0;
 		max-width: min(62rem, 100%);
 		padding-top: 1rem;
 		border-top: 1px solid #ececec;
+		box-sizing: border-box;
 	}
 
-	.next-chapter {
+	.nav-spacer {
+		display: block;
+	}
+
+	.nav-link {
 		display: inline-flex;
 		flex-direction: column;
 		align-items: flex-start;
@@ -553,35 +606,42 @@
 		overflow-wrap: anywhere;
 		word-break: break-word;
 		box-sizing: border-box;
+		min-width: 0;
 	}
 
-	a.next-chapter:hover .next-kicker,
-	a.next-chapter:hover .next-title {
+	.nav-link.next {
+		align-items: flex-end;
+		text-align: right;
+		justify-self: end;
+	}
+
+	a.nav-link:hover .nav-kicker,
+	a.nav-link:hover .nav-title {
 		text-decoration: underline;
 	}
 
-	.next-chapter.is-disabled {
+	.nav-link.is-disabled {
 		color: #b0b0b0;
 		cursor: not-allowed;
 		pointer-events: none;
 		user-select: none;
 	}
 
-	.next-kicker {
+	.nav-kicker {
 		font-size: 0.78rem;
 		letter-spacing: 0.02em;
 		text-transform: uppercase;
 		color: inherit;
 	}
 
-	.next-title,
-	.next-soon {
+	.nav-title,
+	.nav-soon {
 		font-size: 0.95rem;
 		line-height: 1.35;
 		color: inherit;
 	}
 
-	.next-soon {
+	.nav-soon {
 		font-style: italic;
 	}
 
@@ -596,6 +656,17 @@
 
 		.font-control {
 			margin-left: 0;
+		}
+
+		.chapter-nav {
+			grid-template-columns: 1fr;
+			gap: 0.85rem;
+		}
+
+		.nav-link.next {
+			align-items: flex-start;
+			text-align: left;
+			justify-self: start;
 		}
 
 		.section {

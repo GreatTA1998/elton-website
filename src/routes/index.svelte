@@ -71,7 +71,8 @@
 			<a href="/essays/gohs-folly">Goh's Folly: Seeing What Others Couldn't</a>
 		</p>
 		<p class="essay-sentence">
-			A short chaptered essay — one page at a time, with a quiet chapter navigator.
+			Sometimes, we have to devote many years of our life into something that might not work — a
+			four-chapter essay on Singapore, originality, and courage.
 		</p>
 	</div>
 	<div class="essay-item">
