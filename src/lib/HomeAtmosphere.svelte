@@ -4,6 +4,8 @@
   Delete this component (and its import/usage in index.svelte) to remove it.
 -->
 <script>
+	// Timeline only for now. Later: selecting a place can swap scenery;
+	// Hsinchu maps to the current home-wisteria patio photo.
 	const places = [
 		'Hsinchu',
 		'Shanghai',
