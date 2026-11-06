@@ -139,8 +139,8 @@
 		border: none;
 		border-top: 1px solid rgba(255, 255, 255, 0.42);
 		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
-		backdrop-filter: blur(16px) saturate(1.35);
-		-webkit-backdrop-filter: blur(16px) saturate(1.35);
+		backdrop-filter: blur(5px) saturate(1.15);
+		-webkit-backdrop-filter: blur(5px) saturate(1.15);
 		box-sizing: border-box;
 	}
 
@@ -154,7 +154,7 @@
 		border: none;
 		border-radius: 0;
 		background: transparent;
-		color: rgba(18, 18, 18, 0.92);
+		color: #fff;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -163,8 +163,9 @@
 	}
 
 	.play-btn:hover {
-		color: #000;
+		color: #fff;
 		background: transparent;
+		opacity: 0.9;
 	}
 
 	.play-btn svg {
