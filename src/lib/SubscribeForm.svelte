@@ -212,7 +212,8 @@
 		font-weight: 500;
 		color: #2c2c2c;
 		line-height: 1.3;
-		transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+		transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+			opacity 0.15s ease;
 	}
 
 	.chip:hover {
@@ -221,8 +222,15 @@
 	}
 
 	.chip.selected {
-		border-color: #2c2c2c;
-		background: #f7f7f7;
+		border-color: transparent;
+		background: #2c2c2c;
+		color: #fff;
+	}
+
+	.chip.selected:hover {
+		background: #1f1f1f;
+		border-color: transparent;
+		color: #fff;
 	}
 
 	.chip:not(.selected) {
@@ -259,31 +267,33 @@
 		height: 44px;
 		margin: 0;
 		padding: 0;
-		border: 1px solid #ececec;
+		border: 1px solid transparent;
 		border-radius: 10px;
 		background: #fff;
 		overflow: hidden;
 		cursor: pointer;
 		line-height: 0;
-		transition: border-color 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+		transition: opacity 0.15s ease, filter 0.15s ease, transform 0.15s ease;
 	}
 
 	.app-icon:hover {
-		border-color: #d8d8d8;
-		background: #fafafa;
+		background: #fff;
 	}
 
 	.app-icon.selected {
-		border-color: #2c2c2c;
-		background: #f7f7f7;
+		opacity: 1;
+		filter: none;
+		transform: scale(1.04);
 	}
 
 	.app-icon:not(.selected) {
-		opacity: 0.72;
+		opacity: 0.38;
+		filter: grayscale(0.35);
 	}
 
 	.app-icon:not(.selected):hover {
-		opacity: 0.9;
+		opacity: 0.58;
+		filter: grayscale(0.15);
 	}
 
 	.app-icon img {
