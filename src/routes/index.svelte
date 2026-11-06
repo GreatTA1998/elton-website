@@ -66,8 +66,8 @@
 			<a href="/essays/gohs-folly">Goh's Folly: Seeing What Others Couldn't</a>
 		</p>
 		<p class="essay-sentence">
-			Sometimes, we have to devote many years of our life into something that might not work — a
-			four-chapter essay on Singapore, originality, and courage.
+			Sometimes, we have to devote many years of our life into something that might not work - a
+			four-chapter essay on originality, courage, based on Singapore's founding story
 		</p>
 	</div>
 	<div class="essay-item">
