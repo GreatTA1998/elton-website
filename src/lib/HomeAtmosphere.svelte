@@ -71,6 +71,9 @@
 		background: #ffffff;
 		padding: 0 2rem 0.35rem;
 		box-sizing: border-box;
+		/* Never intercept chrome (language toggle) over the hero */
+		pointer-events: none;
+		z-index: 0;
 	}
 
 	.frame {
@@ -83,6 +86,8 @@
 		max-height: min(78vh, 760px);
 		overflow: hidden;
 		flex-shrink: 0;
+		pointer-events: none;
+		z-index: 0;
 	}
 
 	.frame picture,
@@ -108,6 +113,7 @@
 		column-gap: 0.2rem;
 		row-gap: 0.2rem;
 		max-width: 36rem;
+		pointer-events: auto;
 	}
 
 	.places li {
