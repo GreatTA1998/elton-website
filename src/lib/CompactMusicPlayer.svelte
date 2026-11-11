@@ -1,6 +1,7 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import { nowPlaying, currentTrack, TRACKS, ALBUM_IDS, playTrack } from './nowPlaying.js';
+	import { messages } from './i18n.js';
 
 	let playing = false;
 	let ytReady = false;
@@ -18,6 +19,12 @@
 	$: isYoutube = track.kind === 'youtube';
 	$: canToggle = isYoutube ? ytReady : Boolean(audioEl);
 	$: if ($nowPlaying.nonce !== lastNonce) onTrackChange($nowPlaying);
+	$: credit =
+		track.credit === 'my playing'
+			? $messages.myPlaying
+			: track.credit === 'Coming soon'
+				? $messages.bachComingSoon
+				: track.credit;
 
 	/** @param {HTMLElement} node */
 	function ytHost(node) {
@@ -200,7 +207,7 @@
 	});
 </script>
 
-<div class="unit" class:playing role="region" aria-label="Music player">
+<div class="unit" class:playing role="region" aria-label={$messages.musicPlayer}>
 	<div class="yt-host" aria-hidden="true">
 		<div use:ytHost></div>
 	</div>
@@ -218,7 +225,7 @@
 			class="icon-btn play"
 			on:click={togglePlay}
 			disabled={!canToggle}
-			aria-label={playing ? 'Pause' : 'Play'}
+			aria-label={playing ? $messages.pause : $messages.play}
 		>
 			{#if playing}
 				<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
@@ -233,25 +240,27 @@
 
 		<div class="meta">
 			<p class="title" title={track.title}>{track.title}</p>
-			<p class="credit">{track.credit}</p>
+			<p class="credit">{credit}</p>
 		</div>
 	</div>
 
-	<div class="thumbs" aria-label="Recordings">
+	<div class="thumbs" aria-label={$messages.recordings}>
 		{#each ALBUM_IDS as id (id)}
 			<button
 				type="button"
 				class="thumb"
 				class:selected={$nowPlaying.id === id}
 				aria-pressed={$nowPlaying.id === id}
-				aria-label={`Play ${TRACKS[id].title}. ${TRACKS[id].credit}`}
+				aria-label={`${$messages.play} ${TRACKS[id].title}. ${
+					TRACKS[id].credit === 'my playing' ? $messages.myPlaying : TRACKS[id].credit
+				}`}
 				on:click={() => selectAlbum(id)}
 			>
 				<img src={TRACKS[id].cover} alt="" />
 			</button>
 		{/each}
 
-		<div class="thumb placeholder" aria-disabled="true" title="Bach — coming soon">
+		<div class="thumb placeholder" aria-disabled="true" title={$messages.bachComingSoonTitle}>
 			<img src={TRACKS.bach.cover} alt="" />
 		</div>
 	</div>

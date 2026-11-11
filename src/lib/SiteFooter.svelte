@@ -1,5 +1,9 @@
+<script>
+	import { messages } from './i18n.js';
+</script>
+
 <footer class="site-footer">
-	<nav class="socials" aria-label="Contact and social links">
+	<nav class="socials" aria-label={$messages.contactSocial}>
 		<a class="mail" href="mailto:eltonlin1998@gmail.com">eltonlin1998@gmail.com</a>
 		<a
 			href="https://github.com/GreatTA1998"

@@ -2,10 +2,10 @@
 <HomeAtmosphere />
 
 <p class="welcome">
-	Welcome to my absolutely EPIC website, it's INSANE:
+	{$messages.welcome}
 </p>
 
-<h2 class="section-label">software apps</h2>
+<h2 class="section-label">{$messages.softwareApps}</h2>
 
 <div class="app-cards">
 	<div class="app-card app-card-ready">
@@ -13,7 +13,7 @@
 		<div class="app-card-text">
 			<strong>
 				actions.life
-				<span class="ready-tick" title="Ready" aria-label="Ready">
+				<span class="ready-tick" title={$messages.ready} aria-label={$messages.ready}>
 					<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
 						<circle cx="8" cy="8" r="8" fill="#2f9e44" />
 						<path
@@ -27,15 +27,15 @@
 					</svg>
 				</span>
 			</strong>
-			<span class="app-desc">Put to-do lists on the calendar. Fully using since 2024.</span>
-			<span class="app-status">2022 – current</span>
+			<span class="app-desc">{$messages.actionsDesc}</span>
+			<span class="app-status">{$messages.actionsStatus}</span>
 			<a
 				class="app-explore"
 				target="_blank"
 				rel="noopener noreferrer"
 				href="https://actions.life"
 			>
-				Visit
+				{$messages.visit}
 			</a>
 		</div>
 	</div>
@@ -43,34 +43,29 @@
 		<img class="app-card-logo" src="/explanations-logo.png" alt="blackboards.io logo" />
 		<div class="app-card-text">
 			<strong>blackboards.io</strong>
-			<span class="app-desc"
-				>Previously explain.mit.edu — ~800 students/teachers across ~10 MIT classes during
-				COVID-19.</span
-			>
-			<span class="app-status">2018 (under rework) – current</span>
+			<span class="app-desc">{$messages.blackboardsDesc}</span>
+			<span class="app-status">{$messages.blackboardsStatus}</span>
 		</div>
 	</div>
 	<div class="app-card app-card-quiet" aria-disabled="true">
 		<img class="app-card-logo" src="/zetteldraw-logo.png" alt="zetteldraw logo" />
 		<div class="app-card-text">
 			<strong>zetteldraw</strong>
-			<span class="app-desc"
-				>notebook for jotting down ideas first, and worrying about organization later</span
-			>
-			<span class="app-status">2026 (in private testing) – current</span>
+			<span class="app-desc">{$messages.zetteldrawDesc}</span>
+			<span class="app-status">{$messages.zetteldrawStatus}</span>
 		</div>
 	</div>
 	<div class="app-card app-card-quiet" aria-disabled="true">
 		<img class="app-card-logo" src="/zen-message-logo.jpg" alt="zen-message logo" />
 		<div class="app-card-text">
 			<strong>zen-message</strong>
-			<span class="app-desc">A calmer, less interruptive messaging system.</span>
-			<span class="app-status">2024 (in development)</span>
+			<span class="app-desc">{$messages.zenDesc}</span>
+			<span class="app-status">{$messages.zenStatus}</span>
 		</div>
 	</div>
 </div>
 
-<h2 class="section-label">video essays</h2>
+<h2 class="section-label">{$messages.videoEssays}</h2>
 
 <div class="essay-grid">
 	<div class="essay-item">
@@ -132,12 +127,12 @@
 	<div class="essay-item">
 		<div class="essay-thumb essay-thumb-placeholder" aria-hidden="true"></div>
 		<p class="essay-title">《童年回憶：拜訪 Nero——忍鬥風雲 2 開發者》</p>
-		<p class="essay-sentence">coming soon</p>
+		<p class="essay-sentence">{$messages.comingSoon}</p>
 	</div>
 </div>
 
 <section class="email-section" aria-labelledby="email-updates-label">
-	<h2 class="section-label" id="email-updates-label">email updates</h2>
+	<h2 class="section-label" id="email-updates-label">{$messages.emailUpdates}</h2>
 	<SubscribeForm compact />
 </section>
 </div>
@@ -148,6 +143,7 @@
 	import HomeAtmosphere from '$lib/HomeAtmosphere.svelte';
 	import SiteFooter from '$lib/SiteFooter.svelte';
 	import SubscribeForm from '$lib/SubscribeForm.svelte';
+	import { messages } from '$lib/i18n.js';
 
 	let notionPlaying = false;
 </script>
