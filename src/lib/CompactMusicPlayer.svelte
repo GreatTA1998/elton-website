@@ -393,31 +393,25 @@
 
 	.thumb {
 		appearance: none;
-		position: relative;
 		margin: 0;
 		padding: 0;
 		border: none;
-		/* White backing + isolate: rounded AA composites against white, not a dark fringe */
 		background: #fff;
 		width: 2.55rem;
 		height: 2.55rem;
-		border-radius: 8px;
-		overflow: hidden;
-		isolation: isolate;
+		/* Match baked cover radius; no overflow clip — PNG corners are already white */
+		border-radius: 20%;
 		cursor: pointer;
 		flex-shrink: 0;
-		box-shadow: 0 1px 4px rgba(40, 36, 30, 0.08);
 		transition: width 0.22s ease, height 0.22s ease, box-shadow 0.22s ease;
 	}
 
 	.thumb img {
-		/* Oversized into the clip (no dual radius, no img-layer scale AA) */
-		position: absolute;
-		inset: -8%;
-		width: 116%;
-		height: 116%;
-		max-width: none;
+		display: block;
+		width: 100%;
+		height: 100%;
 		object-fit: cover;
+		/* Covers are pre-rounded onto white; do not re-radius/clip here */
 		border-radius: 0;
 	}
 
