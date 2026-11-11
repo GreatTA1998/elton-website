@@ -27,42 +27,36 @@
 					</svg>
 				</span>
 			</strong>
-			<span class="app-desc"
-				>Put to-do lists on the calendar. Fully using since 2024; currently v2 after 2380
-				commits.</span
-			>
-			<span class="app-status">2022 – current · fully active / usable</span>
+			<span class="app-desc">Put to-do lists on the calendar. Fully using since 2024.</span>
+			<span class="app-status">2022 – current</span>
 			<a
 				class="app-explore"
 				target="_blank"
 				rel="noopener noreferrer"
 				href="https://actions.life"
 			>
-				Explore
+				Visit
 			</a>
 		</div>
 	</div>
-	<a
-		class="app-card"
-		target="_blank"
-		rel="noopener noreferrer"
-		href="https://blackboards.io"
-	>
+	<div class="app-card app-card-quiet" aria-disabled="true">
 		<img class="app-card-logo" src="/explanations-logo.png" alt="blackboards.io logo" />
 		<div class="app-card-text">
 			<strong>blackboards.io</strong>
 			<span class="app-desc"
-				>Blackboard-video explanations. Previously explain.mit.edu — ~800 students/teachers across
-				~10 MIT classes during COVID-19.</span
+				>Previously explain.mit.edu — ~800 students/teachers across ~10 MIT classes during
+				COVID-19.</span
 			>
 			<span class="app-status">2018 (under rework) – current</span>
 		</div>
-	</a>
+	</div>
 	<div class="app-card app-card-quiet" aria-disabled="true">
 		<img class="app-card-logo" src="/zetteldraw-logo.png" alt="zetteldraw logo" />
 		<div class="app-card-text">
 			<strong>zetteldraw</strong>
-			<span class="app-desc">Handwriting-first notes on a Boox.</span>
+			<span class="app-desc"
+				>notebook for jotting down ideas first, and worrying about organization later</span
+			>
 			<span class="app-status">2026 (in private testing) – current</span>
 		</div>
 	</div>
