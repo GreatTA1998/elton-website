@@ -15,7 +15,7 @@ export const TRACKS = {
 		kind: 'audio',
 		src: '/ghost-in-a-flower.mp3',
 		title: 'Ghost in a Flower',
-		credit: 'Elton · my playing',
+		credit: 'my playing',
 		cover:
 			'https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg'
 	},
@@ -24,7 +24,7 @@ export const TRACKS = {
 		kind: 'audio',
 		src: '/all-of-me.mp3',
 		title: 'All of Me',
-		credit: 'Elton · my playing',
+		credit: 'my playing',
 		cover: 'https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg'
 	},
 	bach: {
