@@ -67,59 +67,90 @@
 		});
 	}
 
+	const YT_IFRAME_ALLOW =
+		'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+
+	/**
+	 * `referrerpolicy` and `allow` are read when the embed request starts.
+	 * The IFrame API assigns `src` inside the constructor, so the policy has to
+	 * be on that iframe before the assignment. `onReady` is after the document
+	 * loads, and `loadVideoById` does not navigate the iframe again.
+	 * @param {() => void} create
+	 */
+	function withYtIframePolicy(create) {
+		const proto = HTMLIFrameElement.prototype;
+		const desc = Object.getOwnPropertyDescriptor(proto, 'src');
+		if (!desc || typeof desc.set !== 'function' || !desc.configurable) {
+			if (hostEl) {
+				hostEl.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+				hostEl.setAttribute('allow', YT_IFRAME_ALLOW);
+			}
+			create();
+			return;
+		}
+		Object.defineProperty(proto, 'src', {
+			configurable: true,
+			enumerable: desc.enumerable,
+			get: desc.get,
+			set(value) {
+				this.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+				this.setAttribute('allow', YT_IFRAME_ALLOW);
+				desc.set.call(this, value);
+			}
+		});
+		try {
+			create();
+		} finally {
+			Object.defineProperty(proto, 'src', desc);
+		}
+	}
+
 	function createYtPlayer() {
 		if (destroyed || !hostEl || ytPlayer) return;
-		ytPlayer = new window.YT.Player(hostEl, {
-			width: 200,
-			height: 200,
-			videoId: TRACKS.rachmaninoff.videoId,
-			playerVars: {
-				autoplay: 0,
-				controls: 0,
-				disablekb: 1,
-				fs: 0,
-				iv_load_policy: 3,
-				modestbranding: 1,
-				playsinline: 1,
-				rel: 0,
-				origin: typeof window !== 'undefined' ? window.location.origin : undefined
-			},
-			events: {
-				onReady: (event) => {
-					if (destroyed) return;
-					ytReady = true;
-					const iframe =
-						event?.target?.getIframe?.() || hostEl?.querySelector?.('iframe');
-					if (iframe) {
-						iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-						iframe.setAttribute(
-							'allow',
-							'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
-						);
-					}
-					if ($nowPlaying.autoplay && TRACKS[$nowPlaying.id]?.kind === 'youtube') {
-						startCurrent();
-					}
+		withYtIframePolicy(() => {
+			ytPlayer = new window.YT.Player(hostEl, {
+				width: 200,
+				height: 200,
+				videoId: TRACKS.rachmaninoff.videoId,
+				playerVars: {
+					autoplay: 0,
+					controls: 0,
+					disablekb: 1,
+					fs: 0,
+					iv_load_policy: 3,
+					modestbranding: 1,
+					playsinline: 1,
+					rel: 0,
+					origin: typeof window !== 'undefined' ? window.location.origin : undefined
 				},
-				onStateChange: (event) => {
-					if (destroyed || !window.YT) return;
-					if (TRACKS[$nowPlaying.id]?.kind !== 'youtube') return;
-					const state = event.data;
-					if (state === window.YT.PlayerState.PLAYING) playing = true;
-					else if (
-						state === window.YT.PlayerState.PAUSED ||
-						state === window.YT.PlayerState.ENDED
-					)
+				events: {
+					onReady: () => {
+						if (destroyed) return;
+						ytReady = true;
+						if ($nowPlaying.autoplay && TRACKS[$nowPlaying.id]?.kind === 'youtube') {
+							startCurrent();
+						}
+					},
+					onStateChange: (event) => {
+						if (destroyed || !window.YT) return;
+						if (TRACKS[$nowPlaying.id]?.kind !== 'youtube') return;
+						const state = event.data;
+						if (state === window.YT.PlayerState.PLAYING) playing = true;
+						else if (
+							state === window.YT.PlayerState.PAUSED ||
+							state === window.YT.PlayerState.ENDED
+						)
+							playing = false;
+					},
+					onError: (event) => {
 						playing = false;
-				},
-				onError: (event) => {
-					playing = false;
-					const code = event?.data;
-					if (code === 101 || code === 150 || code === 153) {
-						playing = false;
+						const code = event?.data;
+						if (code === 101 || code === 150 || code === 153) {
+							playing = false;
+						}
 					}
 				}
-			}
+			});
 		});
 	}
 
