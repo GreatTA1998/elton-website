@@ -5,7 +5,9 @@ export const TRACKS = {
 	rachmaninoff: {
 		id: 'rachmaninoff',
 		kind: 'youtube',
-		/* Ashkenazy Topic J7FNWtUwBD0 returns IFrame API error 150 (embed blocked). */
+		/* TEMP fallback: Ashkenazy Topic J7FNWtUwBD0 (and all other Ashkenazy Op.23 No.4
+		   uploads probed) return IFrame API 150. Prefer Ashkenazy · official when an
+		   embeddable id exists — hold merge until Elton decides. */
 		videoId: '-uwnPBGFiXY',
 		title: 'Rachmaninoff: 10 Preludes, Op. 23: No. 4 in D Major',
 		credit: 'Pletnev · France Musique',
