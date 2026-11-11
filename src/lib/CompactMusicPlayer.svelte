@@ -113,11 +113,9 @@
 						playing = false;
 				},
 				onError: (event) => {
+					/* 101/150/153 = embed restricted / unavailable — keep UI stopped. */
+					void event?.data;
 					playing = false;
-					const code = event?.data;
-					if (code === 101 || code === 150 || code === 153) {
-						playing = false;
-					}
 				}
 			}
 		});
