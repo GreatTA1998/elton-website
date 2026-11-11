@@ -103,18 +103,30 @@
 
 	function waitForImg(el) {
 		if (!el) return Promise.resolve();
-		if (el.complete && el.naturalWidth > 0) {
-			return el.decode ? el.decode().catch(() => {}) : Promise.resolve();
+		// complete with width 0 = broken/settled; still resolve so rotation cannot stall
+		if (el.complete) {
+			if (el.naturalWidth > 0 && el.decode) {
+				return el.decode().catch(() => {});
+			}
+			return Promise.resolve();
 		}
 		return new Promise((resolve) => {
-			const done = () => {
-				el.removeEventListener('load', done);
-				el.removeEventListener('error', done);
-				if (el.decode) el.decode().then(resolve).catch(resolve);
-				else resolve();
+			let settled = false;
+			const finish = () => {
+				if (settled) return;
+				settled = true;
+				el.removeEventListener('load', finish);
+				el.removeEventListener('error', finish);
+				clearTimeout(timer);
+				if (el.naturalWidth > 0 && el.decode) {
+					el.decode().then(resolve).catch(resolve);
+				} else {
+					resolve();
+				}
 			};
-			el.addEventListener('load', done);
-			el.addEventListener('error', done);
+			const timer = setTimeout(finish, 4000);
+			el.addEventListener('load', finish);
+			el.addEventListener('error', finish);
 		});
 	}
 
@@ -151,9 +163,13 @@
 		if (incomingIsB) layerB = nextScene;
 		else layerA = nextScene;
 
-		await preloadScene(nextScene);
-		await tick();
-		await waitForImg(incomingIsB ? imgB : imgA);
+		try {
+			await preloadScene(nextScene);
+			await tick();
+			await waitForImg(incomingIsB ? imgB : imgA);
+		} catch (_) {
+			/* still proceed — better a soft fade than a stuck carousel */
+		}
 
 		if (paused || reducedMotion) {
 			// Index unchanged — resume will retry the same next place
