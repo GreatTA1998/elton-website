@@ -48,7 +48,8 @@
 		padding: 0.42rem 0.62rem;
 		box-sizing: border-box;
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		pointer-events: auto;
+		/* Chip chrome must not steal Home / nav clicks underneath */
+		pointer-events: none;
 		background: rgba(255, 255, 255, 0.88);
 		border: 1px solid rgba(40, 40, 40, 0.08);
 		border-radius: 999px;
@@ -60,7 +61,7 @@
 	.label {
 		appearance: none;
 		margin: 0;
-		padding: 0;
+		padding: 0.12rem 0.08rem;
 		border: none;
 		background: transparent;
 		font: inherit;
