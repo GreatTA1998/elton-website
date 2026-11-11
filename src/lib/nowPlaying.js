@@ -5,10 +5,13 @@ export const TRACKS = {
 	rachmaninoff: {
 		id: 'rachmaninoff',
 		kind: 'youtube',
-		videoId: 'J7FNWtUwBD0',
+		/* TEMP fallback: Ashkenazy Topic J7FNWtUwBD0 (and all other Ashkenazy Op.23 No.4
+		   uploads probed) return IFrame API 150. Prefer Ashkenazy · official when an
+		   embeddable id exists — hold merge until Elton decides. */
+		videoId: '-uwnPBGFiXY',
 		title: 'Rachmaninoff: 10 Preludes, Op. 23: No. 4 in D Major',
-		credit: 'Ashkenazy · official',
-		cover: 'https://i.ytimg.com/vi/J7FNWtUwBD0/hqdefault.jpg'
+		credit: 'Pletnev · France Musique',
+		cover: 'https://i.ytimg.com/vi/-uwnPBGFiXY/hqdefault.jpg'
 	},
 	ghost: {
 		id: 'ghost',

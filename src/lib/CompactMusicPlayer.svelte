@@ -85,9 +85,18 @@
 				origin: typeof window !== 'undefined' ? window.location.origin : undefined
 			},
 			events: {
-				onReady: () => {
+				onReady: (event) => {
 					if (destroyed) return;
 					ytReady = true;
+					const iframe =
+						event?.target?.getIframe?.() || hostEl?.querySelector?.('iframe');
+					if (iframe) {
+						iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+						iframe.setAttribute(
+							'allow',
+							'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+						);
+					}
 					if ($nowPlaying.autoplay && TRACKS[$nowPlaying.id]?.kind === 'youtube') {
 						startCurrent();
 					}
@@ -103,7 +112,9 @@
 					)
 						playing = false;
 				},
-				onError: () => {
+				onError: (event) => {
+					/* 101/150/153 = embed restricted / unavailable — keep UI stopped. */
+					void event?.data;
 					playing = false;
 				}
 			}
