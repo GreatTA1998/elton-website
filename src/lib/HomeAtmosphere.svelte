@@ -1,6 +1,7 @@
 <!--
   Reversible homepage place-atmosphere (vibe-only photo + quiet lived places).
-  Portrait composition; Hsinchu → wisteria, Boston → Maseeh snow, Tokyo → rainy alley. No white fade overlay.
+  Portrait frame; Hsinchu → wisteria, Milton Keynes → rainbow garden,
+  Boston → Maseeh snow, Tokyo → rainy alley. No white fade overlay.
   Quiet ~5s crossfade among places that have scenery. Delete this component
   (and its import/usage in index.svelte) to remove it.
 -->
@@ -27,6 +28,14 @@
 			desktopWebp: '/home-wisteria-desktop.webp',
 			position: '62% 38%',
 			desktopPosition: '55% 44%'
+		},
+		'Milton Keynes': {
+			mobileJpg: '/home-milton-keynes.jpg',
+			mobileWebp: '/home-milton-keynes.webp',
+			desktopJpg: '/home-milton-keynes-desktop.jpg',
+			desktopWebp: '/home-milton-keynes-desktop.webp',
+			position: '55% 40%',
+			desktopPosition: '52% 38%'
 		},
 		Boston: {
 			mobileJpg: '/home-boston.jpg',
