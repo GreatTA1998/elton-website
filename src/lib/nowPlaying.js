@@ -8,8 +8,7 @@ export const TRACKS = {
 		videoId: 'J7FNWtUwBD0',
 		title: 'Rachmaninoff: 10 Preludes, Op. 23: No. 4 in D Major',
 		credit: 'Ashkenazy · official',
-		/* Local PNGs: dark rims cropped, corners AA'd onto white (no CSS clip fringe) */
-		cover: '/album-rachmaninoff.png'
+		cover: 'https://i.ytimg.com/vi/J7FNWtUwBD0/hqdefault.jpg'
 	},
 	ghost: {
 		id: 'ghost',
@@ -17,7 +16,8 @@ export const TRACKS = {
 		src: '/ghost-in-a-flower.mp3',
 		title: 'Ghost in a Flower',
 		credit: 'Elton · my playing',
-		cover: '/album-ghost.png'
+		cover:
+			'https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg'
 	},
 	'all-of-me': {
 		id: 'all-of-me',
@@ -25,7 +25,7 @@ export const TRACKS = {
 		src: '/all-of-me.mp3',
 		title: 'All of Me',
 		credit: 'Elton · my playing',
-		cover: '/album-all-of-me.png'
+		cover: 'https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg'
 	}
 };
 

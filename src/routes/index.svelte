@@ -4,9 +4,6 @@
 <p class="welcome">
 	Welcome to my absolutely EPIC website, it's INSANE:
 </p>
-<p class="welcome-sub">
-	I'm a solo founder who dreams of being useful and making it big some day.
-</p>
 
 <h2 class="section-label">software apps</h2>
 
@@ -170,20 +167,11 @@
 	}
 
 	.welcome {
-		margin: 1.35rem 0 0.15em;
+		margin: 1.35rem 0 0;
 		font-size: 1.05rem;
 		font-weight: 500;
 		color: #2c2c2c;
 		line-height: 1.5;
-	}
-
-	.welcome-sub {
-		margin: 0.35em 0 0;
-		max-width: 34rem;
-		font-size: 0.95rem;
-		font-weight: 400;
-		color: #6a6a6a;
-		line-height: 1.55;
 	}
 
 	.section-label {
@@ -196,7 +184,7 @@
 		line-height: 1.3;
 	}
 
-	.welcome-sub + .section-label {
+	.welcome + .section-label {
 		margin-top: 2em;
 	}
 
@@ -330,12 +318,11 @@
 		width: 100%;
 		padding: 0;
 		border: none;
-		background: #fff;
+		background: transparent;
 		cursor: pointer;
 		text-align: left;
 		border-radius: 8px;
 		overflow: hidden;
-		isolation: isolate;
 	}
 
 	.essay-thumb {
@@ -343,10 +330,6 @@
 		width: 100%;
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
-		/* Parent clips radius — avoid dual-radius subpixel black fringe */
-		border-radius: 0;
-		transform: scale(1.02);
-		transform-origin: center;
 	}
 
 	.essay-video-frame {
@@ -355,7 +338,7 @@
 		aspect-ratio: 16 / 9;
 		border-radius: 8px;
 		overflow: hidden;
-		background: #fff;
+		background: #111;
 	}
 
 	.essay-video-frame iframe {

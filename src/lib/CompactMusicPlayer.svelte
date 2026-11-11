@@ -396,11 +396,11 @@
 		margin: 0;
 		padding: 0;
 		border: none;
-		background: #fff;
+		background: transparent;
 		width: 2.55rem;
 		height: 2.55rem;
-		/* Match baked cover radius; no overflow clip — PNG corners are already white */
-		border-radius: 20%;
+		border-radius: 8px;
+		overflow: hidden;
 		cursor: pointer;
 		flex-shrink: 0;
 		transition: width 0.22s ease, height 0.22s ease, box-shadow 0.22s ease;
@@ -411,8 +411,6 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		/* Covers are pre-rounded onto white; do not re-radius/clip here */
-		border-radius: 0;
 	}
 
 	.thumb.selected {
