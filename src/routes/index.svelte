@@ -359,9 +359,12 @@
 		width: 100%;
 		padding: 0;
 		border: none;
-		background: transparent;
+		background: #fff;
 		cursor: pointer;
 		text-align: left;
+		border-radius: 8px;
+		overflow: hidden;
+		isolation: isolate;
 	}
 
 	.essay-thumb {
@@ -369,7 +372,10 @@
 		width: 100%;
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
-		border-radius: 8px;
+		/* Parent clips radius — avoid dual-radius subpixel black fringe */
+		border-radius: 0;
+		transform: scale(1.02);
+		transform-origin: center;
 	}
 
 	.essay-video-frame {
@@ -378,7 +384,7 @@
 		aspect-ratio: 16 / 9;
 		border-radius: 8px;
 		overflow: hidden;
-		background: #111;
+		background: #fff;
 	}
 
 	.essay-video-frame iframe {
@@ -465,19 +471,21 @@
 		height: 200px;
 		border-radius: 10px;
 		overflow: hidden;
-		background: transparent;
+		background: #fff;
 		transform: translateZ(0);
-		-webkit-mask-image: -webkit-radial-gradient(white, black);
-		mask-image: radial-gradient(white, black);
+		isolation: isolate;
 	}
 
 	.music-cover img {
 		display: block;
-		width: 200px;
-		height: 200px;
+		width: 100%;
+		height: 100%;
 		object-fit: cover;
 		object-position: center;
-		border-radius: 10px;
+		/* Overscale into clip so dark asset rims don't AA as a black ring */
+		border-radius: 0;
+		transform: scale(1.03);
+		transform-origin: center;
 	}
 
 	.bach-cover {

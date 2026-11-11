@@ -160,16 +160,17 @@
 
 	.glass-fade {
 		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 0;
+		/* Inset so the dark stop doesn't paint a black rim on rounded corners */
+		left: 1px;
+		right: 1px;
+		bottom: 1px;
 		height: 58%;
 		pointer-events: none;
 		background: linear-gradient(
 			180deg,
 			rgba(0, 0, 0, 0) 0%,
 			rgba(0, 0, 0, 0.08) 48%,
-			rgba(0, 0, 0, 0.28) 100%
+			rgba(0, 0, 0, 0.22) 100%
 		);
 		backdrop-filter: blur(2px);
 		-webkit-backdrop-filter: blur(2px);
