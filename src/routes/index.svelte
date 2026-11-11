@@ -54,7 +54,9 @@
 		<img class="app-card-logo" src="/zetteldraw-logo.png" alt="zetteldraw logo" />
 		<div class="app-card-text">
 			<strong>zetteldraw</strong>
-			<span class="app-desc">Handwriting-first notes on a Boox.</span>
+			<span class="app-desc"
+				>notebook for jotting down ideas first, and worrying about organization later</span
+			>
 			<span class="app-status">2026 (in private testing) – current</span>
 		</div>
 	</div>
