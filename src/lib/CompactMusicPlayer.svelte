@@ -1,8 +1,6 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import { nowPlaying, currentTrack, TRACKS } from './nowPlaying.js';
-
-	export let variant = 'pill'; // pill | shelf | section
+	import { nowPlaying, currentTrack, TRACKS, ALBUM_IDS, playTrack } from './nowPlaying.js';
 
 	let playing = false;
 	let ytReady = false;
@@ -30,6 +28,16 @@
 		return {
 			destroy() {
 				if (hostEl === node) hostEl = null;
+			}
+		};
+	}
+
+	/** @param {HTMLAudioElement} node */
+	function audioHost(node) {
+		audioEl = node;
+		return {
+			destroy() {
+				if (audioEl === node) audioEl = null;
 			}
 		};
 	}
@@ -178,6 +186,15 @@
 		});
 	}
 
+	/** @param {string} id */
+	function selectAlbum(id) {
+		if ($nowPlaying.id === id) {
+			togglePlay();
+			return;
+		}
+		playTrack(id, true);
+	}
+
 	onMount(async () => {
 		await loadApi();
 		if (!destroyed) createYtPlayer();
@@ -194,29 +211,19 @@
 	});
 </script>
 
-<div
-	class="player"
-	class:playing
-	class:shelf={variant === 'shelf'}
-	class:section={variant === 'section'}
-	role="region"
-	aria-label="Now playing"
->
+<div class="unit" class:playing role="region" aria-label="Music player">
 	<div class="yt-host" aria-hidden="true">
 		<div use:ytHost></div>
 	</div>
 	<audio
-		bind:this={audioEl}
+		use:audioHost
 		preload="metadata"
 		on:play={() => (playing = true)}
 		on:pause={() => (playing = false)}
 		on:ended={() => (playing = false)}
 	></audio>
 
-	<div class="row">
-		{#if track.cover}
-			<img class="art" src={track.cover} alt="" />
-		{/if}
+	<div class="pill">
 		<button
 			type="button"
 			class="icon-btn play"
@@ -246,59 +253,69 @@
 			<a href={watchUrl} target="_blank" rel="noopener noreferrer">Open recording</a>
 		</p>
 	{/if}
+
+	<div class="thumbs" aria-label="Recordings">
+		{#each ALBUM_IDS as id (id)}
+			<button
+				type="button"
+				class="thumb"
+				class:selected={$nowPlaying.id === id}
+				aria-pressed={$nowPlaying.id === id}
+				aria-label={`Play ${TRACKS[id].title}. ${TRACKS[id].credit}`}
+				on:click={() => selectAlbum(id)}
+			>
+				<img src={TRACKS[id].cover} alt="" />
+			</button>
+		{/each}
+
+		<div class="thumb placeholder" aria-disabled="true" title="Coming soon">
+			<span>Bach</span>
+		</div>
+	</div>
 </div>
 
 <style>
-	.player {
+	.unit {
 		--ink: #2a2a2a;
 		--mute: #7a7a7a;
 		--line: rgba(40, 40, 40, 0.08);
-		--wash: rgba(255, 252, 248, 0.86);
-		box-sizing: border-box;
-		padding: 0.72rem;
-		background: linear-gradient(160deg, var(--wash), rgba(255, 255, 255, 0.78));
-		border: 1px solid var(--line);
-		border-radius: 14px;
-		backdrop-filter: blur(14px) saturate(1.05);
-		-webkit-backdrop-filter: blur(14px) saturate(1.05);
-		box-shadow: 0 8px 28px rgba(40, 36, 30, 0.05);
-		color: var(--ink);
-		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-	}
-
-	.player:not(.shelf):not(.section) {
+		--wash: rgba(255, 252, 248, 0.9);
 		position: fixed;
 		top: 0.9rem;
 		right: 0.9rem;
 		z-index: 50;
 		width: min(21.5rem, calc(100vw - 1.6rem));
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.55rem;
+		color: var(--ink);
+		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		pointer-events: none;
 	}
 
-	.player.section {
-		position: relative;
-		width: min(28rem, 100%);
-		margin: 0 0 0.85rem;
-		box-shadow: none;
-		/* Mode 3: mirrors pill chrome without glass */
-		background: #fff;
-		backdrop-filter: none;
-		-webkit-backdrop-filter: none;
-		border-color: #ececec;
+	.unit > * {
+		pointer-events: auto;
 	}
 
-	.player.shelf {
-		position: relative;
-		width: min(22rem, 100%);
-		flex: 1 1 auto;
-		box-shadow: none;
-		background: #fff;
-		backdrop-filter: none;
-		-webkit-backdrop-filter: none;
-		border-color: #ececec;
+	.pill {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		min-width: 0;
+		padding: 0.72rem;
+		background: linear-gradient(160deg, var(--wash), rgba(255, 255, 255, 0.78));
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		backdrop-filter: blur(14px) saturate(1.05);
+		-webkit-backdrop-filter: blur(14px) saturate(1.05);
+		box-shadow: 0 8px 28px rgba(40, 36, 30, 0.05);
 	}
 
-	.player.playing {
+	.unit.playing .pill {
 		border-color: rgba(40, 40, 40, 0.11);
+		box-shadow: 0 10px 32px rgba(40, 36, 30, 0.07);
 	}
 
 	.yt-host {
@@ -317,25 +334,10 @@
 		display: none;
 	}
 
-	.row {
-		display: flex;
-		align-items: center;
-		gap: 0.6rem;
-		min-width: 0;
-	}
-
-	.art {
-		width: 2.05rem;
-		height: 2.05rem;
-		border-radius: 7px;
-		object-fit: cover;
-		flex-shrink: 0;
-		background: #f0f0f0;
-	}
-
 	.meta {
 		flex: 1;
 		min-width: 0;
+		padding-right: 0.35rem;
 	}
 
 	.title {
@@ -391,14 +393,15 @@
 		color: var(--ink);
 	}
 
-	.player.playing .icon-btn.play {
+	.unit.playing .icon-btn.play {
 		background: #2f2f2f;
 		border-color: #2f2f2f;
 		color: #fff;
 	}
 
 	.hint {
-		margin: 0.45rem 0 0;
+		margin: 0;
+		padding: 0 0.85rem;
 		font-size: 0.65rem;
 		color: var(--mute);
 		line-height: 1.3;
@@ -410,12 +413,109 @@
 		text-underline-offset: 2px;
 	}
 
+	.thumbs {
+		display: flex;
+		align-items: flex-end;
+		justify-content: flex-end;
+		gap: 0.45rem;
+		padding: 0 0.15rem;
+		min-height: 3.4rem;
+	}
+
+	.thumb {
+		appearance: none;
+		margin: 0;
+		padding: 0;
+		border: none;
+		background: transparent;
+		width: 2.55rem;
+		height: 2.55rem;
+		border-radius: 8px;
+		overflow: hidden;
+		cursor: pointer;
+		flex-shrink: 0;
+		box-shadow: 0 1px 4px rgba(40, 36, 30, 0.08);
+		transition: width 0.22s ease, height 0.22s ease, box-shadow 0.22s ease;
+	}
+
+	.thumb img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		background: #f0f0f0;
+	}
+
+	.thumb.selected {
+		width: 3.35rem;
+		height: 3.35rem;
+		box-shadow: 0 0 0 1.5px rgba(40, 40, 40, 0.55), 0 6px 18px rgba(40, 36, 30, 0.18),
+			0 0 16px rgba(255, 220, 140, 0.35);
+	}
+
+	.thumb.placeholder {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.55rem;
+		height: 2.55rem;
+		border: 1px solid #ececec;
+		background: #fafafa;
+		box-shadow: none;
+		cursor: default;
+		color: #8a8a8a;
+		font-size: 0.58rem;
+		font-weight: 500;
+		letter-spacing: 0.01em;
+		text-align: center;
+		line-height: 1.2;
+	}
+
 	@media (max-width: 520px) {
-		.player:not(.shelf):not(.section) {
+		.unit {
 			top: 0.55rem;
 			right: 0.55rem;
-			width: min(16.8rem, calc(100vw - 1.1rem));
-			padding: 0.62rem;
+			width: min(17.2rem, calc(100vw - 1.1rem));
+			gap: 0.45rem;
+		}
+
+		.pill {
+			padding: 0.58rem 0.62rem;
+		}
+
+		.title {
+			font-size: 0.72rem;
+		}
+
+		.credit {
+			font-size: 0.64rem;
+		}
+
+		.thumb {
+			width: 2.2rem;
+			height: 2.2rem;
+		}
+
+		.thumb.selected {
+			width: 2.9rem;
+			height: 2.9rem;
+		}
+
+		.thumb.placeholder {
+			width: 2.2rem;
+			height: 2.2rem;
+			font-size: 0.52rem;
+		}
+
+		.thumbs {
+			min-height: 2.95rem;
+			gap: 0.35rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.thumb {
+			transition: none;
 		}
 	}
 </style>

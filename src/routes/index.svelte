@@ -145,20 +145,6 @@
 	</div>
 </div>
 
-<h2 class="section-label">music recordings</h2>
-
-{#if $listenMode === 2}
-	<p class="music-hint">
-		Listening shelf is docked at the bottom — pick <em>official</em> Ashkenazy or
-		<em>my playing</em>.
-	</p>
-{:else}
-	{#if $listenMode === 3}
-		<CompactMusicPlayer variant="section" />
-	{/if}
-	<MusicAlbums size={$listenMode === 3 ? 'md' : 'sm'} showOfficial />
-{/if}
-
 <section class="email-section" aria-labelledby="email-updates-label">
 	<h2 class="section-label" id="email-updates-label">email updates</h2>
 	<SubscribeForm compact />
@@ -168,12 +154,9 @@
 <SiteFooter />
 
 <script>
-	import CompactMusicPlayer from '$lib/CompactMusicPlayer.svelte';
 	import HomeAtmosphere from '$lib/HomeAtmosphere.svelte';
-	import MusicAlbums from '$lib/MusicAlbums.svelte';
 	import SiteFooter from '$lib/SiteFooter.svelte';
 	import SubscribeForm from '$lib/SubscribeForm.svelte';
-	import { listenMode } from '$lib/nowPlaying.js';
 
 	let notionPlaying = false;
 </script>
@@ -438,20 +421,6 @@
 		font-size: 0.84rem;
 		line-height: 1.5;
 		font-weight: 400;
-	}
-
-	.music-hint {
-		margin: 0 0 2rem;
-		max-width: 28rem;
-		font-size: 0.9rem;
-		line-height: 1.5;
-		color: #6a6a6a;
-	}
-
-	.music-hint em {
-		font-style: normal;
-		font-weight: 500;
-		color: #2c2c2c;
 	}
 
 	.email-section {
