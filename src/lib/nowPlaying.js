@@ -26,10 +26,17 @@ export const TRACKS = {
 		title: 'All of Me',
 		credit: 'Elton · my playing',
 		cover: 'https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg'
+	},
+	bach: {
+		id: 'bach',
+		kind: 'coming-soon',
+		title: 'Bach',
+		credit: 'Coming soon',
+		cover: '/bach-album.jpg'
 	}
 };
 
-/** Selectable thumbs under the pill (Bach stays a coming-soon placeholder in the UI). */
+/** Selectable thumbs under the pill (Bach stays coming-soon — art only). */
 export const ALBUM_IDS = ['rachmaninoff', 'ghost', 'all-of-me'];
 
 /** @type {import('svelte/store').Writable<{ id: string, autoplay: boolean, nonce: number }>} */
