@@ -4,16 +4,16 @@
 </script>
 
 <svelte:head>
-	<title>Email updates</title>
+	<title>Quarterly summary</title>
 </svelte:head>
 
 <div class="page">
 	<p class="back"><a href="/">← Home</a></p>
 
-	<h1 class="title">Email updates</h1>
+	<h1 class="title">Quarterly summary</h1>
 	<p class="sub">
-		Pick essays, music, and the software apps you care about — you can change your mind later by
-		writing me.
+		A short note a few times a year. Pick essays, music, and the software apps you care about — you
+		can change your mind later by writing me.
 	</p>
 
 	<SubscribeForm />

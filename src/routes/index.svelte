@@ -136,8 +136,9 @@
 	</div>
 </div>
 
-<section class="email-section" aria-labelledby="email-updates-label">
-	<h2 class="section-label" id="email-updates-label">email updates</h2>
+<section class="email-section" aria-labelledby="quarterly-summary-label">
+	<h2 class="section-label" id="quarterly-summary-label">quarterly summary</h2>
+	<p class="email-help">A short note a few times a year. Pick what you care about.</p>
 	<SubscribeForm compact />
 </section>
 </div>
@@ -200,12 +201,6 @@
 		color: inherit;
 		box-sizing: border-box;
 		background: transparent;
-	}
-
-	a.app-card:hover,
-	a.app-card:focus {
-		background: transparent;
-		border-color: #ececec;
 	}
 
 	.app-card-ready .app-card-text strong {
@@ -404,6 +399,13 @@
 		margin-top: 0.5rem;
 		padding-top: 0.25rem;
 		max-width: 36rem;
+	}
+
+	.email-help {
+		margin: 0 0 0.9rem;
+		font-size: 0.9rem;
+		line-height: 1.5;
+		color: #6a6a6a;
 	}
 
 	@media (max-width: 900px) {
