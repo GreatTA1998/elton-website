@@ -14,14 +14,10 @@
 	});
 
 	$: options = $offeredLocales;
-	$: onlyEnglish = options.length === 1 && options[0] === 'en';
+	$: showToggle = options.length > 1;
 </script>
 
-{#if onlyEnglish}
-	<div class="lang" aria-label={$messages.language}>
-		<span class="label quiet">EN</span>
-	</div>
-{:else}
+{#if showToggle}
 	<div class="lang" role="group" aria-label={$messages.language}>
 		{#each options as id, i (id)}
 			{#if i > 0}
@@ -43,24 +39,29 @@
 <style>
 	.lang {
 		position: fixed;
-		top: 1rem;
-		left: 1rem;
-		z-index: 50;
+		top: 0.85rem;
+		left: 0.85rem;
+		z-index: 200;
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
+		padding: 0.42rem 0.62rem;
+		box-sizing: border-box;
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		/* Chip chrome must not steal Home / nav clicks underneath */
 		pointer-events: none;
-	}
-
-	.lang > * {
-		pointer-events: auto;
+		background: rgba(255, 255, 255, 0.88);
+		border: 1px solid rgba(40, 40, 40, 0.08);
+		border-radius: 999px;
+		backdrop-filter: blur(10px) saturate(1.05);
+		-webkit-backdrop-filter: blur(10px) saturate(1.05);
+		box-shadow: 0 4px 16px rgba(40, 36, 30, 0.04);
 	}
 
 	.label {
 		appearance: none;
 		margin: 0;
-		padding: 0;
+		padding: 0.12rem 0.08rem;
 		border: none;
 		background: transparent;
 		font: inherit;
@@ -68,18 +69,15 @@
 		font-weight: 500;
 		letter-spacing: 0.04em;
 		line-height: 1;
-		color: #b0b0b0;
+		color: #9a9a9a;
 		cursor: pointer;
-	}
-
-	.label.quiet {
-		cursor: default;
-		pointer-events: none;
-		color: #c0c0c0;
+		pointer-events: auto;
+		position: relative;
+		z-index: 1;
 	}
 
 	.label.active {
-		color: #5a5a5a;
+		color: #4a4a4a;
 	}
 
 	.sep {
@@ -87,12 +85,14 @@
 		line-height: 1;
 		color: #d0d0d0;
 		user-select: none;
+		pointer-events: none;
 	}
 
 	@media (max-width: 520px) {
 		.lang {
-			top: 0.65rem;
-			left: 0.65rem;
+			top: 0.55rem;
+			left: 0.55rem;
+			padding: 0.36rem 0.55rem;
 		}
 	}
 </style>
