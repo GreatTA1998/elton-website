@@ -39,22 +39,16 @@
 <style>
 	.lang {
 		position: fixed;
-		top: 0.85rem;
-		left: 0.85rem;
-		z-index: 200;
+		top: 1rem;
+		left: 1rem;
+		/* Above the hero (0) and sticky rails (5); under the essay lightbox (40) and music player (50). */
+		z-index: 10;
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
-		padding: 0.42rem 0.62rem;
-		box-sizing: border-box;
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		pointer-events: auto;
-		background: rgba(255, 255, 255, 0.88);
-		border: 1px solid rgba(40, 40, 40, 0.08);
-		border-radius: 999px;
-		backdrop-filter: blur(10px) saturate(1.05);
-		-webkit-backdrop-filter: blur(10px) saturate(1.05);
-		box-shadow: 0 4px 16px rgba(40, 36, 30, 0.04);
+		/* Pass clicks through the gap so Home links underneath stay usable. */
+		pointer-events: none;
 	}
 
 	.label {
@@ -68,15 +62,13 @@
 		font-weight: 500;
 		letter-spacing: 0.04em;
 		line-height: 1;
-		color: #9a9a9a;
+		color: #b0b0b0;
 		cursor: pointer;
 		pointer-events: auto;
-		position: relative;
-		z-index: 1;
 	}
 
 	.label.active {
-		color: #4a4a4a;
+		color: #5a5a5a;
 	}
 
 	.sep {
@@ -89,9 +81,8 @@
 
 	@media (max-width: 520px) {
 		.lang {
-			top: 0.55rem;
-			left: 0.55rem;
-			padding: 0.36rem 0.55rem;
+			top: 0.65rem;
+			left: 0.65rem;
 		}
 	}
 </style>
