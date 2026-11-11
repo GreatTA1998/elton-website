@@ -6,7 +6,7 @@
   (and its import/usage in index.svelte) to remove it.
 -->
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { messages } from './i18n.js';
 
 	// Cities only (>short stops omitted). No country suffixes, no London/Taipei.
@@ -76,12 +76,16 @@
 	let frameEl = null;
 	/** @type {HTMLElement | null} */
 	let placesEl = null;
+	/** @type {HTMLImageElement | null} */
+	let imgA = null;
+	/** @type {HTMLImageElement | null} */
+	let imgB = null;
 
 	function preferredSrc(scene) {
-		if (typeof window !== 'undefined' && window.matchMedia('(min-width: 900px)').matches) {
-			return scene.desktopJpg;
-		}
-		return scene.mobileJpg;
+		const desktop =
+			typeof window !== 'undefined' && window.matchMedia('(min-width: 900px)').matches;
+		// Match what <picture> will actually paint (WebP first)
+		return desktop ? scene.desktopWebp : scene.mobileWebp;
 	}
 
 	function preloadScene(scene) {
@@ -94,6 +98,23 @@
 			img.onload = () => resolve();
 			img.onerror = () => resolve();
 			img.src = preferredSrc(scene);
+		});
+	}
+
+	function waitForImg(el) {
+		if (!el) return Promise.resolve();
+		if (el.complete && el.naturalWidth > 0) {
+			return el.decode ? el.decode().catch(() => {}) : Promise.resolve();
+		}
+		return new Promise((resolve) => {
+			const done = () => {
+				el.removeEventListener('load', done);
+				el.removeEventListener('error', done);
+				if (el.decode) el.decode().then(resolve).catch(resolve);
+				else resolve();
+			};
+			el.addEventListener('load', done);
+			el.addEventListener('error', done);
 		});
 	}
 
@@ -121,20 +142,26 @@
 	async function advance() {
 		if (reducedMotion || paused || scenicPlaces.length < 2 || advancing) return;
 		advancing = true;
-		scenicIndex = (scenicIndex + 1) % scenicPlaces.length;
-		const nextPlace = scenicPlaces[scenicIndex];
+		const nextIndex = (scenicIndex + 1) % scenicPlaces.length;
+		const nextPlace = scenicPlaces[nextIndex];
 		const nextScene = scenery[nextPlace];
+		const incomingIsB = showA;
 
-		// Assign incoming layer first (still opacity 0), wait for load, then fade
-		if (showA) layerB = nextScene;
+		// Assign incoming layer first (still opacity 0), wait for the painted asset, then fade
+		if (incomingIsB) layerB = nextScene;
 		else layerA = nextScene;
 
 		await preloadScene(nextScene);
+		await tick();
+		await waitForImg(incomingIsB ? imgB : imgA);
+
 		if (paused || reducedMotion) {
+			// Index unchanged — resume will retry the same next place
 			advancing = false;
 			return;
 		}
 
+		scenicIndex = nextIndex;
 		showA = !showA;
 
 		fadeTimer = setTimeout(() => {
@@ -237,6 +264,7 @@
 				<source media="(min-width: 900px)" srcset={layerA.desktopJpg} type="image/jpeg" />
 				<source srcset={layerA.mobileWebp} type="image/webp" />
 				<img
+					bind:this={imgA}
 					class="photo"
 					src={layerA.mobileJpg}
 					alt=""
@@ -253,6 +281,7 @@
 				<source media="(min-width: 900px)" srcset={layerB.desktopJpg} type="image/jpeg" />
 				<source srcset={layerB.mobileWebp} type="image/webp" />
 				<img
+					bind:this={imgB}
 					class="photo"
 					src={layerB.mobileJpg}
 					alt=""
