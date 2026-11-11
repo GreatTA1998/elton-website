@@ -11,12 +11,7 @@
 <h2 class="section-label">software apps</h2>
 
 <div class="app-cards">
-	<a
-		class="app-card app-card-ready"
-		target="_blank"
-		rel="noopener noreferrer"
-		href="https://actions.life"
-	>
+	<div class="app-card app-card-ready">
 		<img class="app-card-logo" src="/actions-life-logo.png" alt="actions.life logo" />
 		<div class="app-card-text">
 			<strong>
@@ -40,8 +35,16 @@
 				commits.</span
 			>
 			<span class="app-status">2022 – current · fully active / usable</span>
+			<a
+				class="app-explore"
+				target="_blank"
+				rel="noopener noreferrer"
+				href="https://actions.life"
+			>
+				Explore
+			</a>
 		</div>
-	</a>
+	</div>
 	<a
 		class="app-card"
 		target="_blank"
@@ -244,17 +247,41 @@
 		color: inherit;
 		box-sizing: border-box;
 		background: transparent;
-		transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 	}
 
-	a.app-card:hover {
-		background: #f7f7f7;
-		border-color: #e0e0e0;
+	a.app-card:hover,
+	a.app-card:focus {
+		background: transparent;
+		border-color: #ececec;
 	}
 
 	.app-card-ready .app-card-text strong {
 		font-weight: 600;
 		color: #1a1a1a;
+	}
+
+	.app-explore {
+		display: inline-flex;
+		align-items: center;
+		align-self: flex-start;
+		margin-top: 6px;
+		padding: 3px 9px;
+		border: 1px solid #d8d8d8;
+		border-radius: 999px;
+		background: #fff;
+		color: #2c2c2c;
+		font-size: 0.72rem;
+		font-weight: 500;
+		line-height: 1.3;
+		letter-spacing: 0.01em;
+		text-decoration: none;
+	}
+
+	.app-explore:hover,
+	.app-explore:focus {
+		background: #fff;
+		border-color: #d8d8d8;
+		color: #2c2c2c;
 	}
 
 	.ready-tick {
@@ -392,20 +419,6 @@
 		background: #e8e8e8;
 		border: 1px solid #ececec;
 		box-sizing: border-box;
-	}
-
-	.essay-thumb-written {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: #fafafa;
-	}
-
-	.essay-thumb-written span {
-		font-size: 0.8rem;
-		font-weight: 500;
-		color: #6a6a6a;
-		letter-spacing: 0.02em;
 	}
 
 	.essay-title {
