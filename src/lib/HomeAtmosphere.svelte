@@ -71,6 +71,31 @@
 	/** @type {ReturnType<typeof setTimeout> | null} */
 	let fadeTimer = null;
 	let scenicIndex = 0;
+	let advancing = false;
+	/** @type {HTMLElement | null} */
+	let frameEl = null;
+	/** @type {HTMLElement | null} */
+	let placesEl = null;
+
+	function preferredSrc(scene) {
+		if (typeof window !== 'undefined' && window.matchMedia('(min-width: 900px)').matches) {
+			return scene.desktopJpg;
+		}
+		return scene.mobileJpg;
+	}
+
+	function preloadScene(scene) {
+		return new Promise((resolve) => {
+			if (typeof Image === 'undefined') {
+				resolve();
+				return;
+			}
+			const img = new Image();
+			img.onload = () => resolve();
+			img.onerror = () => resolve();
+			img.src = preferredSrc(scene);
+		});
+	}
 
 	function clearHold() {
 		if (holdTimer) {
@@ -89,28 +114,33 @@
 
 	function scheduleNext() {
 		clearHold();
-		if (reducedMotion || paused || scenicPlaces.length < 2 || fadeTimer) return;
+		if (reducedMotion || paused || scenicPlaces.length < 2 || fadeTimer || advancing) return;
 		holdTimer = setTimeout(advance, HOLD_MS);
 	}
 
-	function advance() {
-		if (reducedMotion || paused || scenicPlaces.length < 2) return;
+	async function advance() {
+		if (reducedMotion || paused || scenicPlaces.length < 2 || advancing) return;
+		advancing = true;
 		scenicIndex = (scenicIndex + 1) % scenicPlaces.length;
 		const nextPlace = scenicPlaces[scenicIndex];
 		const nextScene = scenery[nextPlace];
 
-		if (showA) {
-			layerB = nextScene;
-			showA = false;
-		} else {
-			layerA = nextScene;
-			showA = true;
+		// Assign incoming layer first (still opacity 0), wait for load, then fade
+		if (showA) layerB = nextScene;
+		else layerA = nextScene;
+
+		await preloadScene(nextScene);
+		if (paused || reducedMotion) {
+			advancing = false;
+			return;
 		}
 
-		// Commit active place after the quiet crossfade settles
+		showA = !showA;
+
 		fadeTimer = setTimeout(() => {
 			activePlace = nextPlace;
 			fadeTimer = null;
+			advancing = false;
 			if (!paused) scheduleNext();
 		}, FADE_MS);
 	}
@@ -125,10 +155,23 @@
 		scheduleNext();
 	}
 
+	function isPointerOverAtmosphere() {
+		return !!(
+			(frameEl && frameEl.matches(':hover')) ||
+			(placesEl && (placesEl.matches(':hover') || placesEl.contains(document.activeElement)))
+		);
+	}
+
+	function syncPauseFromPointer() {
+		if (typeof document === 'undefined') return;
+		if (document.hidden || isPointerOverAtmosphere()) pause();
+		else resume();
+	}
+
 	function onVisibility() {
 		if (typeof document === 'undefined') return;
 		if (document.hidden) pause();
-		else resume();
+		else syncPauseFromPointer();
 	}
 
 	onMount(() => {
@@ -142,6 +185,7 @@
 			reducedMotion = !!(mq && mq.matches);
 			if (reducedMotion) {
 				clearTimers();
+				advancing = false;
 				activePlace = scenicPlaces[0];
 				layerA = scenery[scenicPlaces[0]];
 				layerB = layerA;
@@ -157,11 +201,19 @@
 			else mq.addListener(onMq);
 		}
 
+		// Warm scenic images so the first crossfade is not empty
+		scenicPlaces.forEach((place) => {
+			preloadScene(scenery[place]);
+		});
+
 		document.addEventListener('visibilitychange', onVisibility);
-		scheduleNext();
+		// Cursor may already be over the hero/list on first paint
+		requestAnimationFrame(syncPauseFromPointer);
+		if (!paused) scheduleNext();
 
 		return () => {
 			clearTimers();
+			advancing = false;
 			document.removeEventListener('visibilitychange', onVisibility);
 			if (mq) {
 				if (mq.removeEventListener) mq.removeEventListener('change', onMq);
@@ -175,6 +227,7 @@
 	<div
 		class="frame"
 		aria-hidden="true"
+		bind:this={frameEl}
 		on:pointerenter={pause}
 		on:pointerleave={resume}
 	>
@@ -215,10 +268,11 @@
 	<ol
 		class="places"
 		aria-label={$messages.placesLived}
+		bind:this={placesEl}
 		on:pointerenter={pause}
 		on:pointerleave={resume}
 		on:focusin={pause}
-		on:focusout={resume}
+		on:focusout={syncPauseFromPointer}
 	>
 		{#each places as place, i (place)}
 			<li>
