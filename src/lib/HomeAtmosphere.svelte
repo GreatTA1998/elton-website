@@ -41,8 +41,9 @@
 			mobileWebp: '/home-tokyo.webp',
 			desktopJpg: '/home-tokyo-desktop.jpg',
 			desktopWebp: '/home-tokyo-desktop.webp',
-			position: '48% 42%',
-			desktopPosition: '48% 40%'
+			/* Landscape asset; cover-crop inside portrait frame */
+			position: '52% 45%',
+			desktopPosition: '50% 42%'
 		}
 	};
 
@@ -215,7 +216,11 @@
 				{#if i > 0}
 					<span class="sep" aria-hidden="true">→</span>
 				{/if}
-				<span class="place" class:active={place === activePlace && !!scenery[place]}>{place}</span>
+				<span
+					class="place"
+					class:has-photo={!!scenery[place]}
+					class:active={place === activePlace && !!scenery[place]}
+				>{place}</span>
 			</li>
 		{/each}
 	</ol>
@@ -307,12 +312,22 @@
 		font-weight: 400;
 		letter-spacing: 0.01em;
 		line-height: 1.45;
-		color: #8a8a8a;
-		transition: color 0.35s ease;
+		/* Cities without a hero photo stay quieter */
+		color: #b5b5b5;
+		opacity: 0.72;
+		transition: color 0.35s ease, opacity 0.35s ease, font-weight 0.35s ease;
+	}
+
+	.place.has-photo {
+		color: #7a7a7a;
+		opacity: 1;
+		font-weight: 500;
 	}
 
 	.place.active {
-		color: #4a4a4a;
+		color: #3f3f3f;
+		opacity: 1;
+		font-weight: 600;
 	}
 
 	.sep {
