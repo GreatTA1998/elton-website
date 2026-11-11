@@ -103,18 +103,23 @@
 
 	function waitForImg(el) {
 		if (!el) return Promise.resolve();
-		if (el.complete && el.naturalWidth > 0) {
-			return el.decode ? el.decode().catch(() => {}) : Promise.resolve();
-		}
+		// A broken image is also complete (naturalWidth 0); load/error do not fire again.
+		const ready = () =>
+			el.naturalWidth > 0 && el.decode ? el.decode().catch(() => {}) : Promise.resolve();
+		if (el.complete) return ready();
 		return new Promise((resolve) => {
+			let settled = false;
 			const done = () => {
+				if (settled) return;
+				settled = true;
 				el.removeEventListener('load', done);
 				el.removeEventListener('error', done);
-				if (el.decode) el.decode().then(resolve).catch(resolve);
-				else resolve();
+				ready().then(resolve);
 			};
 			el.addEventListener('load', done);
 			el.addEventListener('error', done);
+			// Settled in the gap between the complete check and these listeners.
+			if (el.complete) done();
 		});
 	}
 
