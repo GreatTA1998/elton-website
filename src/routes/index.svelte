@@ -147,31 +147,17 @@
 
 <h2 class="section-label">music recordings</h2>
 
-<div class="music-row">
-	<div class="music-item">
-		<div class="music-cover">
-			<img
-				src="https://cdns-images.dzcdn.net/images/cover/d23308fd612026c39ba4ea5f3f99ab83/500x500.jpg"
-				alt="Ghost in a Flower album cover"
-			/>
-			<GlassAudioPlayer src="ghost-in-a-flower.mp3" label="Ghost in a Flower" />
-		</div>
-	</div>
-
-	<div class="music-item">
-		<div class="music-cover">
-			<img
-				src="https://m.media-amazon.com/images/I/61b0Mz2-fDL._SY580_.jpg"
-				alt="All of Me album cover"
-			/>
-			<GlassAudioPlayer src="all-of-me.mp3" label="All of Me" />
-		</div>
-	</div>
-
-	<div class="bach-cover">
-		Bach Prelude &amp; Fugue in D
-	</div>
-</div>
+{#if $listenMode === 2}
+	<p class="music-hint">
+		Listening shelf is docked at the bottom — pick <em>official</em> Ashkenazy or
+		<em>my playing</em>.
+	</p>
+{:else}
+	{#if $listenMode === 3}
+		<CompactMusicPlayer variant="section" />
+	{/if}
+	<MusicAlbums size={$listenMode === 3 ? 'md' : 'sm'} showOfficial />
+{/if}
 
 <section class="email-section" aria-labelledby="email-updates-label">
 	<h2 class="section-label" id="email-updates-label">email updates</h2>
@@ -182,10 +168,12 @@
 <SiteFooter />
 
 <script>
-	import GlassAudioPlayer from '$lib/GlassAudioPlayer.svelte';
+	import CompactMusicPlayer from '$lib/CompactMusicPlayer.svelte';
 	import HomeAtmosphere from '$lib/HomeAtmosphere.svelte';
+	import MusicAlbums from '$lib/MusicAlbums.svelte';
 	import SiteFooter from '$lib/SiteFooter.svelte';
 	import SubscribeForm from '$lib/SubscribeForm.svelte';
+	import { listenMode } from '$lib/nowPlaying.js';
 
 	let notionPlaying = false;
 </script>
@@ -452,59 +440,18 @@
 		font-weight: 400;
 	}
 
-	.music-row {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 12px;
+	.music-hint {
 		margin: 0 0 2rem;
-		align-items: flex-start;
+		max-width: 28rem;
+		font-size: 0.9rem;
+		line-height: 1.5;
+		color: #6a6a6a;
 	}
 
-	.music-item {
-		width: 200px;
-		flex-shrink: 0;
-	}
-
-	.music-cover {
-		position: relative;
-		width: 200px;
-		height: 200px;
-		border-radius: 10px;
-		overflow: hidden;
-		background: #fff;
-		transform: translateZ(0);
-		isolation: isolate;
-	}
-
-	.music-cover img {
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: center;
-		/* Overscale into clip so dark asset rims don't AA as a black ring */
-		border-radius: 0;
-		transform: scale(1.03);
-		transform-origin: center;
-	}
-
-	.bach-cover {
-		width: 200px;
-		height: 200px;
-		box-sizing: border-box;
-		border: 1px solid #ececec;
-		border-radius: 10px;
-		background: #fafafa;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
-		padding: 16px;
-		color: #555;
-		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		font-weight: 400;
-		font-size: 0.95rem;
-		flex-shrink: 0;
+	.music-hint em {
+		font-style: normal;
+		font-weight: 500;
+		color: #2c2c2c;
 	}
 
 	.email-section {

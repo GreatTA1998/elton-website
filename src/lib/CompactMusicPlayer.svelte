@@ -1,25 +1,28 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
+	import { nowPlaying, currentTrack, TRACKS } from './nowPlaying.js';
 
-	/** Other people’s recordings — not Elton’s. Brahms deprecated; Rachmaninoff only. */
-	const track = {
-		videoId: 'J7FNWtUwBD0',
-		title: 'Rachmaninoff: 10 Preludes, Op. 23: No. 4 in D Major (Andante cantabile)',
-		credit: 'Ashkenazy'
-	};
+	export let variant = 'pill'; // pill | shelf | section
 
 	let playing = false;
-	let ready = false;
+	let ytReady = false;
 	let embedBlocked = false;
 	let playAttempted = false;
+	let lastNonce = -1;
 
 	/** @type {HTMLElement | null} */
 	let hostEl = null;
+	/** @type {HTMLAudioElement | null} */
+	let audioEl = null;
 	/** @type {any} */
-	let player;
+	let ytPlayer;
 	let destroyed = false;
 
-	const watchUrl = `https://www.youtube.com/watch?v=${track.videoId}`;
+	$: track = $currentTrack;
+	$: isYoutube = track.kind === 'youtube';
+	$: watchUrl = isYoutube ? `https://www.youtube.com/watch?v=${track.videoId}` : null;
+	$: canToggle = isYoutube ? ytReady : Boolean(audioEl);
+	$: if ($nowPlaying.nonce !== lastNonce) onTrackChange($nowPlaying);
 
 	/** @param {HTMLElement} node */
 	function ytHost(node) {
@@ -52,12 +55,12 @@
 		});
 	}
 
-	function createPlayer() {
-		if (destroyed || !hostEl) return;
-		player = new window.YT.Player(hostEl, {
+	function createYtPlayer() {
+		if (destroyed || !hostEl || ytPlayer) return;
+		ytPlayer = new window.YT.Player(hostEl, {
 			width: 200,
 			height: 200,
-			videoId: track.videoId,
+			videoId: TRACKS.rachmaninoff.videoId,
 			playerVars: {
 				autoplay: 0,
 				controls: 0,
@@ -70,29 +73,23 @@
 				origin: typeof window !== 'undefined' ? window.location.origin : undefined
 			},
 			events: {
-				onReady: (event) => {
+				onReady: () => {
 					if (destroyed) return;
-					const iframe = event.target.getIframe?.() || hostEl?.querySelector?.('iframe');
-					if (iframe) {
-						iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-						iframe.setAttribute(
-							'allow',
-							'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
-						);
+					ytReady = true;
+					if ($nowPlaying.autoplay && TRACKS[$nowPlaying.id]?.kind === 'youtube') {
+						startCurrent();
 					}
-					ready = true;
 				},
 				onStateChange: (event) => {
 					if (destroyed || !window.YT) return;
+					if (TRACKS[$nowPlaying.id]?.kind !== 'youtube') return;
 					const state = event.data;
-					if (state === window.YT.PlayerState.PLAYING) {
-						playing = true;
-					} else if (
+					if (state === window.YT.PlayerState.PLAYING) playing = true;
+					else if (
 						state === window.YT.PlayerState.PAUSED ||
 						state === window.YT.PlayerState.ENDED
-					) {
+					)
 						playing = false;
-					}
 				},
 				onError: () => {
 					playing = false;
@@ -102,63 +99,129 @@
 		});
 	}
 
-	function togglePlay() {
-		if (!player || !ready) return;
-		if (playing) {
-			player.pauseVideo();
-			return;
-		}
-		playAttempted = true;
+	function stopAll() {
+		playing = false;
 		embedBlocked = false;
-		player.playVideo();
-		setTimeout(() => {
-			if (destroyed || playing || !player || !playAttempted) return;
+		playAttempted = false;
+		try {
+			ytPlayer?.pauseVideo?.();
+		} catch (e) {
+			/* ignore */
+		}
+		if (audioEl) {
+			audioEl.pause();
 			try {
-				const state = player.getPlayerState?.();
-				if (
-					state !== window.YT?.PlayerState?.PLAYING &&
-					state !== window.YT?.PlayerState?.BUFFERING
-				) {
-					embedBlocked = true;
-				}
+				audioEl.currentTime = 0;
+			} catch (e) {
+				/* ignore */
+			}
+		}
+	}
+
+	function startCurrent() {
+		const current = TRACKS[$nowPlaying.id];
+		if (!current) return;
+		embedBlocked = false;
+		playAttempted = false;
+
+		if (current.kind === 'youtube') {
+			if (!ytPlayer || !ytReady) return;
+			playAttempted = true;
+			try {
+				ytPlayer.loadVideoById?.(current.videoId);
+				ytPlayer.playVideo?.();
 			} catch (e) {
 				embedBlocked = true;
 			}
-		}, 2500);
+			return;
+		}
+
+		if (!audioEl) return;
+		audioEl.src = current.src;
+		audioEl.play().catch(() => {
+			playing = false;
+		});
+	}
+
+	/** @param {{ id: string, autoplay: boolean, nonce: number }} state */
+	function onTrackChange(state) {
+		if (!state || state.nonce === lastNonce) return;
+		lastNonce = state.nonce;
+		stopAll();
+		if (state.autoplay) queueMicrotask(() => startCurrent());
+	}
+
+	function togglePlay() {
+		const current = TRACKS[$nowPlaying.id];
+		if (!current) return;
+
+		if (current.kind === 'youtube') {
+			if (!ytPlayer || !ytReady) return;
+			if (playing) {
+				ytPlayer.pauseVideo();
+				return;
+			}
+			playAttempted = true;
+			embedBlocked = false;
+			ytPlayer.playVideo();
+			return;
+		}
+
+		if (!audioEl) return;
+		if (playing) {
+			audioEl.pause();
+			return;
+		}
+		if (!audioEl.getAttribute('src')) audioEl.src = current.src;
+		audioEl.play().catch(() => {
+			playing = false;
+		});
 	}
 
 	onMount(async () => {
 		await loadApi();
-		if (!destroyed) createPlayer();
+		if (!destroyed) createYtPlayer();
 	});
 
 	onDestroy(() => {
 		destroyed = true;
 		try {
-			if (player && typeof player.destroy === 'function') player.destroy();
+			if (ytPlayer && typeof ytPlayer.destroy === 'function') ytPlayer.destroy();
 		} catch (e) {
 			/* ignore */
 		}
-		player = null;
+		ytPlayer = null;
 	});
 </script>
 
 <div
 	class="player"
 	class:playing
+	class:shelf={variant === 'shelf'}
+	class:section={variant === 'section'}
 	role="region"
-	aria-label="Music player — recordings by other musicians"
+	aria-label="Now playing"
 >
 	<div class="yt-host" aria-hidden="true">
 		<div use:ytHost></div>
 	</div>
+	<audio
+		bind:this={audioEl}
+		preload="metadata"
+		on:play={() => (playing = true)}
+		on:pause={() => (playing = false)}
+		on:ended={() => (playing = false)}
+	></audio>
 
 	<div class="row">
+		{#if track.cover}
+			<img class="art" src={track.cover} alt="" />
+		{/if}
 		<button
 			type="button"
 			class="icon-btn play"
 			on:click={togglePlay}
-			disabled={!ready}
+			disabled={!canToggle}
 			aria-label={playing ? 'Pause' : 'Play'}
 		>
 			{#if playing}
@@ -178,7 +241,7 @@
 		</div>
 	</div>
 
-	{#if embedBlocked}
+	{#if embedBlocked && watchUrl}
 		<p class="hint">
 			<a href={watchUrl} target="_blank" rel="noopener noreferrer">Open recording</a>
 		</p>
@@ -191,11 +254,6 @@
 		--mute: #7a7a7a;
 		--line: rgba(40, 40, 40, 0.08);
 		--wash: rgba(255, 252, 248, 0.86);
-		position: fixed;
-		top: 0.9rem;
-		right: 0.9rem;
-		z-index: 50;
-		width: min(21.5rem, calc(100vw - 1.6rem));
 		box-sizing: border-box;
 		padding: 0.72rem;
 		background: linear-gradient(160deg, var(--wash), rgba(255, 255, 255, 0.78));
@@ -206,12 +264,41 @@
 		box-shadow: 0 8px 28px rgba(40, 36, 30, 0.05);
 		color: var(--ink);
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		transition: box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+	}
+
+	.player:not(.shelf):not(.section) {
+		position: fixed;
+		top: 0.9rem;
+		right: 0.9rem;
+		z-index: 50;
+		width: min(21.5rem, calc(100vw - 1.6rem));
+	}
+
+	.player.section {
+		position: relative;
+		width: min(28rem, 100%);
+		margin: 0 0 0.85rem;
+		box-shadow: none;
+		/* Mode 3: mirrors pill chrome without glass */
+		background: #fff;
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+		border-color: #ececec;
+	}
+
+	.player.shelf {
+		position: relative;
+		width: min(22rem, 100%);
+		flex: 1 1 auto;
+		box-shadow: none;
+		background: #fff;
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+		border-color: #ececec;
 	}
 
 	.player.playing {
 		border-color: rgba(40, 40, 40, 0.11);
-		box-shadow: 0 10px 32px rgba(40, 36, 30, 0.07);
 	}
 
 	.yt-host {
@@ -226,11 +313,24 @@
 		z-index: -1;
 	}
 
+	audio {
+		display: none;
+	}
+
 	.row {
 		display: flex;
 		align-items: center;
 		gap: 0.6rem;
 		min-width: 0;
+	}
+
+	.art {
+		width: 2.05rem;
+		height: 2.05rem;
+		border-radius: 7px;
+		object-fit: cover;
+		flex-shrink: 0;
+		background: #f0f0f0;
 	}
 
 	.meta {
@@ -248,7 +348,6 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		animation: rise 0.45s ease;
 	}
 
 	.credit {
@@ -261,18 +360,6 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		animation: rise 0.55s ease;
-	}
-
-	@keyframes rise {
-		from {
-			opacity: 0;
-			transform: translateY(3px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
 	}
 
 	.icon-btn {
@@ -288,16 +375,6 @@
 		justify-content: center;
 		cursor: pointer;
 		line-height: 0;
-		transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease,
-			opacity 0.2s ease;
-	}
-
-	.icon-btn:hover:not(:disabled) {
-		background: rgba(40, 40, 40, 0.05);
-	}
-
-	.icon-btn:active:not(:disabled) {
-		transform: scale(0.96);
 	}
 
 	.icon-btn:disabled {
@@ -306,7 +383,6 @@
 	}
 
 	.icon-btn.play {
-		position: relative;
 		flex-shrink: 0;
 		width: 2.05rem;
 		height: 2.05rem;
@@ -319,14 +395,6 @@
 		background: #2f2f2f;
 		border-color: #2f2f2f;
 		color: #fff;
-	}
-
-	.icon-btn.play:hover:not(:disabled) {
-		background: rgba(255, 255, 255, 0.95);
-	}
-
-	.player.playing .icon-btn.play:hover:not(:disabled) {
-		background: #222;
 	}
 
 	.hint {
@@ -342,36 +410,12 @@
 		text-underline-offset: 2px;
 	}
 
-	.hint a:hover {
-		color: var(--ink);
-	}
-
 	@media (max-width: 520px) {
-		.player {
+		.player:not(.shelf):not(.section) {
 			top: 0.55rem;
 			right: 0.55rem;
 			width: min(16.8rem, calc(100vw - 1.1rem));
 			padding: 0.62rem;
-		}
-
-		.title {
-			font-size: 0.72rem;
-		}
-
-		.credit {
-			font-size: 0.64rem;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.title,
-		.credit {
-			animation: none;
-		}
-
-		.icon-btn,
-		.player {
-			transition: none;
 		}
 	}
 </style>
