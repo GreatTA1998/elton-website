@@ -90,7 +90,21 @@
 	<fieldset class="interests" disabled={status === 'submitting' || status === 'success'}>
 		<legend class="sr-only">Interests</legend>
 
-		<div class="topic-row" role="group" aria-label="Topics">
+		<div class="interest-row" role="group" aria-label="Interests">
+			{#each APPS as app (app.id)}
+				<button
+					type="button"
+					class="app-icon"
+					class:selected={apps[app.id]}
+					aria-pressed={apps[app.id]}
+					aria-label={app.label}
+					title={app.label}
+					on:click={() => toggleApp(app.id)}
+				>
+					<img src={app.src} alt="" />
+				</button>
+			{/each}
+
 			<button
 				type="button"
 				class="chip"
@@ -109,29 +123,6 @@
 			>
 				Music
 			</button>
-		</div>
-
-		<div class="software">
-			<p class="software-label" id="software-interests-label">Software</p>
-			<div
-				class="app-icons"
-				role="group"
-				aria-labelledby="software-interests-label"
-			>
-				{#each APPS as app}
-					<button
-						type="button"
-						class="app-icon"
-						class:selected={apps[app.id]}
-						aria-pressed={apps[app.id]}
-						aria-label={app.label}
-						title={app.label}
-						on:click={() => toggleApp(app.id)}
-					>
-						<img src={app.src} alt="" />
-					</button>
-				{/each}
-			</div>
 		</div>
 	</fieldset>
 
@@ -186,14 +177,12 @@
 		margin: 0;
 		padding: 0;
 		border: none;
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
 	}
 
-	.topic-row {
+	.interest-row {
 		display: flex;
 		flex-wrap: wrap;
+		align-items: center;
 		gap: 8px;
 	}
 
@@ -201,9 +190,11 @@
 		appearance: none;
 		display: inline-flex;
 		align-items: center;
+		justify-content: center;
 		margin: 0;
+		min-height: 44px;
 		padding: 8px 12px;
-		border: 1px solid #ececec;
+		border: 1px solid #e4e4e4;
 		border-radius: 10px;
 		cursor: pointer;
 		background: #fff;
@@ -212,53 +203,30 @@
 		font-weight: 500;
 		color: #2c2c2c;
 		line-height: 1.3;
+		box-sizing: border-box;
+		transform: scale(1);
+		box-shadow: none;
 		transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease,
-			opacity 0.15s ease;
+			transform 0.15s ease, box-shadow 0.15s ease;
 	}
 
 	.chip:hover {
 		background: #f7f7f7;
-		border-color: #e0e0e0;
+		border-color: #d8d8d8;
 	}
 
 	.chip.selected {
 		border-color: transparent;
 		background: #2c2c2c;
 		color: #fff;
+		transform: scale(1.04);
+		box-shadow: 0 0 0 1px rgba(44, 44, 44, 0.08), 0 4px 14px rgba(40, 40, 40, 0.18);
 	}
 
 	.chip.selected:hover {
 		background: #1f1f1f;
 		border-color: transparent;
 		color: #fff;
-	}
-
-	.chip:not(.selected) {
-		opacity: 0.78;
-	}
-
-	.chip:not(.selected):hover {
-		opacity: 0.92;
-	}
-
-	.software {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-	}
-
-	.software-label {
-		margin: 0;
-		font-size: 0.84rem;
-		font-weight: 500;
-		color: #6a6a6a;
-		line-height: 1.3;
-	}
-
-	.app-icons {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
 	}
 
 	.app-icon {
@@ -273,27 +241,21 @@
 		overflow: hidden;
 		cursor: pointer;
 		line-height: 0;
-		transition: opacity 0.15s ease, filter 0.15s ease, transform 0.15s ease;
+		opacity: 0.88;
+		transform: scale(1);
+		box-shadow: none;
+		transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 	}
 
 	.app-icon:hover {
 		background: #fff;
+		opacity: 1;
 	}
 
 	.app-icon.selected {
 		opacity: 1;
-		filter: none;
-		transform: scale(1.04);
-	}
-
-	.app-icon:not(.selected) {
-		opacity: 0.38;
-		filter: grayscale(0.35);
-	}
-
-	.app-icon:not(.selected):hover {
-		opacity: 0.58;
-		filter: grayscale(0.15);
+		transform: scale(1.1);
+		box-shadow: 0 0 0 1px rgba(44, 44, 44, 0.06), 0 5px 16px rgba(40, 40, 40, 0.16);
 	}
 
 	.app-icon img {
