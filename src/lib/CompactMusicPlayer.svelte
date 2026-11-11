@@ -4,8 +4,6 @@
 
 	let playing = false;
 	let ytReady = false;
-	let embedBlocked = false;
-	let playAttempted = false;
 	let lastNonce = -1;
 
 	/** @type {HTMLElement | null} */
@@ -18,7 +16,6 @@
 
 	$: track = $currentTrack;
 	$: isYoutube = track.kind === 'youtube';
-	$: watchUrl = isYoutube ? `https://www.youtube.com/watch?v=${track.videoId}` : null;
 	$: canToggle = isYoutube ? ytReady : Boolean(audioEl);
 	$: if ($nowPlaying.nonce !== lastNonce) onTrackChange($nowPlaying);
 
@@ -101,7 +98,6 @@
 				},
 				onError: () => {
 					playing = false;
-					if (playAttempted) embedBlocked = true;
 				}
 			}
 		});
@@ -109,8 +105,6 @@
 
 	function stopAll() {
 		playing = false;
-		embedBlocked = false;
-		playAttempted = false;
 		try {
 			ytPlayer?.pauseVideo?.();
 		} catch (e) {
@@ -129,17 +123,14 @@
 	function startCurrent() {
 		const current = TRACKS[$nowPlaying.id];
 		if (!current) return;
-		embedBlocked = false;
-		playAttempted = false;
 
 		if (current.kind === 'youtube') {
 			if (!ytPlayer || !ytReady) return;
-			playAttempted = true;
 			try {
 				ytPlayer.loadVideoById?.(current.videoId);
 				ytPlayer.playVideo?.();
 			} catch (e) {
-				embedBlocked = true;
+				playing = false;
 			}
 			return;
 		}
@@ -169,8 +160,6 @@
 				ytPlayer.pauseVideo();
 				return;
 			}
-			playAttempted = true;
-			embedBlocked = false;
 			ytPlayer.playVideo();
 			return;
 		}
@@ -247,12 +236,6 @@
 			<p class="credit">{track.credit}</p>
 		</div>
 	</div>
-
-	{#if embedBlocked && watchUrl}
-		<p class="hint">
-			<a href={watchUrl} target="_blank" rel="noopener noreferrer">Open recording</a>
-		</p>
-	{/if}
 
 	<div class="thumbs" aria-label="Recordings">
 		{#each ALBUM_IDS as id (id)}
@@ -399,20 +382,6 @@
 		color: #fff;
 	}
 
-	.hint {
-		margin: 0;
-		padding: 0 0.85rem;
-		font-size: 0.65rem;
-		color: var(--mute);
-		line-height: 1.3;
-	}
-
-	.hint a {
-		color: var(--mute);
-		text-decoration: underline;
-		text-underline-offset: 2px;
-	}
-
 	.thumbs {
 		display: flex;
 		align-items: flex-end;
@@ -424,14 +393,17 @@
 
 	.thumb {
 		appearance: none;
+		position: relative;
 		margin: 0;
 		padding: 0;
 		border: none;
-		background: transparent;
+		/* White backing + isolate: rounded AA composites against white, not a dark fringe */
+		background: #fff;
 		width: 2.55rem;
 		height: 2.55rem;
 		border-radius: 8px;
 		overflow: hidden;
+		isolation: isolate;
 		cursor: pointer;
 		flex-shrink: 0;
 		box-shadow: 0 1px 4px rgba(40, 36, 30, 0.08);
@@ -439,11 +411,14 @@
 	}
 
 	.thumb img {
-		display: block;
-		width: 100%;
-		height: 100%;
+		/* Oversized into the clip (no dual radius, no img-layer scale AA) */
+		position: absolute;
+		inset: -8%;
+		width: 116%;
+		height: 116%;
+		max-width: none;
 		object-fit: cover;
-		background: #f0f0f0;
+		border-radius: 0;
 	}
 
 	.thumb.selected {
