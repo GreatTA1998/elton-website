@@ -1,7 +1,9 @@
 <script>
 	import CompactMusicPlayer from '$lib/CompactMusicPlayer.svelte';
+	import LanguageToggle from '$lib/LanguageToggle.svelte';
 </script>
 
+<LanguageToggle />
 <CompactMusicPlayer />
 
 <slot />

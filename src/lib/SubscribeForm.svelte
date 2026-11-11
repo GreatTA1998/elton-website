@@ -1,4 +1,6 @@
 <script>
+	import { messages } from './i18n.js';
+
 	export let compact = false;
 
 	const APPS = [
@@ -20,6 +22,8 @@
 	};
 	let status = 'idle'; // idle | submitting | success | error | not_configured
 	let errorMessage = '';
+	/** @type {'not_configured' | 'invalid_email' | 'invalid_interests' | 'generic' | 'network' | ''} */
+	let errorKey = '';
 
 	$: interests = [
 		...(essays ? ['essays'] : []),
@@ -27,6 +31,17 @@
 		...APPS.map((app) => app.id).filter((id) => apps[id])
 	];
 	$: hasInterest = interests.length > 0;
+	$: if (errorKey === 'not_configured') {
+		errorMessage = $messages.notConfigured;
+	} else if (errorKey === 'invalid_email') {
+		errorMessage = $messages.invalidEmail;
+	} else if (errorKey === 'invalid_interests') {
+		errorMessage = $messages.pickInterest;
+	} else if (errorKey === 'generic') {
+		errorMessage = $messages.somethingWrong;
+	} else if (errorKey === 'network') {
+		errorMessage = $messages.couldntReach;
+	}
 
 	function toggleTopic(topic) {
 		if (topic === 'essays') essays = !essays;
@@ -42,6 +57,7 @@
 
 		status = 'submitting';
 		errorMessage = '';
+		errorKey = '';
 
 		try {
 			const res = await fetch('/api/subscribe', {
@@ -60,23 +76,26 @@
 
 			if (data.error === 'not_configured' || res.status === 503) {
 				status = 'not_configured';
-				errorMessage =
-					data.message ||
-					'Email isn’t configured yet. Set RESEND_API_KEY and SUBSCRIBE_NOTIFY_TO on the host.';
+				errorKey = 'not_configured';
+				errorMessage = data.message || $messages.notConfigured;
 				return;
 			}
 
 			status = 'error';
 			if (data.error === 'invalid_email') {
-				errorMessage = 'That email doesn’t look right.';
+				errorKey = 'invalid_email';
+				errorMessage = $messages.invalidEmail;
 			} else if (data.error === 'invalid_interests') {
-				errorMessage = 'Pick at least one interest.';
+				errorKey = 'invalid_interests';
+				errorMessage = $messages.pickInterest;
 			} else {
-				errorMessage = 'Something went wrong. Try again in a bit.';
+				errorKey = 'generic';
+				errorMessage = $messages.somethingWrong;
 			}
 		} catch (err) {
 			status = 'error';
-			errorMessage = 'Couldn’t reach the server. Check your connection and try again.';
+			errorKey = 'network';
+			errorMessage = $messages.couldntReach;
 		}
 	}
 
@@ -88,9 +107,9 @@
 
 <form class="subscribe" class:compact on:submit={onSubmit} novalidate>
 	<fieldset class="interests" disabled={status === 'submitting' || status === 'success'}>
-		<legend class="sr-only">Interests</legend>
+		<legend class="sr-only">{$messages.interests}</legend>
 
-		<div class="interest-row" role="group" aria-label="Interests">
+		<div class="interest-row" role="group" aria-label={$messages.interests}>
 			{#each APPS as app (app.id)}
 				<button
 					type="button"
@@ -112,7 +131,7 @@
 				aria-pressed={essays}
 				on:click={() => toggleTopic('essays')}
 			>
-				Essays
+				{$messages.essays}
 			</button>
 			<button
 				type="button"
@@ -121,13 +140,13 @@
 				aria-pressed={music}
 				on:click={() => toggleTopic('music')}
 			>
-				Music
+				{$messages.music}
 			</button>
 		</div>
 	</fieldset>
 
 	<div class="row">
-		<label class="sr-only" for="subscribe-email">Email</label>
+		<label class="sr-only" for="subscribe-email">{$messages.email}</label>
 		<input
 			id="subscribe-email"
 			class="email"
@@ -143,17 +162,17 @@
 			disabled={status === 'submitting' || status === 'success' || !email || !hasInterest}
 		>
 			{#if status === 'submitting'}
-				Sending…
+				{$messages.sending}
 			{:else if status === 'success'}
-				Subscribed
+				{$messages.subscribed}
 			{:else}
-				Subscribe
+				{$messages.subscribe}
 			{/if}
 		</button>
 	</div>
 
 	{#if status === 'success'}
-		<p class="note ok" role="status">You’re on the list.</p>
+		<p class="note ok" role="status">{$messages.onTheList}</p>
 	{:else if status === 'not_configured'}
 		<p class="note warn" role="status">{errorMessage}</p>
 	{:else if status === 'error'}

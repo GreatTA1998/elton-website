@@ -4,8 +4,10 @@
   Delete this component (and its import/usage in index.svelte) to remove it.
 -->
 <script>
+	import { messages } from './i18n.js';
+
 	// Cities only (>short stops omitted). No country suffixes, no London/Taipei.
-	// Later: selecting a place can swap scenery; Hsinchu = current home-wisteria photo.
+	// Keep Latin city names; later: selecting a place can swap scenery.
 	const places = [
 		'Hsinchu',
 		'Shanghai',
@@ -42,7 +44,7 @@
 		</picture>
 	</div>
 
-	<ol class="places" aria-label="Places lived">
+	<ol class="places" aria-label={$messages.placesLived}>
 		{#each places as place, i (place)}
 			<li>
 				{#if i > 0}
