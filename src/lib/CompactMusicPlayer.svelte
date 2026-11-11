@@ -135,7 +135,7 @@
 			return;
 		}
 
-		if (!audioEl) return;
+		if (current.kind !== 'audio' || !audioEl) return;
 		audioEl.src = current.src;
 		audioEl.play().catch(() => {
 			playing = false;
@@ -164,7 +164,7 @@
 			return;
 		}
 
-		if (!audioEl) return;
+		if (current.kind !== 'audio' || !audioEl) return;
 		if (playing) {
 			audioEl.pause();
 			return;
@@ -251,8 +251,8 @@
 			</button>
 		{/each}
 
-		<div class="thumb placeholder" aria-disabled="true" title="Coming soon">
-			<span>Bach</span>
+		<div class="thumb placeholder" aria-disabled="true" title="Bach — coming soon">
+			<img src={TRACKS.bach.cover} alt="" />
 		</div>
 	</div>
 </div>
@@ -421,21 +421,8 @@
 	}
 
 	.thumb.placeholder {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 2.55rem;
-		height: 2.55rem;
-		border: 1px solid #ececec;
-		background: #fafafa;
-		box-shadow: none;
 		cursor: default;
-		color: #8a8a8a;
-		font-size: 0.58rem;
-		font-weight: 500;
-		letter-spacing: 0.01em;
-		text-align: center;
-		line-height: 1.2;
+		pointer-events: none;
 	}
 
 	@media (max-width: 520px) {
@@ -466,12 +453,6 @@
 		.thumb.selected {
 			width: 2.9rem;
 			height: 2.9rem;
-		}
-
-		.thumb.placeholder {
-			width: 2.2rem;
-			height: 2.2rem;
-			font-size: 0.52rem;
 		}
 
 		.thumbs {
