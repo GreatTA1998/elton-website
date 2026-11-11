@@ -6,7 +6,7 @@
   (and its import/usage in index.svelte) to remove it.
 -->
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { messages } from './i18n.js';
 
 	// Cities only (>short stops omitted). No country suffixes, no London/Taipei.
@@ -71,6 +71,17 @@
 	/** @type {ReturnType<typeof setTimeout> | null} */
 	let fadeTimer = null;
 	let scenicIndex = 0;
+	let staging = false;
+	let stageToken = 0;
+
+	/** @type {HTMLElement | null} */
+	let frameEl = null;
+	/** @type {HTMLElement | null} */
+	let placesEl = null;
+	/** @type {HTMLImageElement | null} */
+	let imgA = null;
+	/** @type {HTMLImageElement | null} */
+	let imgB = null;
 
 	function clearHold() {
 		if (holdTimer) {
@@ -80,6 +91,8 @@
 	}
 
 	function clearTimers() {
+		stageToken += 1;
+		staging = false;
 		clearHold();
 		if (fadeTimer) {
 			clearTimeout(fadeTimer);
@@ -87,25 +100,94 @@
 		}
 	}
 
+	// Enter/leave does not fire for a pointer already on the hero (first paint,
+	// or still there when a hidden tab is shown again). Read the live hit state.
+	function keepsPaused() {
+		const hovered =
+			(!!frameEl && frameEl.matches(':hover')) || (!!placesEl && placesEl.matches(':hover'));
+		const focused = !!placesEl && placesEl.matches(':focus-within');
+		const hidden = typeof document !== 'undefined' && document.hidden;
+		return hovered || focused || hidden;
+	}
+
 	function scheduleNext() {
 		clearHold();
-		if (reducedMotion || paused || scenicPlaces.length < 2 || fadeTimer) return;
+		if (reducedMotion || paused || scenicPlaces.length < 2 || fadeTimer || staging) return;
 		holdTimer = setTimeout(advance, HOLD_MS);
 	}
 
-	function advance() {
-		if (reducedMotion || paused || scenicPlaces.length < 2) return;
-		scenicIndex = (scenicIndex + 1) % scenicPlaces.length;
-		const nextPlace = scenicPlaces[scenicIndex];
+	function sceneSelected(img, scene) {
+		const current = img.currentSrc || '';
+		return (
+			current.includes(scene.mobileWebp) ||
+			current.includes(scene.mobileJpg) ||
+			current.includes(scene.desktopWebp) ||
+			current.includes(scene.desktopJpg)
+		);
+	}
+
+	function whenIncomingReady(img, scene) {
+		return new Promise((resolve) => {
+			if (!img) {
+				resolve(false);
+				return;
+			}
+			let settled = false;
+			const readyNow = () => img.naturalWidth > 0 && sceneSelected(img, scene);
+			const finish = (ok) => {
+				if (settled) return;
+				settled = true;
+				img.removeEventListener('load', onLoad);
+				img.removeEventListener('error', onError);
+				if (ok && readyNow() && typeof img.decode === 'function') {
+					img.decode().then(
+						() => resolve(readyNow()),
+						() => resolve(readyNow())
+					);
+					return;
+				}
+				resolve(!!ok && readyNow());
+			};
+			const onLoad = () => finish(true);
+			const onError = () => finish(false);
+			if (img.complete && sceneSelected(img, scene)) {
+				finish(img.naturalWidth > 0);
+				return;
+			}
+			img.addEventListener('load', onLoad);
+			img.addEventListener('error', onError);
+		});
+	}
+
+	async function advance() {
+		if (reducedMotion || paused || scenicPlaces.length < 2 || staging) return;
+		const nextIndex = (scenicIndex + 1) % scenicPlaces.length;
+		const nextPlace = scenicPlaces[nextIndex];
 		const nextScene = scenery[nextPlace];
 
-		if (showA) {
-			layerB = nextScene;
-			showA = false;
-		} else {
-			layerA = nextScene;
-			showA = true;
+		// Keep the current photo up until the incoming layer has pixels.
+		if (showA) layerB = nextScene;
+		else layerA = nextScene;
+
+		const token = ++stageToken;
+		staging = true;
+		/** @type {boolean} */
+		let ready = false;
+		try {
+			await tick();
+			if (token !== stageToken) return;
+			ready = await whenIncomingReady(showA ? imgB : imgA, nextScene);
+		} finally {
+			if (token === stageToken) staging = false;
 		}
+		if (token !== stageToken || reducedMotion || paused || scenicPlaces.length < 2) return;
+		if (!ready) {
+			scheduleNext();
+			return;
+		}
+
+		scenicIndex = nextIndex;
+		showA = !showA;
 
 		// Commit active place after the quiet crossfade settles
 		fadeTimer = setTimeout(() => {
@@ -121,6 +203,10 @@
 	}
 
 	function resume() {
+		if (keepsPaused()) {
+			pause();
+			return;
+		}
 		paused = false;
 		scheduleNext();
 	}
@@ -148,6 +234,7 @@
 				showA = true;
 				scenicIndex = 0;
 			} else {
+				if (keepsPaused()) pause();
 				scheduleNext();
 			}
 		};
@@ -158,6 +245,7 @@
 		}
 
 		document.addEventListener('visibilitychange', onVisibility);
+		if (keepsPaused()) pause();
 		scheduleNext();
 
 		return () => {
@@ -175,6 +263,7 @@
 	<div
 		class="frame"
 		aria-hidden="true"
+		bind:this={frameEl}
 		on:pointerenter={pause}
 		on:pointerleave={resume}
 	>
@@ -184,6 +273,7 @@
 				<source media="(min-width: 900px)" srcset={layerA.desktopJpg} type="image/jpeg" />
 				<source srcset={layerA.mobileWebp} type="image/webp" />
 				<img
+					bind:this={imgA}
 					class="photo"
 					src={layerA.mobileJpg}
 					alt=""
@@ -200,6 +290,7 @@
 				<source media="(min-width: 900px)" srcset={layerB.desktopJpg} type="image/jpeg" />
 				<source srcset={layerB.mobileWebp} type="image/webp" />
 				<img
+					bind:this={imgB}
 					class="photo"
 					src={layerB.mobileJpg}
 					alt=""
@@ -215,6 +306,7 @@
 	<ol
 		class="places"
 		aria-label={$messages.placesLived}
+		bind:this={placesEl}
 		on:pointerenter={pause}
 		on:pointerleave={resume}
 		on:focusin={pause}
