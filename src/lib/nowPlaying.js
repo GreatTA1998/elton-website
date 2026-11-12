@@ -8,7 +8,7 @@ export const TRACKS = {
 		videoId: 'J7FNWtUwBD0',
 		title: 'Rachmaninoff: 10 Preludes, Op. 23: No. 4 in D Major',
 		credit: 'Ashkenazy · official',
-		cover: 'https://i.ytimg.com/vi/J7FNWtUwBD0/hqdefault.jpg'
+		cover: 'https://i.ytimg.com/vi/J7FNWtUwBD0/mqdefault.jpg'
 	},
 	ghost: {
 		id: 'ghost',

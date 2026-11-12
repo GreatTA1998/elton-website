@@ -412,7 +412,8 @@
 		overflow: hidden;
 		cursor: pointer;
 		flex-shrink: 0;
-		transition: width 0.22s ease, height 0.22s ease, box-shadow 0.22s ease;
+		box-shadow: none;
+		transition: width 0.22s ease, height 0.22s ease;
 	}
 
 	.thumb img {
@@ -420,13 +421,12 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		object-position: center;
 	}
 
 	.thumb.selected {
 		width: 3.35rem;
 		height: 3.35rem;
-		box-shadow: 0 0 0 1.5px rgba(40, 40, 40, 0.55), 0 6px 18px rgba(40, 36, 30, 0.18),
-			0 0 16px rgba(255, 220, 140, 0.35);
 	}
 
 	.thumb.placeholder {
