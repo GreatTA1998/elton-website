@@ -2,22 +2,16 @@
   Reversible homepage place-atmosphere (vibe-only photo + quiet lived places).
   Portrait frame; Hsinchu → wisteria, Milton Keynes → rainbow garden,
   Boston → Maseeh snow, Tokyo → rainy alley. No white fade overlay.
-  Quiet ~5s crossfade among places that have scenery. Delete this component
-  (and its import/usage in index.svelte) to remove it.
+  Quiet ~5s crossfade among all four places until the visitor selects a city,
+  which locks that scenery and stops auto-rotation permanently.
+  Delete this component (and its import/usage in index.svelte) to remove it.
 -->
 <script>
 	import { onMount, tick } from 'svelte';
 	import { messages } from './i18n.js';
 
 	// Cities only (>short stops omitted). No country suffixes, no London/Taipei.
-	const places = [
-		'Hsinchu',
-		'Shanghai',
-		'Eindhoven',
-		'Milton Keynes',
-		'Boston',
-		'Tokyo'
-	];
+	const places = ['Hsinchu', 'Milton Keynes', 'Boston', 'Tokyo'];
 
 	/** @type {Record<string, { mobileJpg: string; mobileWebp: string; desktopJpg: string; desktopWebp: string; position: string; desktopPosition: string }>} */
 	const scenery = {
@@ -66,12 +60,16 @@
 	let showA = true;
 	let reducedMotion = false;
 	let paused = false;
+	/** User chose a city — auto-rotation stays off permanently */
+	let userLocked = false;
 	/** @type {ReturnType<typeof setTimeout> | null} */
 	let holdTimer = null;
 	/** @type {ReturnType<typeof setTimeout> | null} */
 	let fadeTimer = null;
 	let scenicIndex = 0;
 	let advancing = false;
+	/** Bumps when a newer goToPlace supersedes an in-flight crossfade */
+	let goGen = 0;
 	/** @type {HTMLElement | null} */
 	let frameEl = null;
 	/** @type {HTMLElement | null} */
@@ -145,17 +143,51 @@
 		}
 	}
 
-	function scheduleNext() {
-		clearHold();
-		if (reducedMotion || paused || scenicPlaces.length < 2 || fadeTimer || advancing) return;
-		holdTimer = setTimeout(advance, HOLD_MS);
+	function rotationAllowed() {
+		return !userLocked && !reducedMotion && !paused;
 	}
 
-	async function advance() {
-		if (reducedMotion || paused || scenicPlaces.length < 2 || advancing) return;
+	function lockRotation() {
+		userLocked = true;
+		paused = true;
+		clearTimers();
+		// Invalidate any in-flight auto crossfade; selection starts a fresh gen
+		goGen += 1;
+		advancing = false;
+	}
+
+	function scheduleNext() {
+		clearHold();
+		if (!rotationAllowed() || scenicPlaces.length < 2 || fadeTimer || advancing) return;
+		holdTimer = setTimeout(() => {
+			// Re-check at fire time — selection may have locked during the hold
+			if (!rotationAllowed()) return;
+			advance();
+		}, HOLD_MS);
+	}
+
+	/**
+	 * Crossfade to a scenic place via dual-layer preload (no empty flash).
+	 * @param {string} nextPlace
+	 * @param {{ lock?: boolean }} [opts]
+	 */
+	async function goToPlace(nextPlace, opts = {}) {
+		const lock = !!opts.lock;
+		// Lock first so any concurrent pointerleave/resume cannot restart rotation
+		if (lock) lockRotation();
+
+		const nextIndex = scenicPlaces.indexOf(nextPlace);
+		if (nextIndex < 0) return;
+
+		if (nextPlace === activePlace && !fadeTimer && !advancing) {
+			return;
+		}
+		if (advancing && !lock) return;
+		// After a user lock, only a locked goToPlace may continue
+		if (userLocked && !lock) return;
+
+		const myGen = ++goGen;
 		advancing = true;
-		const nextIndex = (scenicIndex + 1) % scenicPlaces.length;
-		const nextPlace = scenicPlaces[nextIndex];
 		const nextScene = scenery[nextPlace];
 		const incomingIsB = showA;
 
@@ -171,21 +203,40 @@
 			/* still proceed — better a soft fade than a stuck carousel */
 		}
 
-		if (paused || reducedMotion) {
-			// Index unchanged — resume will retry the same next place
+		// Superseded by a newer selection/advance
+		if (myGen !== goGen) {
+			return;
+		}
+
+		// Auto path: abort if pause/lock landed during preload
+		if (!lock && !rotationAllowed()) {
 			advancing = false;
 			return;
 		}
 
 		scenicIndex = nextIndex;
 		showA = !showA;
+		// Selected label tracks commit-to-fade (not fade end) so click feedback is immediate
+		activePlace = nextPlace;
 
 		fadeTimer = setTimeout(() => {
-			activePlace = nextPlace;
+			if (myGen !== goGen) return;
 			fadeTimer = null;
 			advancing = false;
-			if (!paused) scheduleNext();
+			if (rotationAllowed()) scheduleNext();
 		}, FADE_MS);
+	}
+
+	async function advance() {
+		if (!rotationAllowed() || scenicPlaces.length < 2 || advancing || userLocked) return;
+		const nextIndex = (scenicIndex + 1) % scenicPlaces.length;
+		await goToPlace(scenicPlaces[nextIndex]);
+	}
+
+	function selectPlace(place) {
+		if (!scenery[place]) return;
+		// Lock synchronously on click so pointerleave/resume cannot restart the carousel
+		goToPlace(place, { lock: true });
 	}
 
 	function pause() {
@@ -194,6 +245,11 @@
 	}
 
 	function resume() {
+		if (userLocked) {
+			paused = true;
+			clearHold();
+			return;
+		}
 		paused = false;
 		scheduleNext();
 	}
@@ -207,6 +263,11 @@
 
 	function syncPauseFromPointer() {
 		if (typeof document === 'undefined') return;
+		if (userLocked) {
+			paused = true;
+			clearHold();
+			return;
+		}
 		if (document.hidden || isPointerOverAtmosphere()) pause();
 		else resume();
 	}
@@ -234,7 +295,7 @@
 				layerB = layerA;
 				showA = true;
 				scenicIndex = 0;
-			} else {
+			} else if (!userLocked) {
 				scheduleNext();
 			}
 		};
@@ -252,7 +313,7 @@
 		document.addEventListener('visibilitychange', onVisibility);
 		// Cursor may already be over the hero/list on first paint
 		requestAnimationFrame(syncPauseFromPointer);
-		if (!paused) scheduleNext();
+		if (!paused && !userLocked) scheduleNext();
 
 		return () => {
 			clearTimers();
@@ -313,6 +374,7 @@
 	<ol
 		class="places"
 		aria-label={$messages.placesLived}
+		data-rotation-locked={userLocked ? 'true' : 'false'}
 		bind:this={placesEl}
 		on:pointerenter={pause}
 		on:pointerleave={resume}
@@ -324,11 +386,13 @@
 				{#if i > 0}
 					<span class="sep" aria-hidden="true">→</span>
 				{/if}
-				<span
+				<button
+					type="button"
 					class="place"
-					class:has-photo={!!scenery[place]}
-					class:active={place === activePlace && !!scenery[place]}
-				>{place}</span>
+					class:active={place === activePlace}
+					aria-pressed={place === activePlace}
+					on:click={() => selectPlace(place)}
+				>{place}</button>
 			</li>
 		{/each}
 	</ol>
@@ -416,25 +480,24 @@
 	}
 
 	.place {
+		appearance: none;
+		background: none;
+		border: none;
+		margin: 0;
+		padding: 0;
+		font: inherit;
 		font-size: 0.78rem;
 		font-weight: 400;
 		letter-spacing: 0.01em;
 		line-height: 1.45;
-		/* Cities without a hero photo stay quieter */
-		color: #b5b5b5;
-		opacity: 0.72;
-		transition: color 0.35s ease, opacity 0.35s ease, font-weight 0.35s ease;
-	}
-
-	.place.has-photo {
-		color: #7a7a7a;
+		cursor: pointer;
+		color: #9a9a9a;
 		opacity: 1;
-		font-weight: 500;
+		transition: color 0.35s ease, font-weight 0.35s ease;
 	}
 
 	.place.active {
-		color: #3f3f3f;
-		opacity: 1;
+		color: #5a5a5a;
 		font-weight: 600;
 	}
 
