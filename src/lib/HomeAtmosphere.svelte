@@ -2,8 +2,9 @@
   Reversible homepage place-atmosphere (vibe-only photo + quiet lived places).
   Portrait frame; Hsinchu → wisteria, Milton Keynes → rainbow garden,
   Boston → Maseeh snow, Tokyo → rainy alley. No white fade overlay.
-  Quiet ~5s crossfade among all four places until the visitor selects a city,
-  which locks that scenery and stops auto-rotation permanently.
+  Quiet ~5s crossfade among all four places. Selecting a city crossfades
+  to that place and resets the ~5s cycle from there (does not permanently
+  stop rotation). Hover/focus on the frame or list pauses temporarily.
   Delete this component (and its import/usage in index.svelte) to remove it.
 -->
 <script>
@@ -60,8 +61,6 @@
 	let showA = true;
 	let reducedMotion = false;
 	let paused = false;
-	/** User chose a city — auto-rotation stays off permanently */
-	let userLocked = false;
 	/** @type {ReturnType<typeof setTimeout> | null} */
 	let holdTimer = null;
 	/** @type {ReturnType<typeof setTimeout> | null} */
@@ -144,15 +143,19 @@
 	}
 
 	function rotationAllowed() {
-		return !userLocked && !reducedMotion && !paused;
+		return !reducedMotion && !paused;
 	}
 
-	function lockRotation() {
-		userLocked = true;
-		paused = true;
-		clearTimers();
-		// Invalidate any in-flight auto crossfade; selection starts a fresh gen
-		goGen += 1;
+	/** Snap both layers to the committed active scene (clean slate mid-fade). */
+	function snapLayersToActive() {
+		const scene = scenery[activePlace];
+		layerA = scene;
+		layerB = scene;
+		showA = true;
+		if (fadeTimer) {
+			clearTimeout(fadeTimer);
+			fadeTimer = null;
+		}
 		advancing = false;
 	}
 
@@ -160,7 +163,6 @@
 		clearHold();
 		if (!rotationAllowed() || scenicPlaces.length < 2 || fadeTimer || advancing) return;
 		holdTimer = setTimeout(() => {
-			// Re-check at fire time — selection may have locked during the hold
 			if (!rotationAllowed()) return;
 			advance();
 		}, HOLD_MS);
@@ -169,25 +171,22 @@
 	/**
 	 * Crossfade to a scenic place via dual-layer preload (no empty flash).
 	 * @param {string} nextPlace
-	 * @param {{ lock?: boolean }} [opts]
+	 * @param {{ user?: boolean }} [opts]
 	 */
 	async function goToPlace(nextPlace, opts = {}) {
-		const lock = !!opts.lock;
-		// Lock first so any concurrent pointerleave/resume cannot restart rotation
-		if (lock) lockRotation();
-
+		const user = !!opts.user;
 		const nextIndex = scenicPlaces.indexOf(nextPlace);
 		if (nextIndex < 0) return;
 
-		if (nextPlace === activePlace && !fadeTimer && !advancing) {
-			return;
+		// Auto path: skip if busy, paused, or already on target
+		if (!user) {
+			if (advancing || fadeTimer || !rotationAllowed()) return;
+			if (nextPlace === activePlace) return;
 		}
-		if (advancing && !lock) return;
-		// After a user lock, only a locked goToPlace may continue
-		if (userLocked && !lock) return;
 
 		const myGen = ++goGen;
 		advancing = true;
+		clearHold();
 		const nextScene = scenery[nextPlace];
 		const incomingIsB = showA;
 
@@ -208,8 +207,8 @@
 			return;
 		}
 
-		// Auto path: abort if pause/lock landed during preload
-		if (!lock && !rotationAllowed()) {
+		// Auto path: abort if pause/reduced-motion landed during preload
+		if (!user && !rotationAllowed()) {
 			advancing = false;
 			return;
 		}
@@ -228,15 +227,41 @@
 	}
 
 	async function advance() {
-		if (!rotationAllowed() || scenicPlaces.length < 2 || advancing || userLocked) return;
+		if (!rotationAllowed() || scenicPlaces.length < 2 || advancing || fadeTimer) return;
 		const nextIndex = (scenicIndex + 1) % scenicPlaces.length;
 		await goToPlace(scenicPlaces[nextIndex]);
 	}
 
 	function selectPlace(place) {
 		if (!scenery[place]) return;
-		// Lock synchronously on click so pointerleave/resume cannot restart the carousel
-		goToPlace(place, { lock: true });
+
+		// Cancel pending hold and invalidate any in-flight auto advance
+		clearHold();
+		goGen += 1;
+
+		// Mid-fade / mid-preload: snap to current activePlace so paint never
+		// lands on the still-visible fading-out layer, then continue cleanly
+		if (fadeTimer || advancing) {
+			snapLayersToActive();
+		}
+
+		// Blur so focusin-pause on the city button cannot stall the reset timer
+		if (typeof document !== 'undefined' && document.activeElement) {
+			const focused = document.activeElement;
+			if (placesEl && placesEl.contains(focused) && typeof focused.blur === 'function') {
+				focused.blur();
+			}
+		}
+
+		if (place === activePlace) {
+			// Re-clicking the current city still resets the ~5s hold
+			advancing = false;
+			if (rotationAllowed()) scheduleNext();
+			else syncPauseFromPointer();
+			return;
+		}
+
+		goToPlace(place, { user: true });
 	}
 
 	function pause() {
@@ -245,11 +270,6 @@
 	}
 
 	function resume() {
-		if (userLocked) {
-			paused = true;
-			clearHold();
-			return;
-		}
 		paused = false;
 		scheduleNext();
 	}
@@ -263,11 +283,6 @@
 
 	function syncPauseFromPointer() {
 		if (typeof document === 'undefined') return;
-		if (userLocked) {
-			paused = true;
-			clearHold();
-			return;
-		}
 		if (document.hidden || isPointerOverAtmosphere()) pause();
 		else resume();
 	}
@@ -289,13 +304,10 @@
 			reducedMotion = !!(mq && mq.matches);
 			if (reducedMotion) {
 				clearTimers();
+				goGen += 1;
 				advancing = false;
-				activePlace = scenicPlaces[0];
-				layerA = scenery[scenicPlaces[0]];
-				layerB = layerA;
-				showA = true;
-				scenicIndex = 0;
-			} else if (!userLocked) {
+				// Keep current activePlace / layers — only stop advancing
+			} else if (!paused) {
 				scheduleNext();
 			}
 		};
@@ -313,7 +325,7 @@
 		document.addEventListener('visibilitychange', onVisibility);
 		// Cursor may already be over the hero/list on first paint
 		requestAnimationFrame(syncPauseFromPointer);
-		if (!paused && !userLocked) scheduleNext();
+		if (!paused) scheduleNext();
 
 		return () => {
 			clearTimers();
@@ -374,7 +386,6 @@
 	<ol
 		class="places"
 		aria-label={$messages.placesLived}
-		data-rotation-locked={userLocked ? 'true' : 'false'}
 		bind:this={placesEl}
 		on:pointerenter={pause}
 		on:pointerleave={resume}
