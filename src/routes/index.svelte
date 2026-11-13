@@ -302,9 +302,9 @@
 	}
 
 	.essays-col {
-		flex: 1 1 36rem;
-		min-width: 16rem;
-		max-width: 44rem;
+		flex: 0 1 auto;
+		min-width: 0;
+		max-width: calc(52ch + 16rem + 0.65rem);
 	}
 
 	.spotlight {
@@ -431,14 +431,16 @@
 		display: flex;
 		flex-direction: row;
 		align-items: flex-start;
-		gap: 1rem;
-		width: 100%;
+		gap: 0.65rem;
+		width: max-content;
+		max-width: 100%;
 	}
 
 	.essay-side {
-		flex: 1 1 52ch;
-		min-width: 0;
+		flex: 0 1 auto;
+		width: max-content;
 		max-width: 52ch;
+		min-width: 0;
 	}
 
 	.essay-media-wrap {
@@ -528,7 +530,7 @@
 	.essay-title-btn {
 		appearance: none;
 		display: block;
-		width: 100%;
+		width: max-content;
 		max-width: 52ch;
 		margin: 0;
 		padding: 0.32rem 0.1rem;
