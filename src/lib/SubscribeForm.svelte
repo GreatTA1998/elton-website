@@ -42,6 +42,15 @@
 		errorMessage = $messages.couldntReach;
 	}
 
+	const TITLE_MAX = 52;
+
+	/** @param {string} text */
+	function truncateTitle(text) {
+		const value = String(text || '');
+		if (value.length <= TITLE_MAX) return value;
+		return `${value.slice(0, TITLE_MAX).trimEnd()}…`;
+	}
+
 	function selectUpdates() {
 		mode = 'updates';
 	}
@@ -125,13 +134,15 @@
 
 		<label class="mode-option">
 			<input type="radio" name="subscribe-mode" value="digest" bind:group={mode} />
-			<span>{$messages.modeDigest}</span>
+			<span class="mode-title" title={$messages.modeDigest}>{truncateTitle($messages.modeDigest)}</span>
 		</label>
 
 		<div class="mode-updates">
 			<label class="mode-option">
 				<input type="radio" name="subscribe-mode" value="updates" bind:group={mode} />
-				<span>{$messages.modeUpdates}</span>
+				<span class="mode-title" title={$messages.modeUpdates}
+					>{truncateTitle($messages.modeUpdates)}</span
+				>
 			</label>
 
 			<div
@@ -156,7 +167,7 @@
 
 				<button
 					type="button"
-					class="mark"
+					class="mark mark-essays"
 					class:selected={essays}
 					aria-pressed={essays}
 					aria-label={$messages.essays}
@@ -227,6 +238,7 @@
 		align-items: center;
 		gap: 8px;
 		margin: 0;
+		max-width: 100%;
 		font: inherit;
 		font-size: 0.95rem;
 		line-height: 1.35;
@@ -236,21 +248,31 @@
 
 	.mode-option input {
 		margin: 0;
+		flex-shrink: 0;
 		accent-color: #2c2c2c;
+	}
+
+	.mode-title {
+		display: block;
+		min-width: 0;
+		max-width: 52ch;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 
 	.mode-updates {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: 8px 12px;
+		gap: 10px 16px;
 	}
 
 	.stream-marks {
 		display: flex;
-		flex-wrap: wrap;
+		flex-wrap: nowrap;
 		align-items: center;
-		gap: 8px;
+		gap: 18px;
 		opacity: 0.42;
 	}
 
@@ -286,6 +308,11 @@
 		width: 28px;
 		height: 28px;
 		border-radius: 6px;
+	}
+
+	.mark-essays {
+		/* Keep essays visually separate from the apps logo cluster */
+		margin-left: 2px;
 	}
 
 	.mark.selected {
