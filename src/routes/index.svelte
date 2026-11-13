@@ -450,7 +450,6 @@
 		width: auto;
 		max-width: min(52ch, 100%);
 		min-width: 0;
-		overflow: hidden;
 	}
 
 	.essay-media-wrap {
@@ -548,7 +547,6 @@
 
 	.essay-titles-measure .essay-title-btn {
 		width: max-content;
-		max-width: 100%;
 	}
 
 	.essay-title-btn {
