@@ -113,22 +113,13 @@
 						<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
 					{/if}
 
-					<div class="essay-feature-copy">
-						{#if selectedEssay.href}
-							<p class="feature-title essay-feature-title">
-								<a href={selectedEssay.href}>{selectedEssay.title}</a>
-							</p>
+					<p class="feature-desc essay-feature-desc">
+						{#if selectedEssay.sentenceKey}
+							{$messages[selectedEssay.sentenceKey]}
 						{:else}
-							<p class="feature-title essay-feature-title">{selectedEssay.title}</p>
+							{selectedEssay.sentence}
 						{/if}
-						<p class="feature-desc essay-feature-desc">
-							{#if selectedEssay.sentenceKey}
-								{$messages[selectedEssay.sentenceKey]}
-							{:else}
-								{selectedEssay.sentence}
-							{/if}
-						</p>
-					</div>
+					</p>
 				</div>
 			{/key}
 
@@ -278,8 +269,8 @@
 	}
 
 	.section-label {
-		margin: 0 0 0.85em;
-		font-size: 1.05rem;
+		margin: 0 0 0.55em;
+		font-size: 0.95rem;
 		font-weight: 500;
 		letter-spacing: -0.01em;
 		text-transform: lowercase;
@@ -290,8 +281,8 @@
 	.spotlights {
 		display: flex;
 		align-items: flex-start;
-		gap: 2.5rem;
-		margin-top: 2em;
+		gap: 2rem;
+		margin-top: 1.75em;
 		width: 100%;
 	}
 
@@ -307,14 +298,14 @@
 	.essays-col {
 		flex: 1 1 18rem;
 		min-width: 16rem;
-		max-width: 34rem;
+		max-width: 28rem;
 	}
 
 	.spotlight {
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 0.85rem;
+		gap: 0.65rem;
 		width: 100%;
 	}
 
@@ -326,12 +317,12 @@
 		display: flex;
 		align-items: center;
 		width: 100%;
-		padding: 1rem 1.25rem;
+		padding: 0.85rem 1rem;
 		box-sizing: border-box;
 		border: 1px solid rgba(40, 40, 40, 0.08);
-		border-radius: 1.35rem;
+		border-radius: 1.15rem;
 		background: linear-gradient(160deg, rgba(255, 252, 248, 0.92), rgba(255, 255, 255, 0.82));
-		box-shadow: 0 8px 28px rgba(40, 36, 30, 0.05);
+		box-shadow: 0 6px 20px rgba(40, 36, 30, 0.04);
 	}
 
 	.apps-feature {
@@ -356,22 +347,22 @@
 		align-items: center;
 		margin: 0;
 		font-weight: 600;
-		font-size: 0.98rem;
+		font-size: 0.92rem;
 		color: #1a1a1a;
-		line-height: 1.35;
+		line-height: 1.3;
 	}
 
 	.feature-desc {
-		font-size: 0.875rem;
+		font-size: 0.82rem;
 		color: #6a6a6a;
-		line-height: 1.45;
+		line-height: 1.4;
 		font-weight: 400;
 	}
 
 	.feature-status {
-		font-size: 0.78rem;
+		font-size: 0.72rem;
 		color: #9a9a9a;
-		line-height: 1.4;
+		line-height: 1.35;
 		font-weight: 400;
 	}
 
@@ -379,13 +370,13 @@
 		display: inline-flex;
 		align-items: center;
 		align-self: flex-start;
-		margin-top: 0.45rem;
-		padding: 0.28rem 0.72rem;
+		margin-top: 0.35rem;
+		padding: 0.22rem 0.62rem;
 		border: 1px solid #d8d8d8;
 		border-radius: 999px;
 		background: #fff;
 		color: #2c2c2c;
-		font-size: 0.72rem;
+		font-size: 0.7rem;
 		font-weight: 500;
 		line-height: 1.3;
 		letter-spacing: 0.01em;
@@ -402,9 +393,9 @@
 	.spotlight-thumbs {
 		display: flex;
 		align-items: flex-end;
-		gap: 0.55rem;
-		min-height: 3.5rem;
-		padding: 0 0.1rem;
+		gap: 0.45rem;
+		min-height: 3rem;
+		padding: 0;
 	}
 
 	.spotlight-thumb {
@@ -413,9 +404,9 @@
 		padding: 0;
 		border: none;
 		background: transparent;
-		width: 2.55rem;
-		height: 2.55rem;
-		border-radius: 10px;
+		width: 2.3rem;
+		height: 2.3rem;
+		border-radius: 9px;
 		overflow: hidden;
 		cursor: pointer;
 		flex-shrink: 0;
@@ -430,8 +421,8 @@
 	}
 
 	.spotlight-thumb.selected {
-		width: 3.35rem;
-		height: 3.35rem;
+		width: 2.95rem;
+		height: 2.95rem;
 	}
 
 	.spotlight-thumb.quiet {
@@ -446,7 +437,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 0.65rem;
+		gap: 0.45rem;
 		width: 100%;
 	}
 
@@ -454,12 +445,12 @@
 		display: block;
 		position: relative;
 		width: 100%;
-		max-width: 28rem;
+		max-width: 24rem;
 		aspect-ratio: 16 / 9;
 		padding: 0;
 		border: none;
 		background: transparent;
-		border-radius: 12px;
+		border-radius: 10px;
 		overflow: hidden;
 		cursor: pointer;
 		text-align: left;
@@ -490,8 +481,8 @@
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
-		width: 3rem;
-		height: 3rem;
+		width: 2.6rem;
+		height: 2.6rem;
 		border-radius: 999px;
 		background: rgba(20, 20, 20, 0.72);
 		color: #fff;
@@ -510,47 +501,41 @@
 		background: #e8e8e8;
 	}
 
-	.essay-feature-title {
-		font-size: 0.95rem;
-	}
-
-	.essay-feature-title a {
-		color: inherit;
-		text-decoration: none;
-	}
-
 	.essay-feature-desc {
 		margin: 0;
+		max-width: 24rem;
 	}
 
 	.essay-titles {
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 0.2rem;
+		gap: 0;
 		width: 100%;
+		max-width: 24rem;
 	}
 
 	.essay-title-btn {
 		appearance: none;
 		margin: 0;
-		padding: 0.45rem 0.15rem;
+		padding: 0.32rem 0.1rem;
 		border: none;
-		border-bottom: 1px solid transparent;
 		background: transparent;
 		color: #7a7a7a;
 		font: inherit;
-		font-size: 0.84rem;
+		font-size: 0.8rem;
 		font-weight: 400;
-		line-height: 1.4;
+		line-height: 1.35;
 		text-align: left;
 		cursor: pointer;
+		text-decoration: none;
+		transition: color 0.18s ease, font-size 0.18s ease;
 	}
 
 	.essay-title-btn.selected {
 		color: #1a1a1a;
 		font-weight: 500;
-		border-bottom-color: rgba(40, 40, 40, 0.12);
+		font-size: 0.9rem;
 	}
 
 	.essay-title-btn.soon {
@@ -558,7 +543,7 @@
 	}
 
 	.email-section {
-		margin-top: 2.5rem;
+		margin-top: 2rem;
 		padding-top: 0.25rem;
 		max-width: 36rem;
 	}

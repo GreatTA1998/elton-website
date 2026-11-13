@@ -14,8 +14,8 @@ const STORAGE_KEY = 'elton-site-lang';
 const DICT = {
 	en: {
 		welcome: "Welcome to my absolutely EPIC website, it's INSANE:",
-		softwareApps: 'software apps',
-		videoEssays: 'video essays',
+		softwareApps: 'apps',
+		videoEssays: 'essays',
 		emailUpdates: 'quarterly summary',
 		actionsDesc: 'Put to-do lists on the calendar. Fully using since 2024.',
 		actionsStatus: '2022 – current',
@@ -60,8 +60,8 @@ const DICT = {
 	},
 	zh: {
 		welcome: '欢迎来到我超赞的网站，真的很离谱：',
-		softwareApps: '软件应用',
-		videoEssays: '影像随笔',
+		softwareApps: '应用',
+		videoEssays: '随笔',
 		emailUpdates: '季度摘要',
 		actionsDesc: '把待办放进日历。2024 年起一直在用。',
 		actionsStatus: '2022 – 至今',
@@ -105,8 +105,8 @@ const DICT = {
 	},
 	ja: {
 		welcome: 'ようこそ。ここはマジでヤバいサイトです：',
-		softwareApps: 'ソフトウェア',
-		videoEssays: '映像エッセイ',
+		softwareApps: 'アプリ',
+		videoEssays: 'エッセイ',
 		emailUpdates: '四半期サマリー',
 		actionsDesc: 'ToDoをカレンダーに。2024年からずっと使っています。',
 		actionsStatus: '2022 – 現在',
