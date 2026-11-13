@@ -310,7 +310,7 @@
 	.essays-col {
 		flex: 0 1 auto;
 		min-width: 0;
-		max-width: calc(52ch + 16rem + 0.65rem);
+		max-width: min(calc(52ch + 16rem + 0.65rem), 100%);
 	}
 
 	.spotlight {
@@ -440,14 +440,17 @@
 		gap: 0.65rem;
 		width: max-content;
 		max-width: 100%;
+		min-width: 0;
 	}
 
 	.essay-side {
 		flex: 0 1 auto;
 		display: inline-grid;
 		justify-items: stretch;
-		max-width: 52ch;
+		width: auto;
+		max-width: min(52ch, 100%);
 		min-width: 0;
+		overflow: hidden;
 	}
 
 	.essay-media-wrap {
@@ -539,10 +542,13 @@
 	.essay-titles-measure {
 		visibility: hidden;
 		pointer-events: none;
+		max-width: 100%;
+		overflow: hidden;
 	}
 
 	.essay-titles-measure .essay-title-btn {
 		width: max-content;
+		max-width: 100%;
 	}
 
 	.essay-title-btn {
@@ -608,6 +614,13 @@
 		.essay-row {
 			flex-direction: column;
 			gap: 0.75rem;
+			width: 100%;
+			max-width: 100%;
+		}
+
+		.essay-side {
+			width: 100%;
+			max-width: min(52ch, 100%);
 		}
 
 		.essay-media-wrap {
