@@ -1,6 +1,5 @@
 const ALLOWED_INTERESTS = new Set([
 	'essays',
-	'music',
 	'actions.life',
 	'blackboards.io',
 	'zetteldraw',

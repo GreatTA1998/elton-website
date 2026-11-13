@@ -14,7 +14,6 @@
 	/** @type {'digest' | 'updates'} */
 	let mode = 'digest';
 	let essays = false;
-	let music = false;
 	/** @type {Record<string, boolean>} */
 	let apps = {
 		'actions.life': false,
@@ -32,7 +31,6 @@
 			? []
 			: [
 					...(essays ? ['essays'] : []),
-					...(music ? ['music'] : []),
 					...APPS.map((app) => app.id).filter((id) => apps[id])
 			  ];
 	$: hasInterest = interests.length > 0;
@@ -57,10 +55,9 @@
 		mode = 'updates';
 	}
 
-	function toggleTopic(topic) {
+	function toggleEssays() {
 		selectUpdates();
-		if (topic === 'essays') essays = !essays;
-		if (topic === 'music') music = !music;
+		essays = !essays;
 	}
 
 	function toggleApp(id) {
@@ -133,7 +130,7 @@
 
 <form class="subscribe" class:compact on:submit={onSubmit} novalidate>
 	<fieldset class="modes" disabled={status === 'submitting' || status === 'success'}>
-		<legend class="sr-only">{$messages.interests}</legend>
+		<legend class="sr-only">{$messages.subscribePreference}</legend>
 
 		<label class="mode-option">
 			<input type="radio" name="subscribe-mode" value="digest" bind:group={mode} />
@@ -173,20 +170,9 @@
 					aria-pressed={essays}
 					aria-label={$messages.essays}
 					title={$messages.essays}
-					on:click={() => toggleTopic('essays')}
+					on:click={toggleEssays}
 				>
 					<img src="/gohs-folly-cover.jpg" alt="" />
-				</button>
-				<button
-					type="button"
-					class="mark"
-					class:selected={music}
-					aria-pressed={music}
-					aria-label={$messages.music}
-					title={$messages.music}
-					on:click={() => toggleTopic('music')}
-				>
-					<img src="/bach-album.jpg" alt="" />
 				</button>
 			</div>
 		</div>
