@@ -548,7 +548,8 @@
 
 	.essay-titles-measure .essay-title-btn {
 		width: max-content;
-		max-width: 100%;
+		/* Match visible title 52ch (selected font metrics on measure spans) */
+		max-width: 52ch;
 	}
 
 	.essay-title-btn {
@@ -572,6 +573,16 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		transition: color 0.18s ease, font-size 0.18s ease;
+	}
+
+	.essay-title-btn:focus {
+		outline: none;
+	}
+
+	.essay-title-btn:focus-visible {
+		/* Inset so overflow:hidden on .essay-side does not clip the ring */
+		outline: 2px solid #2c2c2c;
+		outline-offset: -2px;
 	}
 
 	.essay-title-btn.selected {
