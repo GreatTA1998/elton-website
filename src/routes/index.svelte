@@ -66,6 +66,12 @@
 		<section class="spotlight essays-spotlight" aria-label={$messages.videoEssays}>
 			<div class="essay-row">
 				<div class="essay-side">
+					<!-- Sizes column to selected title metrics so media doesn't jump on select -->
+					<div class="essay-titles essay-titles-measure" aria-hidden="true">
+						{#each essays as essay (essay.id)}
+							<span class="essay-title-btn selected">{truncateTitle(essay.title)}</span>
+						{/each}
+					</div>
 					<div class="essay-titles" role="group" aria-label={$messages.videoEssays}>
 						{#each essays as essay (essay.id)}
 							<button
@@ -438,7 +444,8 @@
 
 	.essay-side {
 		flex: 0 1 auto;
-		width: max-content;
+		display: inline-grid;
+		justify-items: stretch;
 		max-width: 52ch;
 		min-width: 0;
 	}
@@ -520,17 +527,28 @@
 	}
 
 	.essay-titles {
+		grid-area: 1 / 1;
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
 		gap: 0;
 		width: 100%;
+		min-width: 0;
+	}
+
+	.essay-titles-measure {
+		visibility: hidden;
+		pointer-events: none;
+	}
+
+	.essay-titles-measure .essay-title-btn {
+		width: max-content;
 	}
 
 	.essay-title-btn {
 		appearance: none;
 		display: block;
-		width: max-content;
+		width: 100%;
 		max-width: 52ch;
 		margin: 0;
 		padding: 0.32rem 0.1rem;
