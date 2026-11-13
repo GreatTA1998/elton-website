@@ -3,24 +3,18 @@
 
 	export let compact = false;
 
-	const APPS = [
-		{ id: 'actions.life', label: 'actions.life', src: '/actions-life-logo.png' },
-		{ id: 'blackboards.io', label: 'blackboards.io', src: '/explanations-logo.png' },
-		{ id: 'zetteldraw', label: 'zetteldraw', src: '/zetteldraw-logo.png' },
-		{ id: 'zen-message', label: 'zen-message', src: '/zen-message-logo.jpg' }
+	const APP_MARKS = [
+		{ src: '/actions-life-logo.png', label: 'actions.life' },
+		{ src: '/explanations-logo.png', label: 'blackboards.io' },
+		{ src: '/zetteldraw-logo.png', label: 'zetteldraw' },
+		{ src: '/zen-message-logo.jpg', label: 'zen-message' }
 	];
 
 	let email = '';
 	/** @type {'digest' | 'updates'} */
 	let mode = 'digest';
+	let apps = false;
 	let essays = false;
-	/** @type {Record<string, boolean>} */
-	let apps = {
-		'actions.life': false,
-		'blackboards.io': false,
-		zetteldraw: false,
-		'zen-message': false
-	};
 	let status = 'idle'; // idle | submitting | success | error | not_configured
 	let errorMessage = '';
 	/** @type {'not_configured' | 'invalid_email' | 'invalid_interests' | 'generic' | 'network' | ''} */
@@ -29,10 +23,7 @@
 	$: interests =
 		mode === 'digest'
 			? []
-			: [
-					...(essays ? ['essays'] : []),
-					...APPS.map((app) => app.id).filter((id) => apps[id])
-			  ];
+			: [...(apps ? ['apps'] : []), ...(essays ? ['essays'] : [])];
 	$: hasInterest = interests.length > 0;
 	$: canSubmit =
 		status !== 'submitting' &&
@@ -55,14 +46,14 @@
 		mode = 'updates';
 	}
 
+	function toggleApps() {
+		selectUpdates();
+		apps = !apps;
+	}
+
 	function toggleEssays() {
 		selectUpdates();
 		essays = !essays;
-	}
-
-	function toggleApp(id) {
-		selectUpdates();
-		apps = { ...apps, [id]: !apps[id] };
 	}
 
 	async function handleSubmit() {
@@ -149,19 +140,19 @@
 				role="group"
 				aria-label={$messages.interests}
 			>
-				{#each APPS as app (app.id)}
-					<button
-						type="button"
-						class="mark"
-						class:selected={apps[app.id]}
-						aria-pressed={apps[app.id]}
-						aria-label={app.label}
-						title={app.label}
-						on:click={() => toggleApp(app.id)}
-					>
-						<img src={app.src} alt="" />
-					</button>
-				{/each}
+				<button
+					type="button"
+					class="mark mark-apps"
+					class:selected={apps}
+					aria-pressed={apps}
+					aria-label={$messages.softwareApps}
+					title={$messages.softwareApps}
+					on:click={toggleApps}
+				>
+					{#each APP_MARKS as mark (mark.src)}
+						<img src={mark.src} alt="" />
+					{/each}
+				</button>
 
 				<button
 					type="button"
@@ -259,7 +250,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: 6px;
+		gap: 8px;
 		opacity: 0.42;
 	}
 
@@ -269,6 +260,9 @@
 
 	.mark {
 		appearance: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 		width: 36px;
 		height: 36px;
 		margin: 0;
@@ -280,6 +274,18 @@
 		cursor: pointer;
 		line-height: 0;
 		opacity: 0.55;
+	}
+
+	.mark-apps {
+		width: auto;
+		padding: 0 2px;
+		gap: 2px;
+	}
+
+	.mark-apps img {
+		width: 28px;
+		height: 28px;
+		border-radius: 6px;
 	}
 
 	.mark.selected {

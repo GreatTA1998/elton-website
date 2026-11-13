@@ -57,7 +57,7 @@ const DICT = {
 		backHome: '← Home',
 		subscribeTitle: 'Email updates',
 		subscribeSub:
-			'Default is a summary every 3 months. Or get emailed on updates for the software apps and essays you care about. Change your mind later by writing me.',
+			'Default is a summary every 3 months. Or get emailed on updates for apps and/or essays. Change your mind later by writing me.',
 		contactSocial: 'Contact and social links',
 		language: 'Language'
 	},
@@ -105,7 +105,7 @@ const DICT = {
 		backHome: '← 首页',
 		subscribeTitle: '邮件更新',
 		subscribeSub:
-			'默认每三个月一份摘要。也可以按软件应用和随笔有更新时发邮件。以后想改，写信给我就行。',
+			'默认每三个月一份摘要。也可以按应用和/或随笔有更新时发邮件。以后想改，写信给我就行。',
 		contactSocial: '联系与社交链接',
 		language: '语言'
 	},
@@ -154,7 +154,7 @@ const DICT = {
 		backHome: '← ホーム',
 		subscribeTitle: 'メール更新',
 		subscribeSub:
-			'初期設定は3か月ごとのまとめです。ソフトウェアとエッセイの更新メールも選べます。あとから変更したくなったら、メールください。',
+			'初期設定は3か月ごとのまとめです。アプリと／またはエッセイの更新メールも選べます。あとから変更したくなったら、メールください。',
 		contactSocial: '連絡先とソーシャル',
 		language: '言語'
 	}

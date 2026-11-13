@@ -1,10 +1,4 @@
-const ALLOWED_INTERESTS = new Set([
-	'essays',
-	'actions.life',
-	'blackboards.io',
-	'zetteldraw',
-	'zen-message'
-]);
+const ALLOWED_INTERESTS = new Set(['apps', 'essays']);
 
 /** @type {import('@sveltejs/kit').RequestHandler} */
 export async function post({ request }) {
