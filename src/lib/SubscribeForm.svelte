@@ -11,6 +11,8 @@
 	];
 
 	let email = '';
+	/** @type {'digest' | 'updates'} */
+	let mode = 'digest';
 	let essays = false;
 	let music = false;
 	/** @type {Record<string, boolean>} */
@@ -25,12 +27,20 @@
 	/** @type {'not_configured' | 'invalid_email' | 'invalid_interests' | 'generic' | 'network' | ''} */
 	let errorKey = '';
 
-	$: interests = [
-		...(essays ? ['essays'] : []),
-		...(music ? ['music'] : []),
-		...APPS.map((app) => app.id).filter((id) => apps[id])
-	];
+	$: interests =
+		mode === 'digest'
+			? []
+			: [
+					...(essays ? ['essays'] : []),
+					...(music ? ['music'] : []),
+					...APPS.map((app) => app.id).filter((id) => apps[id])
+			  ];
 	$: hasInterest = interests.length > 0;
+	$: canSubmit =
+		status !== 'submitting' &&
+		status !== 'success' &&
+		!!email &&
+		(mode === 'digest' || hasInterest);
 	$: if (errorKey === 'not_configured') {
 		errorMessage = $messages.notConfigured;
 	} else if (errorKey === 'invalid_email') {
@@ -43,17 +53,29 @@
 		errorMessage = $messages.couldntReach;
 	}
 
+	function selectUpdates() {
+		mode = 'updates';
+	}
+
 	function toggleTopic(topic) {
+		selectUpdates();
 		if (topic === 'essays') essays = !essays;
 		if (topic === 'music') music = !music;
 	}
 
 	function toggleApp(id) {
+		selectUpdates();
 		apps = { ...apps, [id]: !apps[id] };
 	}
 
 	async function handleSubmit() {
 		if (status === 'submitting') return;
+		if (mode === 'updates' && !hasInterest) {
+			status = 'error';
+			errorKey = 'invalid_interests';
+			errorMessage = $messages.pickInterest;
+			return;
+		}
 
 		status = 'submitting';
 		errorMessage = '';
@@ -63,7 +85,11 @@
 			const res = await fetch('/api/subscribe', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email, interests })
+				body: JSON.stringify({
+					email,
+					preference: mode,
+					interests: mode === 'digest' ? [] : interests
+				})
 			});
 
 			const data = await res.json().catch(() => ({}));
@@ -106,42 +132,63 @@
 </script>
 
 <form class="subscribe" class:compact on:submit={onSubmit} novalidate>
-	<fieldset class="interests" disabled={status === 'submitting' || status === 'success'}>
+	<fieldset class="modes" disabled={status === 'submitting' || status === 'success'}>
 		<legend class="sr-only">{$messages.interests}</legend>
 
-		<div class="interest-row" role="group" aria-label={$messages.interests}>
-			{#each APPS as app (app.id)}
+		<label class="mode-option">
+			<input type="radio" name="subscribe-mode" value="digest" bind:group={mode} />
+			<span>{$messages.modeDigest}</span>
+		</label>
+
+		<div class="mode-updates">
+			<label class="mode-option">
+				<input type="radio" name="subscribe-mode" value="updates" bind:group={mode} />
+				<span>{$messages.modeUpdates}</span>
+			</label>
+
+			<div
+				class="stream-marks"
+				class:active={mode === 'updates'}
+				role="group"
+				aria-label={$messages.interests}
+			>
+				{#each APPS as app (app.id)}
+					<button
+						type="button"
+						class="mark"
+						class:selected={apps[app.id]}
+						aria-pressed={apps[app.id]}
+						aria-label={app.label}
+						title={app.label}
+						on:click={() => toggleApp(app.id)}
+					>
+						<img src={app.src} alt="" />
+					</button>
+				{/each}
+
 				<button
 					type="button"
-					class="app-icon"
-					class:selected={apps[app.id]}
-					aria-pressed={apps[app.id]}
-					aria-label={app.label}
-					title={app.label}
-					on:click={() => toggleApp(app.id)}
+					class="mark"
+					class:selected={essays}
+					aria-pressed={essays}
+					aria-label={$messages.essays}
+					title={$messages.essays}
+					on:click={() => toggleTopic('essays')}
 				>
-					<img src={app.src} alt="" />
+					<img src="/gohs-folly-cover.jpg" alt="" />
 				</button>
-			{/each}
-
-			<button
-				type="button"
-				class="chip"
-				class:selected={essays}
-				aria-pressed={essays}
-				on:click={() => toggleTopic('essays')}
-			>
-				{$messages.essays}
-			</button>
-			<button
-				type="button"
-				class="chip"
-				class:selected={music}
-				aria-pressed={music}
-				on:click={() => toggleTopic('music')}
-			>
-				{$messages.music}
-			</button>
+				<button
+					type="button"
+					class="mark"
+					class:selected={music}
+					aria-pressed={music}
+					aria-label={$messages.music}
+					title={$messages.music}
+					on:click={() => toggleTopic('music')}
+				>
+					<img src="/bach-album.jpg" alt="" />
+				</button>
+			</div>
 		</div>
 	</fieldset>
 
@@ -157,10 +204,7 @@
 			required
 			disabled={status === 'submitting' || status === 'success'}
 		/>
-		<button
-			type="submit"
-			disabled={status === 'submitting' || status === 'success' || !email || !hasInterest}
-		>
+		<button type="submit" disabled={!canSubmit}>
 			{#if status === 'submitting'}
 				{$messages.sending}
 			{:else if status === 'success'}
@@ -189,95 +233,75 @@
 	}
 
 	.subscribe.compact {
-		max-width: 32rem;
+		max-width: 36rem;
 	}
 
-	.interests {
+	.modes {
 		margin: 0;
 		padding: 0;
 		border: none;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 	}
 
-	.interest-row {
+	.mode-option {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		margin: 0;
+		font: inherit;
+		font-size: 0.95rem;
+		line-height: 1.35;
+		color: #2c2c2c;
+		cursor: pointer;
+	}
+
+	.mode-option input {
+		margin: 0;
+		accent-color: #2c2c2c;
+	}
+
+	.mode-updates {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: 8px;
+		gap: 8px 12px;
 	}
 
-	.chip {
-		appearance: none;
-		display: inline-flex;
+	.stream-marks {
+		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
-		justify-content: center;
-		margin: 0;
-		min-height: 44px;
-		padding: 8px 12px;
-		border: 1px solid #e4e4e4;
-		border-radius: 10px;
-		cursor: pointer;
-		background: #fff;
-		font: inherit;
-		font-size: 0.92rem;
-		font-weight: 500;
-		color: #2c2c2c;
-		line-height: 1.3;
-		box-sizing: border-box;
-		transform: scale(1);
-		box-shadow: none;
-		transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease,
-			transform 0.15s ease, box-shadow 0.15s ease;
+		gap: 6px;
+		opacity: 0.42;
 	}
 
-	.chip:hover {
-		background: #f7f7f7;
-		border-color: #d8d8d8;
+	.stream-marks.active {
+		opacity: 1;
 	}
 
-	.chip.selected {
-		border-color: transparent;
-		background: #2c2c2c;
-		color: #fff;
-		transform: scale(1.04);
-		box-shadow: 0 0 0 1px rgba(44, 44, 44, 0.08), 0 4px 14px rgba(40, 40, 40, 0.18);
-	}
-
-	.chip.selected:hover {
-		background: #1f1f1f;
-		border-color: transparent;
-		color: #fff;
-	}
-
-	.app-icon {
+	.mark {
 		appearance: none;
-		width: 44px;
-		height: 44px;
+		width: 36px;
+		height: 36px;
 		margin: 0;
 		padding: 0;
 		border: 1px solid transparent;
-		border-radius: 10px;
-		background: #fff;
+		border-radius: 8px;
+		background: transparent;
 		overflow: hidden;
 		cursor: pointer;
 		line-height: 0;
-		opacity: 0.88;
-		transform: scale(1);
-		box-shadow: none;
-		transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+		opacity: 0.55;
 	}
 
-	.app-icon:hover {
-		background: #fff;
+	.mark.selected {
 		opacity: 1;
+		border-color: #c8c8c8;
 	}
 
-	.app-icon.selected {
-		opacity: 1;
-		transform: scale(1.1);
-		box-shadow: 0 0 0 1px rgba(44, 44, 44, 0.06), 0 5px 16px rgba(40, 40, 40, 0.16);
-	}
-
-	.app-icon img {
+	.mark img {
 		display: block;
 		width: 100%;
 		height: 100%;
@@ -323,11 +347,6 @@
 		font-size: 0.9rem;
 		font-weight: 500;
 		cursor: pointer;
-		transition: opacity 0.15s ease, background-color 0.15s ease;
-	}
-
-	button[type='submit']:hover:not(:disabled) {
-		background: #1f1f1f;
 	}
 
 	button[type='submit']:disabled {
