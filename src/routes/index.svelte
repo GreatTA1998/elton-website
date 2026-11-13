@@ -556,6 +556,20 @@
 		font-size: 0.9rem;
 	}
 
+	/* Reserve selected metrics so font-size/weight changes cannot resize the row. */
+	.essay-title-btn::after {
+		content: attr(title);
+		display: block;
+		font-size: 0.9rem;
+		font-weight: 500;
+		line-height: 1.35;
+		height: 0;
+		overflow: hidden;
+		visibility: hidden;
+		pointer-events: none;
+		user-select: none;
+	}
+
 	.essay-title-btn.soon {
 		opacity: 0.72;
 	}
