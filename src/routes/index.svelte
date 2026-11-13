@@ -5,152 +5,150 @@
 	{$messages.welcome}
 </p>
 
-<h2 class="section-label" id="software-apps-label">{$messages.softwareApps}</h2>
+<div class="spotlights">
+	<div class="spotlight-col apps-col">
+		<h2 class="section-label" id="software-apps-label">{$messages.softwareApps}</h2>
 
-<section class="spotlight apps-spotlight" aria-labelledby="software-apps-label">
-	{#key selectedAppId}
-		<div class="spotlight-feature" class:muted={selectedApp.muted} in:fade={{ duration: fadeMs }}>
-			<div class="feature-copy">
-				<strong class="feature-title">
-					{selectedApp.name}
-					{#if selectedApp.ready}
-						<span class="ready-tick" role="img" title={$messages.ready} aria-label={$messages.ready}>
-							<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
-								<circle cx="8" cy="8" r="8" fill="#2f9e44" />
-								<path
-									d="M4.6 8.2l2.1 2.1 4.7-4.7"
-									fill="none"
-									stroke="#fff"
-									stroke-width="1.7"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								/>
-							</svg>
-						</span>
-					{/if}
-				</strong>
-				<span class="feature-desc">{$messages[selectedApp.descKey]}</span>
-				<span class="feature-status">{$messages[selectedApp.statusKey]}</span>
-				{#if selectedApp.visit}
-					<a
-						class="feature-action"
-						target="_blank"
-						rel="noopener noreferrer"
-						href={selectedApp.visit}
-					>
-						{$messages.visit}
-					</a>
-				{/if}
-			</div>
-		</div>
-	{/key}
-
-	<div class="spotlight-thumbs">
-		{#each apps as app (app.id)}
-			<button
-				type="button"
-				class="spotlight-thumb app-thumb"
-				class:selected={selectedAppId === app.id}
-				class:quiet={app.muted}
-				aria-pressed={selectedAppId === app.id}
-				aria-label={app.name}
-				on:click={() => selectApp(app.id)}
-			>
-				<img src={app.logo} alt="" />
-			</button>
-		{/each}
-	</div>
-</section>
-
-<h2 class="section-label" id="video-essays-label">{$messages.videoEssays}</h2>
-
-<section class="spotlight essays-spotlight" aria-labelledby="video-essays-label">
-	{#key selectedEssayId}
-		<div class="essay-feature" in:fade={{ duration: fadeMs }}>
-			{#if selectedEssay.kind === 'essay'}
-				<a class="essay-feature-media" href={selectedEssay.href}>
-					<picture>
-						<source srcset={selectedEssay.coverAvif} type="image/avif" />
-						<source srcset={selectedEssay.coverWebp} type="image/webp" />
-						<img
-							src={selectedEssay.coverJpg}
-							alt={selectedEssay.title}
-							loading="lazy"
-							decoding="async"
-						/>
-					</picture>
-				</a>
-			{:else if selectedEssay.kind === 'video'}
-				{#if notionPlaying}
-					<div class="essay-feature-media essay-video-frame">
-						<iframe
-							src="https://www.youtube-nocookie.com/embed/{selectedEssay.youtubeId}?autoplay=1&rel=0"
-							title={selectedEssay.title}
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-							allowfullscreen
-						></iframe>
+		<section class="spotlight apps-spotlight" aria-labelledby="software-apps-label">
+			{#key selectedAppId}
+				<div class="spotlight-feature apps-feature" class:muted={selectedApp.muted} in:fade={{ duration: fadeMs }}>
+					<div class="feature-copy">
+						<strong class="feature-title">
+							{selectedApp.name}
+							{#if selectedApp.ready}
+								<span class="ready-tick" role="img" title={$messages.ready} aria-label={$messages.ready}>
+									<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+										<circle cx="8" cy="8" r="8" fill="#2f9e44" />
+										<path
+											d="M4.6 8.2l2.1 2.1 4.7-4.7"
+											fill="none"
+											stroke="#fff"
+											stroke-width="1.7"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+								</span>
+							{/if}
+						</strong>
+						<span class="feature-desc">{$messages[selectedApp.descKey]}</span>
+						<span class="feature-status">{$messages[selectedApp.statusKey]}</span>
+						{#if selectedApp.visit}
+							<a
+								class="feature-action"
+								target="_blank"
+								rel="noopener noreferrer"
+								href={selectedApp.visit}
+							>
+								{$messages.visit}
+							</a>
+						{/if}
 					</div>
-				{:else}
+				</div>
+			{/key}
+
+			<div class="spotlight-thumbs">
+				{#each apps as app (app.id)}
 					<button
 						type="button"
-						class="essay-feature-media essay-feature-play"
-						aria-label={`${$messages.play}: ${selectedEssay.title}`}
-						on:click={() => (notionPlaying = true)}
+						class="spotlight-thumb app-thumb"
+						class:selected={selectedAppId === app.id}
+						class:quiet={app.muted}
+						aria-pressed={selectedAppId === app.id}
+						aria-label={app.name}
+						on:click={() => selectApp(app.id)}
 					>
-						<img src={selectedEssay.thumb} alt="" />
-						<span class="essay-play" aria-hidden="true">
-							<svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
-								<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
-							</svg>
-						</span>
+						<img src={app.logo} alt="" />
 					</button>
-				{/if}
-			{:else}
-				<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
-			{/if}
-
-			<div class="essay-feature-copy">
-				{#if selectedEssay.href}
-					<p class="feature-title essay-feature-title">
-						<a href={selectedEssay.href}>{selectedEssay.title}</a>
-					</p>
-				{:else}
-					<p class="feature-title essay-feature-title">{selectedEssay.title}</p>
-				{/if}
-				<p class="feature-desc essay-feature-desc">
-					{#if selectedEssay.sentenceKey}
-						{$messages[selectedEssay.sentenceKey]}
-					{:else}
-						{selectedEssay.sentence}
-					{/if}
-				</p>
+				{/each}
 			</div>
-		</div>
-	{/key}
-
-	<div class="spotlight-thumbs essay-thumbs">
-		{#each essays as essay (essay.id)}
-			{#if essay.id !== selectedEssayId}
-				<button
-					type="button"
-					class="spotlight-thumb essay-thumb"
-					class:placeholder={essay.kind === 'soon'}
-					aria-pressed="false"
-					aria-label={essay.title}
-					on:click={() => selectEssay(essay.id)}
-				>
-					{#if essay.kind === 'essay'}
-						<img src={essay.coverJpg} alt="" />
-					{:else if essay.kind === 'video'}
-						<img src={essay.thumb} alt="" />
-					{:else}
-						<span class="essay-thumb-blank" aria-hidden="true"></span>
-					{/if}
-				</button>
-			{/if}
-		{/each}
+		</section>
 	</div>
-</section>
+
+	<div class="spotlight-col essays-col">
+		<h2 class="section-label" id="video-essays-label">{$messages.videoEssays}</h2>
+
+		<section class="spotlight essays-spotlight" aria-labelledby="video-essays-label">
+			{#key selectedEssayId}
+				<div class="essay-feature" in:fade={{ duration: fadeMs }}>
+					{#if selectedEssay.kind === 'essay'}
+						<a class="essay-feature-media" href={selectedEssay.href}>
+							<picture>
+								<source srcset={selectedEssay.coverAvif} type="image/avif" />
+								<source srcset={selectedEssay.coverWebp} type="image/webp" />
+								<img
+									src={selectedEssay.coverJpg}
+									alt={selectedEssay.title}
+									loading="lazy"
+									decoding="async"
+								/>
+							</picture>
+						</a>
+					{:else if selectedEssay.kind === 'video'}
+						{#if notionPlaying}
+							<div class="essay-feature-media essay-video-frame">
+								<iframe
+									src="https://www.youtube-nocookie.com/embed/{selectedEssay.youtubeId}?autoplay=1&rel=0"
+									title={selectedEssay.title}
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+									allowfullscreen
+								></iframe>
+							</div>
+						{:else}
+							<button
+								type="button"
+								class="essay-feature-media essay-feature-play"
+								aria-label={`${$messages.play}: ${selectedEssay.title}`}
+								on:click={() => (notionPlaying = true)}
+							>
+								<img src={selectedEssay.thumb} alt="" />
+								<span class="essay-play" aria-hidden="true">
+									<svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
+										<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
+									</svg>
+								</span>
+							</button>
+						{/if}
+					{:else}
+						<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
+					{/if}
+
+					<div class="essay-feature-copy">
+						{#if selectedEssay.href}
+							<p class="feature-title essay-feature-title">
+								<a href={selectedEssay.href}>{selectedEssay.title}</a>
+							</p>
+						{:else}
+							<p class="feature-title essay-feature-title">{selectedEssay.title}</p>
+						{/if}
+						<p class="feature-desc essay-feature-desc">
+							{#if selectedEssay.sentenceKey}
+								{$messages[selectedEssay.sentenceKey]}
+							{:else}
+								{selectedEssay.sentence}
+							{/if}
+						</p>
+					</div>
+				</div>
+			{/key}
+
+			<div class="essay-titles" role="group" aria-label={$messages.videoEssays}>
+				{#each essays as essay (essay.id)}
+					<button
+						type="button"
+						class="essay-title-btn"
+						class:selected={selectedEssayId === essay.id}
+						class:soon={essay.kind === 'soon'}
+						aria-pressed={selectedEssayId === essay.id}
+						on:click={() => selectEssay(essay.id)}
+					>
+						{essay.title}
+					</button>
+				{/each}
+			</div>
+		</section>
+	</div>
+</div>
 
 <section class="email-section" aria-labelledby="email-updates-label">
 	<h2 class="section-label" id="email-updates-label">{$messages.emailUpdates}</h2>
@@ -280,7 +278,7 @@
 	}
 
 	.section-label {
-		margin: 2.75em 0 0.85em;
+		margin: 0 0 0.85em;
 		font-size: 1.05rem;
 		font-weight: 500;
 		letter-spacing: -0.01em;
@@ -289,8 +287,26 @@
 		line-height: 1.3;
 	}
 
-	.welcome + .section-label {
+	.spotlights {
+		display: flex;
+		align-items: flex-start;
+		gap: 2.5rem;
 		margin-top: 2em;
+		width: 100%;
+	}
+
+	.spotlight-col {
+		min-width: 0;
+	}
+
+	.apps-col {
+		flex: 0 1 20rem;
+		max-width: 22rem;
+	}
+
+	.essays-col {
+		flex: 1 1 0;
+		min-width: 16rem;
 	}
 
 	.spotlight {
@@ -299,7 +315,10 @@
 		align-items: stretch;
 		gap: 0.85rem;
 		width: 100%;
-		max-width: 42rem;
+	}
+
+	.apps-spotlight {
+		align-items: flex-start;
 	}
 
 	.spotlight-feature {
@@ -312,6 +331,11 @@
 		border-radius: 1.35rem;
 		background: linear-gradient(160deg, rgba(255, 252, 248, 0.92), rgba(255, 255, 255, 0.82));
 		box-shadow: 0 8px 28px rgba(40, 36, 30, 0.05);
+	}
+
+	.apps-feature {
+		width: auto;
+		max-width: 100%;
 	}
 
 	.spotlight-feature.muted {
@@ -397,8 +421,7 @@
 		transition: width 0.22s ease, height 0.22s ease, opacity 0.22s ease;
 	}
 
-	.spotlight-thumb img,
-	.essay-thumb-blank {
+	.spotlight-thumb img {
 		display: block;
 		width: 100%;
 		height: 100%;
@@ -422,7 +445,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 0.7rem;
+		gap: 0.65rem;
 		width: 100%;
 	}
 
@@ -481,8 +504,7 @@
 		margin-left: 2px;
 	}
 
-	.essay-thumb-placeholder,
-	.essay-thumb-blank {
+	.essay-thumb-placeholder {
 		background: #e8e8e8;
 	}
 
@@ -499,39 +521,69 @@
 		margin: 0;
 	}
 
-	.essay-thumbs {
+	.essay-titles {
 		display: flex;
-		width: 100%;
+		flex-direction: column;
 		align-items: stretch;
-		gap: 0.7rem;
-		min-height: 0;
-		padding: 0;
+		gap: 0.2rem;
+		width: 100%;
 	}
 
-	.essay-thumbs .spotlight-thumb {
-		flex: 1 1 0;
-		width: 0;
-		height: auto;
-		aspect-ratio: 4 / 3;
-		border-radius: 10px;
-		min-width: 0;
+	.essay-title-btn {
+		appearance: none;
+		margin: 0;
+		padding: 0.45rem 0.15rem;
+		border: none;
+		border-bottom: 1px solid transparent;
+		background: transparent;
+		color: #7a7a7a;
+		font: inherit;
+		font-size: 0.84rem;
+		font-weight: 400;
+		line-height: 1.4;
+		text-align: left;
+		cursor: pointer;
 	}
 
-	.essay-thumbs .spotlight-thumb.placeholder {
-		opacity: 0.7;
+	.essay-title-btn.selected {
+		color: #1a1a1a;
+		font-weight: 500;
+		border-bottom-color: rgba(40, 40, 40, 0.12);
+	}
+
+	.essay-title-btn.soon {
+		opacity: 0.72;
 	}
 
 	.email-section {
-		margin-top: 0.5rem;
+		margin-top: 2.5rem;
 		padding-top: 0.25rem;
 		max-width: 36rem;
 	}
 
-	@media (max-width: 720px) {
-		.spotlight {
-			max-width: none;
+	.email-section .section-label {
+		margin-top: 0;
+	}
+
+	@media (max-width: 900px) {
+		.spotlights {
+			flex-direction: column;
+			gap: 2.5rem;
 		}
 
+		.apps-col,
+		.essays-col {
+			flex: 1 1 auto;
+			max-width: none;
+			width: 100%;
+		}
+
+		.apps-feature {
+			width: 100%;
+		}
+	}
+
+	@media (max-width: 720px) {
 		.spotlight-feature {
 			padding: 0.9rem 1rem;
 		}
