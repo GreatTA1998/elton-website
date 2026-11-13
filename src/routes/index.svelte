@@ -9,7 +9,7 @@
 	<div class="spotlight-col apps-col">
 		<section class="spotlight apps-spotlight" aria-label={$messages.softwareApps}>
 			{#key selectedAppId}
-				<div class="spotlight-feature apps-feature" class:muted={selectedApp.muted} in:fade={{ duration: fadeMs }}>
+				<div class="spotlight-feature apps-feature" in:fade={{ duration: fadeMs }}>
 					<div class="feature-copy">
 						<strong class="feature-title">
 							{selectedApp.name}
@@ -51,7 +51,6 @@
 						type="button"
 						class="spotlight-thumb app-thumb"
 						class:selected={selectedAppId === app.id}
-						class:quiet={app.muted}
 						aria-pressed={selectedAppId === app.id}
 						aria-label={app.name}
 						on:click={() => selectApp(app.id)}
@@ -166,7 +165,6 @@
 			descKey: 'actionsDesc',
 			statusKey: 'actionsStatus',
 			ready: true,
-			muted: false,
 			visit: 'https://actions.life'
 		},
 		{
@@ -176,7 +174,6 @@
 			descKey: 'blackboardsDesc',
 			statusKey: 'blackboardsStatus',
 			ready: false,
-			muted: true,
 			visit: null
 		},
 		{
@@ -186,7 +183,6 @@
 			descKey: 'zetteldrawDesc',
 			statusKey: 'zetteldrawStatus',
 			ready: false,
-			muted: true,
 			visit: null
 		},
 		{
@@ -196,7 +192,6 @@
 			descKey: 'zenDesc',
 			statusKey: 'zenStatus',
 			ready: false,
-			muted: true,
 			visit: null
 		}
 	];
@@ -326,10 +321,6 @@
 		max-width: 100%;
 	}
 
-	.spotlight-feature.muted {
-		opacity: 0.72;
-	}
-
 	.feature-copy {
 		display: flex;
 		flex-direction: column;
@@ -419,14 +410,6 @@
 	.spotlight-thumb.selected {
 		width: 2.95rem;
 		height: 2.95rem;
-	}
-
-	.spotlight-thumb.quiet {
-		opacity: 0.62;
-	}
-
-	.spotlight-thumb.quiet.selected {
-		opacity: 0.78;
 	}
 
 	.essay-feature {
