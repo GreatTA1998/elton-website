@@ -539,6 +539,8 @@
 	.essay-titles-measure {
 		visibility: hidden;
 		pointer-events: none;
+		/* Size the column to these titles without letting them widen the page. */
+		overflow: hidden;
 	}
 
 	.essay-titles-measure .essay-title-btn {
