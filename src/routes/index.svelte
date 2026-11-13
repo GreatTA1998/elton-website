@@ -10,7 +10,6 @@
 <section class="spotlight apps-spotlight" aria-labelledby="software-apps-label">
 	{#key selectedAppId}
 		<div class="spotlight-feature" class:muted={selectedApp.muted} in:fade={{ duration: fadeMs }}>
-			<img class="feature-logo" src={selectedApp.logo} alt="" />
 			<div class="feature-copy">
 				<strong class="feature-title">
 					{selectedApp.name}
@@ -131,23 +130,24 @@
 
 	<div class="spotlight-thumbs essay-thumbs">
 		{#each essays as essay (essay.id)}
-			<button
-				type="button"
-				class="spotlight-thumb essay-thumb"
-				class:selected={selectedEssayId === essay.id}
-				class:placeholder={essay.kind === 'soon'}
-				aria-pressed={selectedEssayId === essay.id}
-				aria-label={essay.title}
-				on:click={() => selectEssay(essay.id)}
-			>
-				{#if essay.kind === 'essay'}
-					<img src={essay.coverJpg} alt="" />
-				{:else if essay.kind === 'video'}
-					<img src={essay.thumb} alt="" />
-				{:else}
-					<span class="essay-thumb-blank" aria-hidden="true"></span>
-				{/if}
-			</button>
+			{#if essay.id !== selectedEssayId}
+				<button
+					type="button"
+					class="spotlight-thumb essay-thumb"
+					class:placeholder={essay.kind === 'soon'}
+					aria-pressed="false"
+					aria-label={essay.title}
+					on:click={() => selectEssay(essay.id)}
+				>
+					{#if essay.kind === 'essay'}
+						<img src={essay.coverJpg} alt="" />
+					{:else if essay.kind === 'video'}
+						<img src={essay.thumb} alt="" />
+					{:else}
+						<span class="essay-thumb-blank" aria-hidden="true"></span>
+					{/if}
+				</button>
+			{/if}
 		{/each}
 	</div>
 </section>
@@ -296,17 +296,17 @@
 	.spotlight {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
+		align-items: stretch;
 		gap: 0.85rem;
+		width: 100%;
 		max-width: 42rem;
 	}
 
 	.spotlight-feature {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
 		width: 100%;
-		padding: 1rem 1.15rem;
+		padding: 1rem 1.25rem;
 		box-sizing: border-box;
 		border: 1px solid rgba(40, 40, 40, 0.08);
 		border-radius: 1.35rem;
@@ -318,23 +318,12 @@
 		opacity: 0.72;
 	}
 
-	.feature-logo {
-		width: 3.4rem;
-		height: 3.4rem;
-		object-fit: cover;
-		flex-shrink: 0;
-		border-radius: 12px;
-	}
-
-	.spotlight-feature.muted .feature-logo {
-		filter: grayscale(0.35);
-	}
-
 	.feature-copy {
 		display: flex;
 		flex-direction: column;
 		gap: 0.22rem;
 		min-width: 0;
+		width: 100%;
 	}
 
 	.feature-title {
@@ -441,7 +430,6 @@
 		display: block;
 		position: relative;
 		width: 100%;
-		max-width: 28rem;
 		aspect-ratio: 16 / 9;
 		padding: 0;
 		border: none;
@@ -511,15 +499,22 @@
 		margin: 0;
 	}
 
-	.essay-thumbs .spotlight-thumb {
-		border-radius: 8px;
-		width: 4.2rem;
-		height: 2.35rem;
+	.essay-thumbs {
+		display: flex;
+		width: 100%;
+		align-items: stretch;
+		gap: 0.7rem;
+		min-height: 0;
+		padding: 0;
 	}
 
-	.essay-thumbs .spotlight-thumb.selected {
-		width: 5.4rem;
-		height: 3.05rem;
+	.essay-thumbs .spotlight-thumb {
+		flex: 1 1 0;
+		width: 0;
+		height: auto;
+		aspect-ratio: 4 / 3;
+		border-radius: 10px;
+		min-width: 0;
 	}
 
 	.essay-thumbs .spotlight-thumb.placeholder {
@@ -539,16 +534,6 @@
 
 		.spotlight-feature {
 			padding: 0.9rem 1rem;
-			gap: 0.85rem;
-		}
-
-		.feature-logo {
-			width: 3rem;
-			height: 3rem;
-		}
-
-		.essay-feature-media {
-			max-width: none;
 		}
 	}
 
