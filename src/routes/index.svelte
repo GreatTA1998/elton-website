@@ -66,16 +66,6 @@
 		<section class="spotlight essays-spotlight" aria-label={$messages.videoEssays}>
 			<div class="essay-row">
 				<div class="essay-side">
-					{#key selectedEssayId}
-						<p class="feature-desc essay-feature-desc" in:fade={{ duration: fadeMs }}>
-							{#if selectedEssay.sentenceKey}
-								{$messages[selectedEssay.sentenceKey]}
-							{:else}
-								{selectedEssay.sentence}
-							{/if}
-						</p>
-					{/key}
-
 					<div class="essay-titles" role="group" aria-label={$messages.videoEssays}>
 						{#each essays as essay (essay.id)}
 							<button
@@ -135,6 +125,14 @@
 						{:else}
 							<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
 						{/if}
+
+						<p class="feature-desc essay-feature-desc">
+							{#if selectedEssay.sentenceKey}
+								{$messages[selectedEssay.sentenceKey]}
+							{:else}
+								{selectedEssay.sentence}
+							{/if}
+						</p>
 					</div>
 				{/key}
 			</div>
@@ -429,15 +427,16 @@
 	.essay-side {
 		flex: 1 1 0;
 		min-width: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 0.55rem;
 	}
 
 	.essay-media-wrap {
 		flex: 0 1 16rem;
 		width: min(100%, 16rem);
 		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.45rem;
 	}
 
 	.essay-feature-media {
@@ -502,6 +501,7 @@
 	.essay-feature-desc {
 		margin: 0;
 		max-width: none;
+		width: 100%;
 	}
 
 	.essay-titles {
