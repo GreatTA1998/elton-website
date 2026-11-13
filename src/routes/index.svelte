@@ -74,9 +74,11 @@
 								class:selected={selectedEssayId === essay.id}
 								class:soon={essay.kind === 'soon'}
 								aria-pressed={selectedEssayId === essay.id}
+								title={essay.title}
+								aria-label={essay.title}
 								on:click={() => selectEssay(essay.id)}
 							>
-								{essay.title}
+								{truncateTitle(essay.title)}
 							</button>
 						{/each}
 					</div>
@@ -232,6 +234,15 @@
 	let selectedEssayId = 'gohs';
 	let notionPlaying = false;
 
+	const TITLE_MAX = 52;
+
+	/** @param {string} text */
+	function truncateTitle(text) {
+		const value = String(text || '');
+		if (value.length <= TITLE_MAX) return value;
+		return `${value.slice(0, TITLE_MAX).trimEnd()}…`;
+	}
+
 	$: selectedApp = apps.find((app) => app.id === selectedAppId) || apps[0];
 	$: selectedEssay = essays.find((essay) => essay.id === selectedEssayId) || essays[0];
 
@@ -291,9 +302,9 @@
 	}
 
 	.essays-col {
-		flex: 1 1 18rem;
+		flex: 1 1 36rem;
 		min-width: 16rem;
-		max-width: 28rem;
+		max-width: 44rem;
 	}
 
 	.spotlight {
@@ -425,13 +436,15 @@
 	}
 
 	.essay-side {
-		flex: 1 1 0;
+		flex: 1 1 52ch;
 		min-width: 0;
+		max-width: 52ch;
 	}
 
 	.essay-media-wrap {
-		flex: 0 1 16rem;
-		width: min(100%, 16rem);
+		flex: 0 0 16rem;
+		width: 16rem;
+		max-width: 100%;
 		min-width: 0;
 		display: flex;
 		flex-direction: column;
@@ -514,6 +527,9 @@
 
 	.essay-title-btn {
 		appearance: none;
+		display: block;
+		width: 100%;
+		max-width: 52ch;
 		margin: 0;
 		padding: 0.32rem 0.1rem;
 		border: none;
@@ -526,6 +542,9 @@
 		text-align: left;
 		cursor: pointer;
 		text-decoration: none;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 		transition: color 0.18s ease, font-size 0.18s ease;
 	}
 
