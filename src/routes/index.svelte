@@ -64,73 +64,79 @@
 
 	<div class="spotlight-col essays-col">
 		<section class="spotlight essays-spotlight" aria-label={$messages.videoEssays}>
-			{#key selectedEssayId}
-				<div class="essay-feature" in:fade={{ duration: fadeMs }}>
-					{#if selectedEssay.kind === 'essay'}
-						<a class="essay-feature-media" href={selectedEssay.href}>
-							<picture>
-								<source srcset={selectedEssay.coverAvif} type="image/avif" />
-								<source srcset={selectedEssay.coverWebp} type="image/webp" />
-								<img
-									src={selectedEssay.coverJpg}
-									alt={selectedEssay.title}
-									loading="lazy"
-									decoding="async"
-								/>
-							</picture>
-						</a>
-					{:else if selectedEssay.kind === 'video'}
-						{#if notionPlaying}
-							<div class="essay-feature-media essay-video-frame">
-								<iframe
-									src="https://www.youtube-nocookie.com/embed/{selectedEssay.youtubeId}?autoplay=1&rel=0"
-									title={selectedEssay.title}
-									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-									allowfullscreen
-								></iframe>
-							</div>
-						{:else}
+			<div class="essay-row">
+				<div class="essay-side">
+					{#key selectedEssayId}
+						<p class="feature-desc essay-feature-desc" in:fade={{ duration: fadeMs }}>
+							{#if selectedEssay.sentenceKey}
+								{$messages[selectedEssay.sentenceKey]}
+							{:else}
+								{selectedEssay.sentence}
+							{/if}
+						</p>
+					{/key}
+
+					<div class="essay-titles" role="group" aria-label={$messages.videoEssays}>
+						{#each essays as essay (essay.id)}
 							<button
 								type="button"
-								class="essay-feature-media essay-feature-play"
-								aria-label={`${$messages.play}: ${selectedEssay.title}`}
-								on:click={() => (notionPlaying = true)}
+								class="essay-title-btn"
+								class:selected={selectedEssayId === essay.id}
+								class:soon={essay.kind === 'soon'}
+								aria-pressed={selectedEssayId === essay.id}
+								on:click={() => selectEssay(essay.id)}
 							>
-								<img src={selectedEssay.thumb} alt="" />
-								<span class="essay-play" aria-hidden="true">
-									<svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
-										<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
-									</svg>
-								</span>
+								{essay.title}
 							</button>
-						{/if}
-					{:else}
-						<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
-					{/if}
-
-					<p class="feature-desc essay-feature-desc">
-						{#if selectedEssay.sentenceKey}
-							{$messages[selectedEssay.sentenceKey]}
-						{:else}
-							{selectedEssay.sentence}
-						{/if}
-					</p>
+						{/each}
+					</div>
 				</div>
-			{/key}
 
-			<div class="essay-titles" role="group" aria-label={$messages.videoEssays}>
-				{#each essays as essay (essay.id)}
-					<button
-						type="button"
-						class="essay-title-btn"
-						class:selected={selectedEssayId === essay.id}
-						class:soon={essay.kind === 'soon'}
-						aria-pressed={selectedEssayId === essay.id}
-						on:click={() => selectEssay(essay.id)}
-					>
-						{essay.title}
-					</button>
-				{/each}
+				{#key selectedEssayId}
+					<div class="essay-media-wrap" in:fade={{ duration: fadeMs }}>
+						{#if selectedEssay.kind === 'essay'}
+							<a class="essay-feature-media" href={selectedEssay.href}>
+								<picture>
+									<source srcset={selectedEssay.coverAvif} type="image/avif" />
+									<source srcset={selectedEssay.coverWebp} type="image/webp" />
+									<img
+										src={selectedEssay.coverJpg}
+										alt={selectedEssay.title}
+										loading="lazy"
+										decoding="async"
+									/>
+								</picture>
+							</a>
+						{:else if selectedEssay.kind === 'video'}
+							{#if notionPlaying}
+								<div class="essay-feature-media essay-video-frame">
+									<iframe
+										src="https://www.youtube-nocookie.com/embed/{selectedEssay.youtubeId}?autoplay=1&rel=0"
+										title={selectedEssay.title}
+										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+										allowfullscreen
+									></iframe>
+								</div>
+							{:else}
+								<button
+									type="button"
+									class="essay-feature-media essay-feature-play"
+									aria-label={`${$messages.play}: ${selectedEssay.title}`}
+									on:click={() => (notionPlaying = true)}
+								>
+									<img src={selectedEssay.thumb} alt="" />
+									<span class="essay-play" aria-hidden="true">
+										<svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
+											<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
+										</svg>
+									</span>
+								</button>
+							{/if}
+						{:else}
+							<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
+						{/if}
+					</div>
+				{/key}
 			</div>
 		</section>
 	</div>
@@ -412,19 +418,32 @@
 		height: 2.95rem;
 	}
 
-	.essay-feature {
+	.essay-row {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		gap: 1rem;
+		width: 100%;
+	}
+
+	.essay-side {
+		flex: 1 1 0;
+		min-width: 0;
 		display: flex;
 		flex-direction: column;
-		align-items: stretch;
-		gap: 0.45rem;
-		width: 100%;
+		gap: 0.55rem;
+	}
+
+	.essay-media-wrap {
+		flex: 0 1 16rem;
+		width: min(100%, 16rem);
+		min-width: 0;
 	}
 
 	.essay-feature-media {
 		display: block;
 		position: relative;
 		width: 100%;
-		max-width: 24rem;
 		aspect-ratio: 16 / 9;
 		padding: 0;
 		border: none;
@@ -482,7 +501,7 @@
 
 	.essay-feature-desc {
 		margin: 0;
-		max-width: 24rem;
+		max-width: none;
 	}
 
 	.essay-titles {
@@ -491,7 +510,6 @@
 		align-items: stretch;
 		gap: 0;
 		width: 100%;
-		max-width: 24rem;
 	}
 
 	.essay-title-btn {
@@ -548,8 +566,15 @@
 			width: 100%;
 		}
 
-		.essay-feature-media {
-			max-width: none;
+		.essay-row {
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+
+		.essay-media-wrap {
+			flex: 1 1 auto;
+			width: 100%;
+			max-width: 24rem;
 		}
 	}
 
