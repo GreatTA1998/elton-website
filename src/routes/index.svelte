@@ -305,8 +305,9 @@
 	}
 
 	.essays-col {
-		flex: 1 1 0;
+		flex: 1 1 18rem;
 		min-width: 16rem;
+		max-width: 34rem;
 	}
 
 	.spotlight {
@@ -453,6 +454,7 @@
 		display: block;
 		position: relative;
 		width: 100%;
+		max-width: 28rem;
 		aspect-ratio: 16 / 9;
 		padding: 0;
 		border: none;
@@ -580,6 +582,10 @@
 
 		.apps-feature {
 			width: 100%;
+		}
+
+		.essay-feature-media {
+			max-width: none;
 		}
 	}
 
