@@ -22,14 +22,18 @@ export async function post({ request }) {
 	const email = String((data && data.email) || '')
 		.trim()
 		.toLowerCase();
+	const preference = data && data.preference === 'updates' ? 'updates' : 'digest';
 	const rawInterests = Array.isArray(data && data.interests) ? data.interests : [];
-	const interests = [
-		...new Set(
-			rawInterests
-				.map((value) => String(value || '').trim())
-				.filter((value) => ALLOWED_INTERESTS.has(value))
-		)
-	];
+	const interests =
+		preference === 'digest'
+			? []
+			: [
+					...new Set(
+						rawInterests
+							.map((value) => String(value || '').trim())
+							.filter((value) => ALLOWED_INTERESTS.has(value))
+					)
+			  ];
 
 	if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
 		return {
@@ -38,7 +42,7 @@ export async function post({ request }) {
 		};
 	}
 
-	if (!interests.length) {
+	if (preference === 'updates' && !interests.length) {
 		return {
 			status: 400,
 			body: { ok: false, error: 'invalid_interests' }
@@ -62,7 +66,13 @@ export async function post({ request }) {
 		};
 	}
 
-	const interestsLabel = interests.join(', ');
+	const interestsLabel =
+		preference === 'digest'
+			? 'quarterly digest'
+			: interests.length
+			  ? interests.join(', ')
+			  : 'updates';
+	const preferenceLabel = preference === 'digest' ? 'digest' : 'updates';
 
 	if (audienceId) {
 		try {
@@ -105,11 +115,12 @@ export async function post({ request }) {
 			body: JSON.stringify({
 				from,
 				to: [notifyTo],
-				subject: `Subscribe · ${interestsLabel}`,
+				subject: `Subscribe · ${preferenceLabel} · ${interestsLabel}`,
 				text: [
 					`New subscriber on elton-website`,
 					``,
 					`Email: ${email}`,
+					`Preference: ${preferenceLabel}`,
 					`Interests: ${interestsLabel}`,
 					``,
 					audienceId
@@ -135,6 +146,6 @@ export async function post({ request }) {
 
 	return {
 		status: 200,
-		body: { ok: true, interests }
+		body: { ok: true, preference, interests }
 	};
 }
