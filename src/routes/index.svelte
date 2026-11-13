@@ -7,9 +7,7 @@
 
 <div class="spotlights">
 	<div class="spotlight-col apps-col">
-		<h2 class="section-label" id="software-apps-label">{$messages.softwareApps}</h2>
-
-		<section class="spotlight apps-spotlight" aria-labelledby="software-apps-label">
+		<section class="spotlight apps-spotlight" aria-label={$messages.softwareApps}>
 			{#key selectedAppId}
 				<div class="spotlight-feature apps-feature" class:muted={selectedApp.muted} in:fade={{ duration: fadeMs }}>
 					<div class="feature-copy">
@@ -66,9 +64,7 @@
 	</div>
 
 	<div class="spotlight-col essays-col">
-		<h2 class="section-label" id="video-essays-label">{$messages.videoEssays}</h2>
-
-		<section class="spotlight essays-spotlight" aria-labelledby="video-essays-label">
+		<section class="spotlight essays-spotlight" aria-label={$messages.videoEssays}>
 			{#key selectedEssayId}
 				<div class="essay-feature" in:fade={{ duration: fadeMs }}>
 					{#if selectedEssay.kind === 'essay'}
