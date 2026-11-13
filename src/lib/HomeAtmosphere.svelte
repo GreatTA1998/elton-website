@@ -1,7 +1,7 @@
 <!--
   Reversible homepage place-atmosphere (vibe-only photo + quiet lived places).
   Portrait frame; Hsinchu → wisteria, Milton Keynes → rainbow garden,
-  Boston → Maseeh snow, Tokyo → rainy alley. No white fade overlay.
+  Boston → Maseeh snow, Tokyo → IMG_2334 rainy alley. No white fade overlay.
   Quiet ~5s crossfade among all four places. Selecting a city crossfades
   to that place and resets the ~5s cycle from there (does not permanently
   stop rotation). Hover/focus on the frame or list pauses temporarily.
@@ -45,9 +45,8 @@
 			mobileWebp: '/home-tokyo.webp',
 			desktopJpg: '/home-tokyo-desktop.jpg',
 			desktopWebp: '/home-tokyo-desktop.webp',
-			/* Landscape asset; cover-crop inside portrait frame */
-			position: '52% 45%',
-			desktopPosition: '50% 42%'
+			position: '50% 42%',
+			desktopPosition: '50% 40%'
 		}
 	};
 
