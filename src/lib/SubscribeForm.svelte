@@ -304,12 +304,6 @@
 		gap: 2px;
 	}
 
-	.mark-apps img {
-		width: 28px;
-		height: 28px;
-		border-radius: 6px;
-	}
-
 	.mark-essays {
 		/* Keep essays visually separate from the apps logo cluster */
 		margin-left: 2px;
@@ -325,6 +319,14 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+
+	/* Higher specificity than `.mark img` so cluster logos stay 28px */
+	.mark.mark-apps img {
+		width: 28px;
+		height: 28px;
+		flex-shrink: 0;
+		border-radius: 6px;
 	}
 
 	.row {
