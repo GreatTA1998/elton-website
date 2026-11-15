@@ -207,7 +207,7 @@
 	});
 </script>
 
-<div class="unit" class:playing role="region" aria-label={$messages.musicPlayer}>
+<div class="unit" role="region" aria-label={$messages.musicPlayer}>
 	<div class="yt-host" aria-hidden="true">
 		<div use:ytHost></div>
 	</div>
@@ -271,7 +271,7 @@
 		--ink: #2a2a2a;
 		--mute: #3a3a3a;
 		position: fixed;
-		top: 0.9rem;
+		top: calc(0.9rem + env(safe-area-inset-top, 0px));
 		right: 0.9rem;
 		z-index: 50;
 		width: min(21.5rem, calc(100vw - 1.6rem));
@@ -279,9 +279,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 0.55rem;
+		gap: 0.12rem;
 		color: var(--ink);
-		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 		pointer-events: none;
 	}
 
@@ -294,7 +293,7 @@
 		align-items: center;
 		gap: 0.6rem;
 		min-width: 0;
-		padding: 0.72rem;
+		padding: 0.62rem 0.72rem 0.4rem;
 		background: rgba(250, 250, 250, 0.58);
 		border-radius: 999px;
 	}
@@ -376,11 +375,9 @@
 
 	.thumbs {
 		display: flex;
-		align-items: flex-end;
+		align-items: flex-start;
 		justify-content: flex-end;
 		gap: 0.45rem;
-		padding: 0 0.15rem;
-		min-height: 3.4rem;
 	}
 
 	.thumb {
@@ -417,14 +414,13 @@
 
 	@media (max-width: 520px) {
 		.unit {
-			top: 0.55rem;
+			top: calc(0.55rem + env(safe-area-inset-top, 0px));
 			right: 0.55rem;
 			width: min(17.2rem, calc(100vw - 1.1rem));
-			gap: 0.45rem;
 		}
 
 		.pill {
-			padding: 0.58rem 0.62rem;
+			padding: 0.5rem 0.62rem 0.32rem;
 		}
 
 		.title {
@@ -446,7 +442,6 @@
 		}
 
 		.thumbs {
-			min-height: 2.95rem;
 			gap: 0.35rem;
 		}
 	}

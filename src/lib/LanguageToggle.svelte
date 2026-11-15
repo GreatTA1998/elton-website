@@ -39,7 +39,7 @@
 <style>
 	.lang {
 		position: fixed;
-		top: 0.85rem;
+		top: calc(0.85rem + env(safe-area-inset-top, 0px));
 		left: 0.85rem;
 		z-index: 200;
 		display: inline-flex;
@@ -47,7 +47,6 @@
 		gap: 0.35rem;
 		padding: 0.42rem 0.62rem;
 		box-sizing: border-box;
-		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 		/* Chip chrome must not steal Home / nav clicks underneath */
 		pointer-events: none;
 		background: rgba(255, 255, 255, 0.88);
@@ -90,7 +89,7 @@
 
 	@media (max-width: 520px) {
 		.lang {
-			top: 0.55rem;
+			top: calc(0.55rem + env(safe-area-inset-top, 0px));
 			left: 0.55rem;
 			padding: 0.36rem 0.55rem;
 		}
