@@ -268,8 +268,8 @@
 
 <style>
 	.unit {
-		--ink: rgba(255, 255, 255, 0.95);
-		--mute: rgba(255, 255, 255, 0.7);
+		--ink: #2a2a2a;
+		--mute: #7a7a7a;
 		position: fixed;
 		top: 0.9rem;
 		right: 0.9rem;
