@@ -39,7 +39,7 @@
 <style>
 	.lang {
 		position: fixed;
-		top: calc(0.85rem + env(safe-area-inset-top, 0px));
+		top: 0.85rem;
 		left: 0.85rem;
 		z-index: 200;
 		display: inline-flex;
@@ -89,7 +89,7 @@
 
 	@media (max-width: 520px) {
 		.lang {
-			top: calc(0.55rem + env(safe-area-inset-top, 0px));
+			top: 0.55rem;
 			left: 0.55rem;
 			padding: 0.36rem 0.55rem;
 		}
