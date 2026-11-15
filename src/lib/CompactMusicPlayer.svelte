@@ -271,7 +271,7 @@
 		--ink: #2a2a2a;
 		--mute: #3a3a3a;
 		position: fixed;
-		top: calc(0.9rem + env(safe-area-inset-top, 0px));
+		top: 0.9rem;
 		right: 0.9rem;
 		z-index: 50;
 		width: min(21.5rem, calc(100vw - 1.6rem));
@@ -279,7 +279,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 0.12rem;
+		gap: 0.55rem;
 		color: var(--ink);
 		pointer-events: none;
 	}
@@ -293,7 +293,7 @@
 		align-items: center;
 		gap: 0.6rem;
 		min-width: 0;
-		padding: 0.62rem 0.72rem 0.4rem;
+		padding: 0.72rem;
 		background: rgba(250, 250, 250, 0.58);
 		border-radius: 999px;
 	}
@@ -375,9 +375,11 @@
 
 	.thumbs {
 		display: flex;
-		align-items: flex-start;
+		align-items: flex-end;
 		justify-content: flex-end;
 		gap: 0.45rem;
+		padding: 0 0.15rem;
+		min-height: 3.4rem;
 	}
 
 	.thumb {
@@ -414,13 +416,14 @@
 
 	@media (max-width: 520px) {
 		.unit {
-			top: calc(0.55rem + env(safe-area-inset-top, 0px));
+			top: 0.55rem;
 			right: 0.55rem;
 			width: min(17.2rem, calc(100vw - 1.1rem));
+			gap: 0.45rem;
 		}
 
 		.pill {
-			padding: 0.5rem 0.62rem 0.32rem;
+			padding: 0.58rem 0.62rem;
 		}
 
 		.title {
@@ -442,6 +445,7 @@
 		}
 
 		.thumbs {
+			min-height: 2.95rem;
 			gap: 0.35rem;
 		}
 	}
