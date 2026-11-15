@@ -302,7 +302,9 @@
 	}
 
 	.essays-col {
-		flex: none;
+		flex: 0 1 auto;
+		min-width: 0;
+		max-width: min(calc(52ch + 16rem + 0.65rem), 100%);
 	}
 
 	.spotlight {
@@ -422,13 +424,16 @@
 		display: flex;
 		align-items: flex-start;
 		gap: 0.65rem;
+		max-width: 100%;
+		min-width: 0;
 	}
 
-	/* flex:none — avoid 52ch basis becoming ~520px height when stacked */
+	/* auto basis: a 52ch basis becomes height when this row stacks */
 	.essay-side {
-		flex: none;
+		flex: 0 1 auto;
 		width: max-content;
-		max-width: 52ch;
+		max-width: min(52ch, 100%);
+		min-width: 0;
 	}
 
 	.essay-media-wrap {
@@ -565,6 +570,8 @@
 		}
 
 		.essay-side {
+			/* none: keep content height; do not let a basis resolve as height */
+			flex: none;
 			max-width: min(52ch, 100%);
 		}
 
