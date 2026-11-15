@@ -302,7 +302,9 @@
 	}
 
 	.essays-col {
-		flex: none;
+		flex: 0 1 auto;
+		min-width: 0;
+		max-width: 100%;
 	}
 
 	.spotlight {
@@ -422,19 +424,23 @@
 		display: flex;
 		align-items: flex-start;
 		gap: 0.65rem;
+		max-width: 100%;
+		min-width: 0;
 	}
 
-	/* flex:none — avoid 52ch basis becoming ~520px height when stacked */
+	/* flex-basis:auto — avoid 52ch becoming ~520px height when stacked */
 	.essay-side {
-		flex: none;
+		flex: 0 1 auto;
 		width: max-content;
-		max-width: 52ch;
+		max-width: min(52ch, 100%);
+		min-width: 0;
 	}
 
 	.essay-media-wrap {
-		flex: none;
+		flex: 0 1 auto;
 		width: 16rem;
 		max-width: 100%;
+		min-width: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 0.45rem;
