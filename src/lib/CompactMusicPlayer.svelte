@@ -270,8 +270,6 @@
 	.unit {
 		--ink: #2a2a2a;
 		--mute: #7a7a7a;
-		--line: rgba(40, 40, 40, 0.08);
-		--wash: rgba(255, 252, 248, 0.9);
 		position: fixed;
 		top: 0.9rem;
 		right: 0.9rem;
@@ -297,17 +295,12 @@
 		gap: 0.6rem;
 		min-width: 0;
 		padding: 0.72rem;
-		background: linear-gradient(160deg, var(--wash), rgba(255, 255, 255, 0.78));
-		border: 1px solid var(--line);
+		background: rgba(255, 255, 255, 0.26);
+		border: 1px solid rgba(255, 255, 255, 0.48);
 		border-radius: 999px;
-		backdrop-filter: blur(14px) saturate(1.05);
-		-webkit-backdrop-filter: blur(14px) saturate(1.05);
-		box-shadow: 0 8px 28px rgba(40, 36, 30, 0.05);
-	}
-
-	.unit.playing .pill {
-		border-color: rgba(40, 40, 40, 0.11);
-		box-shadow: 0 10px 32px rgba(40, 36, 30, 0.07);
+		backdrop-filter: blur(20px) saturate(1.1);
+		-webkit-backdrop-filter: blur(20px) saturate(1.1);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
 	}
 
 	.yt-host {
@@ -332,28 +325,29 @@
 		padding-right: 0.35rem;
 	}
 
-	.title {
+	.title,
+	.credit {
 		margin: 0;
-		font-size: 0.78rem;
-		font-weight: 500;
-		letter-spacing: -0.015em;
-		line-height: 1.35;
-		color: var(--ink);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 
+	.title {
+		font-size: 0.78rem;
+		font-weight: 500;
+		letter-spacing: -0.015em;
+		line-height: 1.35;
+		color: var(--ink);
+	}
+
 	.credit {
-		margin: 0.18rem 0 0;
+		margin-top: 0.18rem;
 		font-size: 0.68rem;
 		font-weight: 400;
 		letter-spacing: 0.01em;
 		line-height: 1.3;
 		color: var(--mute);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 
 	.icon-btn {
@@ -380,14 +374,14 @@
 		flex-shrink: 0;
 		width: 2.05rem;
 		height: 2.05rem;
-		background: rgba(255, 255, 255, 0.7);
-		border: 1px solid var(--line);
+		background: rgba(255, 255, 255, 0.38);
+		border: 1px solid rgba(255, 255, 255, 0.5);
 		color: var(--ink);
 	}
 
 	.unit.playing .icon-btn.play {
-		background: #2f2f2f;
-		border-color: #2f2f2f;
+		background: rgba(47, 47, 47, 0.78);
+		border-color: rgba(47, 47, 47, 0.55);
 		color: #fff;
 	}
 
@@ -412,7 +406,6 @@
 		overflow: hidden;
 		cursor: pointer;
 		flex-shrink: 0;
-		box-shadow: none;
 		transition: width 0.22s ease, height 0.22s ease;
 	}
 
@@ -421,7 +414,6 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		object-position: center;
 	}
 
 	.thumb.selected {
