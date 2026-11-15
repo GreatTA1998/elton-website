@@ -630,12 +630,15 @@
 		}
 
 		.essay-side {
+			/* Under column, flex-basis:52ch was applied as ~520px HEIGHT and
+			   left a huge void between titles and the featured thumb (iOS). */
+			flex: 0 0 auto;
 			width: 100%;
 			max-width: min(52ch, 100%);
 		}
 
 		.essay-media-wrap {
-			flex: 1 1 auto;
+			flex: 0 0 auto;
 			width: 100%;
 			max-width: 24rem;
 		}
