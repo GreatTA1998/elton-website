@@ -295,10 +295,10 @@
 		gap: 0.6rem;
 		min-width: 0;
 		padding: 0.72rem;
-		background: rgba(255, 255, 255, 0.22);
+		background: rgba(250, 250, 250, 0.58);
 		border-radius: 999px;
-		backdrop-filter: blur(6px);
-		-webkit-backdrop-filter: blur(6px);
+		backdrop-filter: blur(2px);
+		-webkit-backdrop-filter: blur(2px);
 	}
 
 	.yt-host {
@@ -372,12 +372,8 @@
 		flex-shrink: 0;
 		width: 2.05rem;
 		height: 2.05rem;
-		background: rgba(255, 255, 255, 0.2);
+		background: rgba(250, 250, 250, 0.42);
 		color: var(--ink);
-	}
-
-	.unit.playing .icon-btn.play {
-		background: rgba(255, 255, 255, 0.32);
 	}
 
 	.thumbs {

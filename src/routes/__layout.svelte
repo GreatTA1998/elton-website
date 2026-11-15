@@ -17,7 +17,7 @@
 		color: #2c2c2c;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-		background: #ffffff;
+		background: #fafafa;
 		min-height: 100vh;
 	}
 

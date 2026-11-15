@@ -420,7 +420,6 @@
 		gap: 0.85rem;
 		overflow: hidden;
 		isolation: isolate;
-		background: #ffffff;
 		padding: 0 2rem 0.35rem;
 		box-sizing: border-box;
 		/* Never intercept chrome (language toggle) over the hero */
