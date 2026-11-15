@@ -66,12 +66,6 @@
 		<section class="spotlight essays-spotlight" aria-label={$messages.videoEssays}>
 			<div class="essay-row">
 				<div class="essay-side">
-					<!-- Sizes column to selected title metrics so media doesn't jump on select -->
-					<div class="essay-titles essay-titles-measure" aria-hidden="true">
-						{#each essays as essay (essay.id)}
-							<span class="essay-title-btn selected">{truncateTitle(essay.title)}</span>
-						{/each}
-					</div>
 					<div class="essay-titles" role="group" aria-label={$messages.videoEssays}>
 						{#each essays as essay (essay.id)}
 							<button
@@ -308,15 +302,12 @@
 	}
 
 	.essays-col {
-		flex: 0 1 auto;
-		min-width: 0;
-		max-width: min(calc(52ch + 16rem + 0.65rem), 100%);
+		flex: none;
 	}
 
 	.spotlight {
 		display: flex;
 		flex-direction: column;
-		align-items: stretch;
 		gap: 0.65rem;
 		width: 100%;
 	}
@@ -364,19 +355,16 @@
 		font-size: 0.82rem;
 		color: #6a6a6a;
 		line-height: 1.4;
-		font-weight: 400;
 	}
 
 	.feature-status {
 		font-size: 0.72rem;
 		color: #9a9a9a;
 		line-height: 1.35;
-		font-weight: 400;
 	}
 
 	.feature-action {
 		display: inline-flex;
-		align-items: center;
 		align-self: flex-start;
 		margin-top: 0.35rem;
 		padding: 0.22rem 0.62rem;
@@ -387,13 +375,11 @@
 		font-size: 0.7rem;
 		font-weight: 500;
 		line-height: 1.3;
-		letter-spacing: 0.01em;
 		text-decoration: none;
 	}
 
 	.ready-tick {
 		display: inline-flex;
-		align-items: center;
 		margin-left: 6px;
 		vertical-align: -1px;
 	}
@@ -403,7 +389,6 @@
 		align-items: flex-end;
 		gap: 0.45rem;
 		min-height: 3rem;
-		padding: 0;
 	}
 
 	.spotlight-thumb {
@@ -418,7 +403,7 @@
 		overflow: hidden;
 		cursor: pointer;
 		flex-shrink: 0;
-		transition: width 0.22s ease, height 0.22s ease, opacity 0.22s ease;
+		transition: width 0.22s ease, height 0.22s ease;
 	}
 
 	.spotlight-thumb img {
@@ -435,32 +420,23 @@
 
 	.essay-row {
 		display: flex;
-		flex-direction: row;
 		align-items: flex-start;
 		gap: 0.65rem;
-		width: max-content;
-		max-width: 100%;
-		min-width: 0;
 	}
 
+	/* flex:none — avoid 52ch basis becoming ~520px height when stacked */
 	.essay-side {
-		flex: 0 1 auto;
-		display: inline-grid;
-		justify-items: stretch;
-		width: auto;
-		max-width: min(52ch, 100%);
-		min-width: 0;
-		overflow: hidden;
+		flex: none;
+		width: max-content;
+		max-width: 52ch;
 	}
 
 	.essay-media-wrap {
-		flex: 0 0 16rem;
+		flex: none;
 		width: 16rem;
 		max-width: 100%;
-		min-width: 0;
 		display: flex;
 		flex-direction: column;
-		align-items: stretch;
 		gap: 0.45rem;
 	}
 
@@ -475,7 +451,6 @@
 		border-radius: 10px;
 		overflow: hidden;
 		cursor: pointer;
-		text-align: left;
 	}
 
 	.essay-feature-media img {
@@ -525,38 +500,17 @@
 
 	.essay-feature-desc {
 		margin: 0;
-		max-width: none;
-		width: 100%;
 	}
 
 	.essay-titles {
-		grid-area: 1 / 1;
 		display: flex;
 		flex-direction: column;
-		align-items: stretch;
-		gap: 0;
-		width: 100%;
-		min-width: 0;
-	}
-
-	.essay-titles-measure {
-		visibility: hidden;
-		pointer-events: none;
-		max-width: 100%;
-		overflow: hidden;
-	}
-
-	.essay-titles-measure .essay-title-btn {
-		width: max-content;
-		/* Match visible title 52ch (selected font metrics on measure spans) */
-		max-width: 52ch;
 	}
 
 	.essay-title-btn {
 		appearance: none;
 		display: block;
 		width: 100%;
-		max-width: 52ch;
 		margin: 0;
 		padding: 0.32rem 0.1rem;
 		border: none;
@@ -564,25 +518,13 @@
 		color: #7a7a7a;
 		font: inherit;
 		font-size: 0.8rem;
-		font-weight: 400;
 		line-height: 1.35;
 		text-align: left;
 		cursor: pointer;
-		text-decoration: none;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		transition: color 0.18s ease, font-size 0.18s ease;
-	}
-
-	.essay-title-btn:focus {
-		outline: none;
-	}
-
-	.essay-title-btn:focus-visible {
-		/* Inset so overflow:hidden on .essay-side does not clip the ring */
-		outline: 2px solid #2c2c2c;
-		outline-offset: -2px;
 	}
 
 	.essay-title-btn.selected {
@@ -597,7 +539,6 @@
 
 	.email-section {
 		margin-top: 2rem;
-		padding-top: 0.25rem;
 		max-width: 36rem;
 	}
 
@@ -618,29 +559,17 @@
 			width: 100%;
 		}
 
-		.apps-feature {
-			width: 100%;
-		}
-
 		.essay-row {
 			flex-direction: column;
 			gap: 0.75rem;
-			width: 100%;
-			max-width: 100%;
 		}
 
 		.essay-side {
-			/* Under column, flex-basis:52ch was applied as ~520px HEIGHT and
-			   left a huge void between titles and the featured thumb (iOS). */
-			flex: 0 0 auto;
-			width: 100%;
 			max-width: min(52ch, 100%);
 		}
 
 		.essay-media-wrap {
-			flex: 0 0 auto;
-			width: 100%;
-			max-width: 24rem;
+			width: min(24rem, 100%);
 		}
 	}
 
