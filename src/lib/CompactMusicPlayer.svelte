@@ -269,7 +269,7 @@
 <style>
 	.unit {
 		--ink: #2a2a2a;
-		--mute: #7a7a7a;
+		--mute: #3a3a3a;
 		position: fixed;
 		top: 0.9rem;
 		right: 0.9rem;
@@ -295,12 +295,10 @@
 		gap: 0.6rem;
 		min-width: 0;
 		padding: 0.72rem;
-		background: rgba(255, 255, 255, 0.26);
-		border: 1px solid rgba(255, 255, 255, 0.48);
+		background: rgba(255, 255, 255, 0.22);
 		border-radius: 999px;
-		backdrop-filter: blur(20px) saturate(1.1);
-		-webkit-backdrop-filter: blur(20px) saturate(1.1);
-		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+		backdrop-filter: blur(6px);
+		-webkit-backdrop-filter: blur(6px);
 	}
 
 	.yt-host {
@@ -344,7 +342,7 @@
 	.credit {
 		margin-top: 0.18rem;
 		font-size: 0.68rem;
-		font-weight: 400;
+		font-weight: 500;
 		letter-spacing: 0.01em;
 		line-height: 1.3;
 		color: var(--mute);
@@ -374,15 +372,12 @@
 		flex-shrink: 0;
 		width: 2.05rem;
 		height: 2.05rem;
-		background: rgba(255, 255, 255, 0.38);
-		border: 1px solid rgba(255, 255, 255, 0.5);
+		background: rgba(255, 255, 255, 0.2);
 		color: var(--ink);
 	}
 
 	.unit.playing .icon-btn.play {
-		background: rgba(47, 47, 47, 0.78);
-		border-color: rgba(47, 47, 47, 0.55);
-		color: #fff;
+		background: rgba(255, 255, 255, 0.32);
 	}
 
 	.thumbs {
