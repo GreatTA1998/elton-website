@@ -297,8 +297,6 @@
 		padding: 0.72rem;
 		background: rgba(250, 250, 250, 0.58);
 		border-radius: 999px;
-		backdrop-filter: blur(2px);
-		-webkit-backdrop-filter: blur(2px);
 	}
 
 	.yt-host {
