@@ -268,8 +268,8 @@
 
 <style>
 	.unit {
-		--ink: rgba(255, 255, 255, 0.95);
-		--mute: rgba(255, 255, 255, 0.7);
+		--ink: #2a2a2a;
+		--mute: #3a3a3a;
 		position: fixed;
 		top: 0.9rem;
 		right: 0.9rem;
@@ -295,7 +295,7 @@
 		gap: 0.6rem;
 		min-width: 0;
 		padding: 0.72rem;
-		background: rgba(255, 255, 255, 0.14);
+		background: rgba(255, 255, 255, 0.22);
 		border-radius: 999px;
 		backdrop-filter: blur(6px);
 		-webkit-backdrop-filter: blur(6px);
@@ -342,7 +342,7 @@
 	.credit {
 		margin-top: 0.18rem;
 		font-size: 0.68rem;
-		font-weight: 400;
+		font-weight: 500;
 		letter-spacing: 0.01em;
 		line-height: 1.3;
 		color: var(--mute);
