@@ -9,6 +9,7 @@
 <slot />
 
 <style>
+	:global(html),
 	:global(body) {
 		margin: 0;
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -19,6 +20,7 @@
 		-moz-osx-font-smoothing: grayscale;
 		background: #fafafa;
 		min-height: 100vh;
+		min-height: -webkit-fill-available;
 	}
 
 	:global(a) {
