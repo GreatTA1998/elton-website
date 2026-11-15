@@ -13,7 +13,7 @@ const STORAGE_KEY = 'elton-site-lang';
 /** @type {Record<Locale, Record<string, string>>} */
 const DICT = {
 	en: {
-		welcome: "Welcome to my absolutely EPIC website, it's INSANE:",
+		welcome: 'Welcome to my absolutely epic website',
 		softwareApps: 'apps',
 		videoEssays: 'essays',
 		emailUpdates: 'email updates',
@@ -62,7 +62,7 @@ const DICT = {
 		language: 'Language'
 	},
 	zh: {
-		welcome: '欢迎来到我超赞的网站，真的很离谱：',
+		welcome: '欢迎来到我超赞的网站',
 		softwareApps: '应用',
 		videoEssays: '随笔',
 		emailUpdates: '邮件更新',
@@ -110,7 +110,7 @@ const DICT = {
 		language: '语言'
 	},
 	ja: {
-		welcome: 'ようこそ。ここはマジでヤバいサイトです：',
+		welcome: 'ようこそ。ここはとてもいいサイトです',
 		softwareApps: 'アプリ',
 		videoEssays: 'エッセイ',
 		emailUpdates: 'メール更新',
