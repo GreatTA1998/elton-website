@@ -279,7 +279,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 0.2rem;
+		gap: 0.12rem;
 		color: var(--ink);
 		pointer-events: none;
 	}
@@ -293,7 +293,7 @@
 		align-items: center;
 		gap: 0.6rem;
 		min-width: 0;
-		padding: 0.72rem;
+		padding: 0.62rem 0.72rem 0.4rem;
 		background: rgba(250, 250, 250, 0.58);
 		border-radius: 999px;
 	}
@@ -420,7 +420,7 @@
 		}
 
 		.pill {
-			padding: 0.58rem 0.62rem;
+			padding: 0.5rem 0.62rem 0.32rem;
 		}
 
 		.title {
