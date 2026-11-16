@@ -226,7 +226,7 @@
 		{
 			id: 'nero',
 			kind: 'soon',
-			title: '《童年回憶：拜訪 Nero——忍鬥風雲 2 開發者》',
+			title: '童年回憶：拜訪 Nero——忍鬥風雲 2 開發者',
 			sentenceKey: 'comingSoon'
 		}
 	];
