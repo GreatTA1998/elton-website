@@ -7,49 +7,12 @@
 
 <div class="spotlights">
 	<div class="spotlight-col apps-col">
-		<section class="spotlight apps-spotlight" aria-label={$messages.softwareApps}>
-			{#key selectedAppId}
-				<div class="spotlight-feature apps-feature" in:fade={{ duration: fadeMs }}>
-					<div class="feature-copy">
-						<strong class="feature-title">
-							{selectedApp.name}
-							{#if selectedApp.ready}
-								<span class="ready-tick" role="img" title={$messages.ready} aria-label={$messages.ready}>
-									<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
-										<circle cx="8" cy="8" r="8" fill="#2f9e44" />
-										<path
-											d="M4.6 8.2l2.1 2.1 4.7-4.7"
-											fill="none"
-											stroke="#fff"
-											stroke-width="1.7"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-									</svg>
-								</span>
-							{/if}
-						</strong>
-						<span class="feature-desc">{$messages[selectedApp.descKey]}</span>
-						<span class="feature-status">{$messages[selectedApp.statusKey]}</span>
-						{#if selectedApp.visit}
-							<a
-								class="feature-action"
-								target="_blank"
-								rel="noopener noreferrer"
-								href={selectedApp.visit}
-							>
-								{$messages.visit}
-							</a>
-						{/if}
-					</div>
-				</div>
-			{/key}
-
+		<section class="spotlight" aria-label={$messages.softwareApps}>
 			<div class="spotlight-thumbs">
 				{#each apps as app (app.id)}
 					<button
 						type="button"
-						class="spotlight-thumb app-thumb"
+						class="spotlight-thumb"
 						class:selected={selectedAppId === app.id}
 						aria-pressed={selectedAppId === app.id}
 						aria-label={app.name}
@@ -59,14 +22,50 @@
 					</button>
 				{/each}
 			</div>
+
+			{#key selectedAppId}
+				<div class="spotlight-feature" in:fade={{ duration: fadeMs }}>
+					<div class="feature-copy">
+						<strong class="feature-title">
+							{selectedApp.name}
+							{#if selectedApp.ready}
+								<span class="ready-tick" role="img" title={$messages.ready} aria-label={$messages.ready}
+									>✓</span
+								>
+							{/if}
+						</strong>
+						<span class="feature-desc">{$messages[selectedApp.descKey]}</span>
+						<span class="feature-status">{$messages[selectedApp.statusKey]}</span>
+						<div class="feature-actions">
+							{#if selectedApp.visit}
+								<a
+									class="feature-action"
+									target="_blank"
+									rel="noopener noreferrer"
+									href={selectedApp.visit}
+								>
+									{$messages.visit}
+								</a>
+							{/if}
+							<button
+								type="button"
+								class="feature-action"
+								on:click={() => updatesDialog?.showModal()}
+							>
+								{$messages.emailUpdates}
+							</button>
+						</div>
+					</div>
+				</div>
+			{/key}
 		</section>
 	</div>
 
 	<div class="spotlight-col essays-col">
-		<section class="spotlight essays-spotlight" aria-label={$messages.videoEssays}>
+		<section class="spotlight" aria-label={$messages.videoEssays}>
 			<div class="essay-row">
 				<div class="essay-side">
-					<div class="essay-titles" role="group" aria-label={$messages.videoEssays}>
+					<div role="group" aria-label={$messages.videoEssays}>
 						{#each essays as essay (essay.id)}
 							<button
 								type="button"
@@ -128,7 +127,7 @@
 							<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
 						{/if}
 
-						<p class="feature-desc essay-feature-desc">
+						<p class="feature-desc">
 							{#if selectedEssay.sentenceKey}
 								{$messages[selectedEssay.sentenceKey]}
 							{:else}
@@ -142,10 +141,12 @@
 	</div>
 </div>
 
-<section class="email-section" aria-labelledby="email-updates-label">
-	<h2 class="section-label" id="email-updates-label">{$messages.emailUpdates}</h2>
+<dialog class="updates-dialog" bind:this={updatesDialog} aria-label={$messages.subscribeTitle}>
+	<form class="updates-close" method="dialog">
+		<button type="submit" aria-label="Close">×</button>
+	</form>
 	<SubscribeForm compact />
-</section>
+</dialog>
 </div>
 
 <SiteFooter />
@@ -225,7 +226,7 @@
 		{
 			id: 'nero',
 			kind: 'soon',
-			title: '《童年回憶：拜訪 Nero——忍鬥風雲 2 開發者》',
+			title: '童年回憶：拜訪 Nero——忍鬥風雲 2 開發者',
 			sentenceKey: 'comingSoon'
 		}
 	];
@@ -233,12 +234,13 @@
 	let selectedAppId = 'actions';
 	let selectedEssayId = 'gohs';
 	let notionPlaying = false;
+	let updatesDialog;
 
 	const TITLE_MAX = 52;
 
 	/** @param {string} text */
 	function truncateTitle(text) {
-		const value = String(text || '');
+		const value = String(text || '').trim();
 		if (value.length <= TITLE_MAX) return value;
 		return `${value.slice(0, TITLE_MAX).trimEnd()}…`;
 	}
@@ -274,16 +276,6 @@
 		line-height: 1.5;
 	}
 
-	.section-label {
-		margin: 0 0 0.55em;
-		font-size: 0.95rem;
-		font-weight: 500;
-		letter-spacing: -0.01em;
-		text-transform: lowercase;
-		color: #2c2c2c;
-		line-height: 1.3;
-	}
-
 	.spotlights {
 		display: flex;
 		align-items: flex-start;
@@ -314,25 +306,17 @@
 		width: 100%;
 	}
 
-	.apps-spotlight {
-		align-items: flex-start;
-	}
-
 	.spotlight-feature {
 		display: flex;
 		align-items: center;
-		width: 100%;
+		width: auto;
+		max-width: 100%;
 		padding: 0.85rem 1rem;
 		box-sizing: border-box;
 		border: 1px solid rgba(40, 40, 40, 0.08);
 		border-radius: 1.15rem;
 		background: linear-gradient(160deg, rgba(255, 252, 248, 0.92), rgba(255, 255, 255, 0.82));
 		box-shadow: 0 6px 20px rgba(40, 36, 30, 0.04);
-	}
-
-	.apps-feature {
-		width: auto;
-		max-width: 100%;
 	}
 
 	.feature-copy {
@@ -354,6 +338,7 @@
 	}
 
 	.feature-desc {
+		margin: 0;
 		font-size: 0.82rem;
 		color: #6a6a6a;
 		line-height: 1.4;
@@ -365,30 +350,36 @@
 		line-height: 1.35;
 	}
 
+	.feature-actions {
+		display: flex;
+		gap: 0.35rem;
+		margin-top: 0.35rem;
+	}
+
 	.feature-action {
 		display: inline-flex;
-		align-self: flex-start;
-		margin-top: 0.35rem;
+		align-items: center;
 		padding: 0.22rem 0.62rem;
 		border: 1px solid #d8d8d8;
 		border-radius: 999px;
 		background: #fff;
 		color: #2c2c2c;
+		font: inherit;
 		font-size: 0.7rem;
 		font-weight: 500;
 		line-height: 1.3;
 		text-decoration: none;
+		cursor: pointer;
 	}
 
 	.ready-tick {
-		display: inline-flex;
 		margin-left: 6px;
-		vertical-align: -1px;
+		color: #2f9e44;
 	}
 
 	.spotlight-thumbs {
 		display: flex;
-		align-items: flex-end;
+		align-items: flex-start;
 		gap: 0.45rem;
 		min-height: 3rem;
 	}
@@ -428,7 +419,6 @@
 		min-width: 0;
 	}
 
-	/* flex-basis:auto — avoid 52ch becoming ~520px height when stacked */
 	.essay-side {
 		flex: 0 1 auto;
 		width: max-content;
@@ -438,12 +428,12 @@
 
 	.essay-media-wrap {
 		flex: 0 1 auto;
-		width: 16rem;
-		max-width: 100%;
 		min-width: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 0.45rem;
+		max-width: 100%;
+		display: grid;
+		grid-template-columns: minmax(0, 16rem) minmax(0, 22rem);
+		gap: 0.65rem;
+		align-items: start;
 	}
 
 	.essay-feature-media {
@@ -504,21 +494,12 @@
 		background: #e8e8e8;
 	}
 
-	.essay-feature-desc {
-		margin: 0;
-	}
-
-	.essay-titles {
-		display: flex;
-		flex-direction: column;
-	}
-
 	.essay-title-btn {
 		appearance: none;
 		display: block;
 		width: 100%;
 		margin: 0;
-		padding: 0.32rem 0.1rem;
+		padding: 0.32rem 0;
 		border: none;
 		background: transparent;
 		color: #7a7a7a;
@@ -530,7 +511,6 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		transition: color 0.18s ease, font-size 0.18s ease;
 	}
 
 	.essay-title-btn.selected {
@@ -543,13 +523,30 @@
 		opacity: 0.72;
 	}
 
-	.email-section {
-		margin-top: 2rem;
-		max-width: 36rem;
+	.updates-dialog {
+		box-sizing: border-box;
+		width: min(28rem, calc(100vw - 2rem));
+		padding: 1.15rem 1.2rem 1.35rem;
+		border: 1px solid rgba(40, 40, 40, 0.1);
+		border-radius: 1rem;
+		background: #faf9f7;
 	}
 
-	.email-section .section-label {
-		margin-top: 0;
+	.updates-dialog::backdrop {
+		background: rgba(40, 36, 30, 0.28);
+	}
+
+	.updates-close {
+		margin: 0 0 0.35rem;
+		text-align: right;
+	}
+
+	.updates-close button {
+		border: 0;
+		background: transparent;
+		color: #6a6a6a;
+		font-size: 1.15rem;
+		cursor: pointer;
 	}
 
 	@media (max-width: 900px) {
@@ -570,18 +567,15 @@
 			gap: 0.75rem;
 		}
 
-		.essay-side {
-			max-width: min(52ch, 100%);
-		}
-
 		.essay-media-wrap {
-			width: min(24rem, 100%);
+			grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
 		}
 	}
 
-	@media (max-width: 720px) {
-		.spotlight-feature {
-			padding: 0.9rem 1rem;
+	@media (max-width: 640px) {
+		.essay-media-wrap {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 0.45rem;
 		}
 	}
 
