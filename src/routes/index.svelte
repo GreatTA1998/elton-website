@@ -528,6 +528,7 @@
 
 	.updates-dialog {
 		width: min(28rem, calc(100vw - 2rem));
+		box-sizing: border-box;
 		padding: 1.15rem 1.2rem 1.35rem;
 		border: 1px solid rgba(40, 40, 40, 0.1);
 		border-radius: 1rem;
