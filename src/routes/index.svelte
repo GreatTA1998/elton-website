@@ -141,10 +141,12 @@
 	</div>
 </div>
 
-<dialog class="updates-dialog" bind:this={updatesDialog} aria-label={$messages.subscribeTitle}>
-	<form class="updates-close" method="dialog">
-		<button type="submit" aria-label="Close">×</button>
-	</form>
+<dialog
+	class="updates-dialog"
+	bind:this={updatesDialog}
+	aria-label={$messages.subscribeTitle}
+	on:click={onUpdatesDialogClick}
+>
 	<SubscribeForm compact />
 </dialog>
 </div>
@@ -257,6 +259,11 @@
 	function selectEssay(id) {
 		if (id !== 'notion') notionPlaying = false;
 		selectedEssayId = id;
+	}
+
+	/** @param {MouseEvent} event */
+	function onUpdatesDialogClick(event) {
+		if (event.target === updatesDialog) updatesDialog.close();
 	}
 </script>
 
@@ -534,19 +541,6 @@
 
 	.updates-dialog::backdrop {
 		background: rgba(40, 36, 30, 0.28);
-	}
-
-	.updates-close {
-		margin: 0 0 0.35rem;
-		text-align: right;
-	}
-
-	.updates-close button {
-		border: 0;
-		background: transparent;
-		color: #6a6a6a;
-		font-size: 1.15rem;
-		cursor: pointer;
 	}
 
 	@media (max-width: 900px) {
