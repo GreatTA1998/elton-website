@@ -228,11 +228,11 @@
 			aria-label={playing ? $messages.pause : $messages.play}
 		>
 			{#if playing}
-				<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
 					<path fill="currentColor" d="M7 6h3.25v12H7V6zm6.75 0H17v12h-3.25V6z" />
 				</svg>
 			{:else}
-				<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
 					<path fill="currentColor" d="M8.2 5.6v12.8L18.4 12 8.2 5.6z" />
 				</svg>
 			{/if}
@@ -295,6 +295,7 @@
 		min-width: 0;
 		padding: 0.72rem;
 		background: rgba(250, 250, 250, 0.58);
+		border: 1px solid rgba(42, 42, 42, 0.12);
 		border-radius: 999px;
 	}
 
@@ -345,32 +346,27 @@
 		color: var(--mute);
 	}
 
-	.icon-btn {
+	.icon-btn.play {
 		appearance: none;
 		border: none;
-		background: transparent;
-		color: var(--ink);
-		padding: 0.28rem;
+		flex-shrink: 0;
+		width: 2.55rem;
+		height: 2.55rem;
 		margin: 0;
+		padding: 0;
 		border-radius: 999px;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
 		line-height: 0;
-	}
-
-	.icon-btn:disabled {
-		opacity: 0.32;
-		cursor: default;
-	}
-
-	.icon-btn.play {
-		flex-shrink: 0;
-		width: 2.05rem;
-		height: 2.05rem;
 		background: rgba(250, 250, 250, 0.42);
 		color: var(--ink);
+	}
+
+	.icon-btn.play:disabled {
+		opacity: 0.32;
+		cursor: default;
 	}
 
 	.thumbs {
