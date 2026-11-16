@@ -47,11 +47,7 @@
 									{$messages.visit}
 								</a>
 							{/if}
-							<button
-								type="button"
-								class="feature-action"
-								on:click={() => updatesDialog?.showModal()}
-							>
+							<button type="button" class="feature-action" on:click={openUpdates}>
 								{$messages.emailUpdates}
 							</button>
 						</div>
@@ -141,11 +137,15 @@
 	</div>
 </div>
 
-<dialog class="updates-dialog" bind:this={updatesDialog} aria-label={$messages.subscribeTitle}>
-	<form class="updates-close" method="dialog">
-		<button type="submit" aria-label="Close">×</button>
-	</form>
-	<SubscribeForm compact />
+<dialog
+	class="updates-dialog"
+	bind:this={updatesDialog}
+	aria-label={$messages.subscribeTitle}
+	on:click={onUpdatesDialogClick}
+>
+	{#key updatesFormKey}
+		<SubscribeForm compact />
+	{/key}
 </dialog>
 </div>
 
@@ -235,6 +235,7 @@
 	let selectedEssayId = 'gohs';
 	let notionPlaying = false;
 	let updatesDialog;
+	let updatesFormKey = 0;
 
 	const TITLE_MAX = 52;
 
@@ -257,6 +258,16 @@
 	function selectEssay(id) {
 		if (id !== 'notion') notionPlaying = false;
 		selectedEssayId = id;
+	}
+
+	function openUpdates() {
+		updatesFormKey += 1;
+		updatesDialog?.showModal();
+	}
+
+	/** @param {MouseEvent} event */
+	function onUpdatesDialogClick(event) {
+		if (event.target === updatesDialog) updatesDialog.close();
 	}
 </script>
 
@@ -534,19 +545,6 @@
 
 	.updates-dialog::backdrop {
 		background: rgba(40, 36, 30, 0.28);
-	}
-
-	.updates-close {
-		margin: 0 0 0.35rem;
-		text-align: right;
-	}
-
-	.updates-close button {
-		border: 0;
-		background: transparent;
-		color: #6a6a6a;
-		font-size: 1.15rem;
-		cursor: pointer;
 	}
 
 	@media (max-width: 900px) {

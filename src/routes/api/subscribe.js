@@ -1,5 +1,3 @@
-const ALLOWED_INTERESTS = new Set(['apps', 'essays']);
-
 /** @type {import('@sveltejs/kit').RequestHandler} */
 export async function post({ request }) {
 	let data;
@@ -16,29 +14,12 @@ export async function post({ request }) {
 		.trim()
 		.toLowerCase();
 	const preference = data && data.preference === 'updates' ? 'updates' : 'digest';
-	const rawInterests = Array.isArray(data && data.interests) ? data.interests : [];
-	const interests =
-		preference === 'digest'
-			? []
-			: [
-					...new Set(
-						rawInterests
-							.map((value) => String(value || '').trim())
-							.filter((value) => ALLOWED_INTERESTS.has(value))
-					)
-			  ];
+	const preferenceLabel = preference === 'updates' ? 'major updates' : 'quarterly digest';
 
 	if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
 		return {
 			status: 400,
 			body: { ok: false, error: 'invalid_email' }
-		};
-	}
-
-	if (preference === 'updates' && !interests.length) {
-		return {
-			status: 400,
-			body: { ok: false, error: 'invalid_interests' }
 		};
 	}
 
@@ -59,14 +40,6 @@ export async function post({ request }) {
 		};
 	}
 
-	const interestsLabel =
-		preference === 'digest'
-			? 'quarterly digest'
-			: interests.length
-			  ? interests.join(', ')
-			  : 'updates';
-	const preferenceLabel = preference === 'digest' ? 'digest' : 'updates';
-
 	if (audienceId) {
 		try {
 			const contactRes = await fetch('https://api.resend.com/contacts', {
@@ -79,7 +52,7 @@ export async function post({ request }) {
 					email,
 					audience_id: audienceId,
 					unsubscribed: false,
-					first_name: interestsLabel.slice(0, 120)
+					first_name: preferenceLabel.slice(0, 120)
 				})
 			});
 
@@ -108,13 +81,12 @@ export async function post({ request }) {
 			body: JSON.stringify({
 				from,
 				to: [notifyTo],
-				subject: `Subscribe · ${preferenceLabel} · ${interestsLabel}`,
+				subject: `Subscribe · ${preference} · ${preferenceLabel}`,
 				text: [
 					`New subscriber on elton-website`,
 					``,
 					`Email: ${email}`,
 					`Preference: ${preferenceLabel}`,
-					`Interests: ${interestsLabel}`,
 					``,
 					audienceId
 						? `Also added to Resend audience ${audienceId}.`
@@ -139,6 +111,6 @@ export async function post({ request }) {
 
 	return {
 		status: 200,
-		body: { ok: true, preference, interests }
+		body: { ok: true, preference }
 	};
 }
