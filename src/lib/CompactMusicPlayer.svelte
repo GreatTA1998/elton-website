@@ -384,12 +384,12 @@
 		border: none;
 		background: transparent;
 		width: 2.55rem;
-		height: 2.55rem;
-		border-radius: 8px;
+		aspect-ratio: 1;
+		border-radius: 4px;
 		overflow: hidden;
 		cursor: pointer;
 		flex-shrink: 0;
-		transition: width 0.22s ease, height 0.22s ease;
+		transition: width 0.22s ease;
 	}
 
 	.thumb img {
@@ -401,7 +401,6 @@
 
 	.thumb.selected {
 		width: 3.35rem;
-		height: 3.35rem;
 	}
 
 	.thumb.placeholder {
@@ -431,12 +430,10 @@
 
 		.thumb {
 			width: 2.2rem;
-			height: 2.2rem;
 		}
 
 		.thumb.selected {
 			width: 2.9rem;
-			height: 2.9rem;
 		}
 
 		.thumbs {
