@@ -385,7 +385,7 @@
 		background: transparent;
 		width: 2.55rem;
 		aspect-ratio: 1;
-		border-radius: 1px;
+		border-radius: 0;
 		overflow: hidden;
 		cursor: pointer;
 		flex-shrink: 0;
