@@ -141,11 +141,10 @@
 	</div>
 </div>
 
-<dialog class="updates-dialog" bind:this={updatesDialog} aria-labelledby="updates-title">
+<dialog class="updates-dialog" bind:this={updatesDialog} aria-label={$messages.subscribeTitle}>
 	<form class="updates-close" method="dialog">
 		<button type="submit" aria-label="Close">×</button>
 	</form>
-	<p id="updates-title" class="feature-status">{$messages.subscribeTitle}</p>
 	<SubscribeForm compact />
 </dialog>
 </div>
@@ -550,10 +549,6 @@
 		color: #6a6a6a;
 		font-size: 1.15rem;
 		cursor: pointer;
-	}
-
-	.updates-dialog .feature-status {
-		margin: 0 0 0.75rem;
 	}
 
 	@media (max-width: 900px) {
