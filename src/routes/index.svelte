@@ -16,7 +16,7 @@
 						class:selected={selectedAppId === app.id}
 						aria-pressed={selectedAppId === app.id}
 						aria-label={app.name}
-						on:click={() => selectApp(app.id)}
+						on:click={() => (selectedAppId = app.id)}
 					>
 						<img src={app.logo} alt="" />
 					</button>
@@ -250,11 +250,6 @@
 	$: selectedEssay = essays.find((essay) => essay.id === selectedEssayId) || essays[0];
 
 	/** @param {string} id */
-	function selectApp(id) {
-		selectedAppId = id;
-	}
-
-	/** @param {string} id */
 	function selectEssay(id) {
 		if (id !== 'notion') notionPlaying = false;
 		selectedEssayId = id;
@@ -392,7 +387,6 @@
 		display: flex;
 		align-items: flex-start;
 		gap: 0.45rem;
-		min-height: 3rem;
 	}
 
 	.spotlight-thumb {
@@ -401,13 +395,13 @@
 		padding: 0;
 		border: none;
 		background: transparent;
-		width: 2.3rem;
-		height: 2.3rem;
-		border-radius: 9px;
+		width: 3rem;
+		aspect-ratio: 1;
+		border-radius: 10px;
 		overflow: hidden;
 		cursor: pointer;
 		flex-shrink: 0;
-		transition: width 0.22s ease, height 0.22s ease;
+		transition: width 0.22s ease;
 	}
 
 	.spotlight-thumb img {
@@ -418,8 +412,7 @@
 	}
 
 	.spotlight-thumb.selected {
-		width: 2.95rem;
-		height: 2.95rem;
+		width: 3.55rem;
 	}
 
 	.essay-row {
