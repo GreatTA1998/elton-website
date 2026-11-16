@@ -62,7 +62,7 @@
 	</div>
 
 	<div class="spotlight-col essays-col">
-		<section class="spotlight essays-spotlight" aria-label={$messages.videoEssays}>
+		<section class="spotlight" aria-label={$messages.videoEssays}>
 			<div class="essay-row">
 				<div class="essay-side">
 					<div role="group" aria-label={$messages.videoEssays}>
@@ -338,6 +338,7 @@
 	}
 
 	.feature-desc {
+		margin: 0;
 		font-size: 0.82rem;
 		color: #6a6a6a;
 		line-height: 1.4;
@@ -493,10 +494,6 @@
 		background: #e8e8e8;
 	}
 
-	.essay-feature-desc {
-		margin: 0;
-	}
-
 	.essay-title-btn {
 		appearance: none;
 		display: block;
@@ -527,6 +524,7 @@
 	}
 
 	.updates-dialog {
+		box-sizing: border-box;
 		width: min(28rem, calc(100vw - 2rem));
 		padding: 1.15rem 1.2rem 1.35rem;
 		border: 1px solid rgba(40, 40, 40, 0.1);
