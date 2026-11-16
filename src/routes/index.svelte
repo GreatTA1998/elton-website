@@ -127,7 +127,7 @@
 							<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
 						{/if}
 
-						<p class="feature-desc essay-feature-desc">
+						<p class="feature-desc">
 							{#if selectedEssay.sentenceKey}
 								{$messages[selectedEssay.sentenceKey]}
 							{:else}
