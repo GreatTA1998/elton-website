@@ -47,11 +47,7 @@
 									{$messages.visit}
 								</a>
 							{/if}
-							<button
-								type="button"
-								class="feature-action"
-								on:click={() => updatesDialog?.showModal()}
-							>
+							<button type="button" class="feature-action" on:click={openUpdates}>
 								{$messages.emailUpdates}
 							</button>
 						</div>
@@ -147,7 +143,9 @@
 	aria-label={$messages.subscribeTitle}
 	on:click={onUpdatesDialogClick}
 >
-	<SubscribeForm compact />
+	{#key updatesFormKey}
+		<SubscribeForm compact />
+	{/key}
 </dialog>
 </div>
 
@@ -237,6 +235,7 @@
 	let selectedEssayId = 'gohs';
 	let notionPlaying = false;
 	let updatesDialog;
+	let updatesFormKey = 0;
 
 	const TITLE_MAX = 52;
 
@@ -259,6 +258,11 @@
 	function selectEssay(id) {
 		if (id !== 'notion') notionPlaying = false;
 		selectedEssayId = id;
+	}
+
+	function openUpdates() {
+		updatesFormKey += 1;
+		updatesDialog?.showModal();
 	}
 
 	/** @param {MouseEvent} event */

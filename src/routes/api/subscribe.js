@@ -13,7 +13,8 @@ export async function post({ request }) {
 	const email = String((data && data.email) || '')
 		.trim()
 		.toLowerCase();
-	const preference = 'digest';
+	const preference = data && data.preference === 'updates' ? 'updates' : 'digest';
+	const preferenceLabel = preference === 'updates' ? 'major updates' : 'quarterly digest';
 
 	if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
 		return {
@@ -51,7 +52,7 @@ export async function post({ request }) {
 					email,
 					audience_id: audienceId,
 					unsubscribed: false,
-					first_name: 'quarterly digest'
+					first_name: preferenceLabel.slice(0, 120)
 				})
 			});
 
@@ -80,12 +81,12 @@ export async function post({ request }) {
 			body: JSON.stringify({
 				from,
 				to: [notifyTo],
-				subject: `Subscribe · digest · quarterly digest`,
+				subject: `Subscribe · ${preference} · ${preferenceLabel}`,
 				text: [
 					`New subscriber on elton-website`,
 					``,
 					`Email: ${email}`,
-					`Preference: digest`,
+					`Preference: ${preferenceLabel}`,
 					``,
 					audienceId
 						? `Also added to Resend audience ${audienceId}.`

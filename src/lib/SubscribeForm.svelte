@@ -1,9 +1,14 @@
 <script>
+	import { onMount } from 'svelte';
 	import { messages } from './i18n.js';
 
 	export let compact = false;
 
+	const EMAIL_KEY = 'elton-site-subscribe-email';
+
 	let email = '';
+	/** @type {'updates' | 'digest'} */
+	let mode = 'updates';
 	let status = 'idle'; // idle | submitting | success | error | not_configured
 	let errorMessage = '';
 	/** @type {'not_configured' | 'invalid_email' | 'generic' | 'network' | ''} */
@@ -20,6 +25,15 @@
 		errorMessage = $messages.couldntReach;
 	}
 
+	onMount(() => {
+		try {
+			const saved = localStorage.getItem(EMAIL_KEY);
+			if (saved) email = saved;
+		} catch (e) {
+			/* ignore */
+		}
+	});
+
 	async function handleSubmit() {
 		if (status === 'submitting') return;
 
@@ -31,14 +45,18 @@
 			const res = await fetch('/api/subscribe', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email, preference: 'digest' })
+				body: JSON.stringify({ email, preference: mode })
 			});
 
 			const data = await res.json().catch(() => ({}));
 
 			if (res.ok && data.ok) {
 				status = 'success';
-				email = '';
+				try {
+					localStorage.setItem(EMAIL_KEY, email);
+				} catch (e) {
+					/* ignore */
+				}
 				return;
 			}
 
@@ -71,7 +89,19 @@
 </script>
 
 <form class="subscribe" class:compact on:submit={onSubmit} novalidate>
-	<p class="digest">{$messages.modeDigest}</p>
+	<fieldset class="modes" disabled={status === 'submitting' || status === 'success'}>
+		<legend class="sr-only">{$messages.subscribeTitle}</legend>
+
+		<label class="mode">
+			<input type="radio" name="subscribe-mode" value="updates" bind:group={mode} />
+			<span>{$messages.modeUpdates}</span>
+		</label>
+
+		<label class="mode">
+			<input type="radio" name="subscribe-mode" value="digest" bind:group={mode} />
+			<span>{$messages.modeDigest}</span>
+		</label>
+	</fieldset>
 
 	<div class="row">
 		<label class="sr-only" for="subscribe-email">{$messages.email}</label>
@@ -117,11 +147,31 @@
 		max-width: 36rem;
 	}
 
-	.digest {
+	.modes {
 		margin: 0;
+		padding: 0;
+		border: none;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.mode {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		margin: 0;
+		font: inherit;
 		font-size: 0.95rem;
 		line-height: 1.35;
 		color: #2c2c2c;
+		cursor: pointer;
+	}
+
+	.mode input {
+		margin: 0;
+		flex-shrink: 0;
+		accent-color: #2c2c2c;
 	}
 
 	.row {
