@@ -350,8 +350,8 @@
 		appearance: none;
 		border: none;
 		flex-shrink: 0;
-		width: 2.55rem;
-		height: 2.55rem;
+		width: 2.05rem;
+		aspect-ratio: 1;
 		margin: 0;
 		padding: 0;
 		border-radius: 999px;
@@ -361,7 +361,6 @@
 		cursor: pointer;
 		line-height: 0;
 		background: rgba(250, 250, 250, 0.42);
-		color: var(--ink);
 	}
 
 	.icon-btn.play:disabled {
