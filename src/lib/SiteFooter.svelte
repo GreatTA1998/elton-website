@@ -85,11 +85,6 @@
 		justify-content: center;
 		color: #8a8a8a;
 		text-decoration: none;
-		transition: color 0.15s ease;
-	}
-
-	.socials a:hover {
-		color: #2c2c2c;
 	}
 
 	.socials .mail {

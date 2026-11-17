@@ -270,16 +270,18 @@
 	.unit {
 		--ink: #2a2a2a;
 		--mute: #3a3a3a;
+		--thumb: clamp(2.2rem, 4.2vw, 2.55rem);
+		--thumb-on: clamp(2.9rem, 5.2vw, 3.35rem);
 		position: fixed;
-		top: 0.9rem;
-		right: 0.9rem;
+		top: clamp(0.55rem, 1.4vw, 0.9rem);
+		right: clamp(0.55rem, 1.4vw, 0.9rem);
 		z-index: 50;
-		width: min(21.5rem, calc(100vw - 1.6rem));
+		width: min(clamp(17.2rem, 42vw, 21.5rem), calc(100vw - 1.1rem));
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 0.55rem;
+		gap: clamp(0.45rem, 1vw, 0.55rem);
 		color: var(--ink);
 		pointer-events: none;
 	}
@@ -293,7 +295,7 @@
 		align-items: center;
 		gap: 0.6rem;
 		min-width: 0;
-		padding: 0.72rem;
+		padding: clamp(0.58rem, 1.2vw, 0.72rem) clamp(0.62rem, 1.2vw, 0.72rem);
 		background: rgba(250, 250, 250, 0.58);
 		border: 1px solid rgba(42, 42, 42, 0.12);
 		border-radius: 999px;
@@ -330,7 +332,7 @@
 	}
 
 	.title {
-		font-size: 0.78rem;
+		font-size: clamp(0.72rem, 1.5vw, 0.78rem);
 		font-weight: 500;
 		letter-spacing: -0.015em;
 		line-height: 1.35;
@@ -339,7 +341,7 @@
 
 	.credit {
 		margin-top: 0.18rem;
-		font-size: 0.68rem;
+		font-size: clamp(0.64rem, 1.3vw, 0.68rem);
 		font-weight: 500;
 		letter-spacing: 0.01em;
 		line-height: 1.3;
@@ -372,9 +374,9 @@
 		display: flex;
 		align-items: flex-end;
 		justify-content: flex-end;
-		gap: 0.45rem;
+		gap: clamp(0.35rem, 0.9vw, 0.45rem);
 		padding: 0 0.15rem;
-		min-height: 3.4rem;
+		min-height: clamp(2.95rem, 6vw, 3.4rem);
 	}
 
 	.thumb {
@@ -383,7 +385,7 @@
 		padding: 0;
 		border: none;
 		background: transparent;
-		width: 2.55rem;
+		width: var(--thumb);
 		aspect-ratio: 1;
 		border-radius: 2px;
 		overflow: hidden;
@@ -400,7 +402,7 @@
 	}
 
 	.thumb.selected {
-		width: 3.35rem;
+		width: var(--thumb-on);
 	}
 
 	.thumb.placeholder {
@@ -408,43 +410,7 @@
 		pointer-events: none;
 	}
 
-	@media (max-width: 520px) {
-		.unit {
-			top: 0.55rem;
-			right: 0.55rem;
-			width: min(17.2rem, calc(100vw - 1.1rem));
-			gap: 0.45rem;
-		}
-
-		.pill {
-			padding: 0.58rem 0.62rem;
-		}
-
-		.title {
-			font-size: 0.72rem;
-		}
-
-		.credit {
-			font-size: 0.64rem;
-		}
-
-		.thumb {
-			width: 2.2rem;
-		}
-
-		.thumb.selected {
-			width: 2.9rem;
-		}
-
-		.thumbs {
-			min-height: 2.95rem;
-			gap: 0.35rem;
-		}
-	}
-
 	@media (prefers-reduced-motion: reduce) {
-		.thumb {
-			transition: none;
-		}
+		.thumb { transition: none; }
 	}
 </style>
