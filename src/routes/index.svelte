@@ -571,8 +571,6 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.spotlight-thumb {
-			transition: none;
-		}
+		.spotlight-thumb { transition: none; }
 	}
 </style>

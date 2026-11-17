@@ -1,8 +1,10 @@
 <script>
 	import CompactMusicPlayer from '$lib/CompactMusicPlayer.svelte';
 	import LanguageToggle from '$lib/LanguageToggle.svelte';
+	import WelcomeSplash from '$lib/WelcomeSplash.svelte';
 </script>
 
+<WelcomeSplash />
 <LanguageToggle />
 <CompactMusicPlayer />
 

@@ -39,22 +39,18 @@
 <style>
 	.lang {
 		position: fixed;
-		top: 0.85rem;
-		left: 0.85rem;
+		top: clamp(0.55rem, 1.4vw, 0.85rem);
+		left: clamp(0.55rem, 1.4vw, 0.85rem);
 		z-index: 200;
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
-		padding: 0.42rem 0.62rem;
+		padding: clamp(0.36rem, 0.9vw, 0.42rem) clamp(0.55rem, 1.1vw, 0.62rem);
 		box-sizing: border-box;
-		/* Chip chrome must not steal Home / nav clicks underneath */
 		pointer-events: none;
 		background: rgba(255, 255, 255, 0.88);
 		border: 1px solid rgba(40, 40, 40, 0.08);
 		border-radius: 999px;
-		backdrop-filter: blur(10px) saturate(1.05);
-		-webkit-backdrop-filter: blur(10px) saturate(1.05);
-		box-shadow: 0 4px 16px rgba(40, 36, 30, 0.04);
 	}
 
 	.label {
@@ -85,13 +81,5 @@
 		color: #d0d0d0;
 		user-select: none;
 		pointer-events: none;
-	}
-
-	@media (max-width: 520px) {
-		.lang {
-			top: 0.55rem;
-			left: 0.55rem;
-			padding: 0.36rem 0.55rem;
-		}
 	}
 </style>

@@ -3,10 +3,6 @@
     Essay title
   </h2>
 
-  <!-- Turns out the raintown aesthetics doesn't blend with lots of other visual images -->
-  <!-- <video src="anime-rain-town.mp4" autoplay muted style="position: absolute; z-index: -1;"></video>
-  <audio src="rainsound.mp3" controls></audio> -->
-
   <div style="display: flex; justify-content: center; margin-bottom: 24px;">
     <div style="width: 808px;">
       <ReusableBlock/>
