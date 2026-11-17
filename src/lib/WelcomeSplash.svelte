@@ -91,9 +91,9 @@
 	.enter {
 		appearance: none;
 		margin: 0;
-		padding: 0.45rem 1.05rem;
-		border: 1px solid rgba(42, 42, 42, 0.16);
-		border-radius: 999px;
+		padding: 0.5rem 1rem 1.4rem 0.85rem;
+		border: 1px solid rgba(42, 42, 42, 0.28);
+		clip-path: polygon(0 0, 100% 0, 100% 52%, 46% 52%, 46% 100%, 0 100%);
 		background: #fff;
 		color: #2a2a2a;
 		font: inherit;
