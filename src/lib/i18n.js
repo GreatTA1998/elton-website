@@ -13,7 +13,7 @@ const STORAGE_KEY = 'elton-site-lang';
 /** @type {Record<Locale, Record<string, string>>} */
 const DICT = {
 	en: {
-		welcome: 'Welcome to my absolutely epic website',
+		welcome: 'Welcome to my absolutely epic website!',
 		softwareApps: 'apps',
 		videoEssays: 'essays',
 		emailUpdates: 'Get updates',

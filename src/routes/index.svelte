@@ -1,10 +1,6 @@
 <div class="home">
 <HomeAtmosphere />
 
-<p class="welcome">
-	{$messages.welcome}
-</p>
-
 <div class="spotlights">
 	<div class="spotlight-col apps-col">
 		<section class="spotlight" aria-label={$messages.softwareApps}>
@@ -272,14 +268,6 @@
 		max-width: none;
 		padding: 2.25rem 2rem 3.5rem;
 		box-sizing: border-box;
-	}
-
-	.welcome {
-		margin: 1.35rem 0 0;
-		font-size: 1.05rem;
-		font-weight: 500;
-		color: #2c2c2c;
-		line-height: 1.5;
 	}
 
 	.spotlights {
