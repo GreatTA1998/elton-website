@@ -45,8 +45,8 @@
 	<div class="splash" role="dialog" aria-modal="true" aria-labelledby="welcome-splash-title">
 		<h1 id="welcome-splash-title">{$messages.welcome}</h1>
 		<p id="welcome-splash-copy">
-			Hello! Welcome to my website. I'm Elton, a startup founder since 2021. This place
-			centralizes my software, music recordings, essays and contact information.
+			Hello! I'm Elton, a startup founder since 2021. This place centralizes my software,
+			music recordings, essays and contact information.
 		</p>
 		<div class="row">
 			<button type="button" class="enter" bind:this={enterBtn} on:click={enter}>Enter</button>
