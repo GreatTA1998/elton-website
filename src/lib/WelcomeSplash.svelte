@@ -1,6 +1,7 @@
 <script>
 	import { onMount, tick } from 'svelte';
 	import { get } from 'svelte/store';
+	import { messages } from './i18n.js';
 	import { nowPlaying, playTrack } from './nowPlaying.js';
 
 	const KEY = 'elton-welcome-seen';
@@ -41,7 +42,8 @@
 </script>
 
 {#if show}
-	<div class="splash" role="dialog" aria-modal="true" aria-labelledby="welcome-splash-copy">
+	<div class="splash" role="dialog" aria-modal="true" aria-labelledby="welcome-splash-title">
+		<h1 id="welcome-splash-title">{$messages.welcome}</h1>
 		<p id="welcome-splash-copy">
 			Hello! Welcome to my website. I'm Elton, a startup founder since 2021. This place
 			centralizes my software, music recordings, essays and contact information.
@@ -66,11 +68,19 @@
 		background: #fafafa;
 		color: #2c2c2c;
 	}
+	.splash h1,
 	.splash p {
 		margin: 0;
 		max-width: 28rem;
-		font-size: 1.05rem;
-		font-weight: 500;
+	}
+	.splash h1 {
+		font-size: 1.4rem;
+		font-weight: 650;
+		line-height: 1.3;
+	}
+	.splash p {
+		font-size: 0.98rem;
+		font-weight: 400;
 		line-height: 1.55;
 	}
 	.row {
