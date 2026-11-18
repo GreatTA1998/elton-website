@@ -3,14 +3,10 @@
 	import {
 		FLAG_DEFS,
 		ARCHIVED_FLAG_DEFS,
-		PRESETS,
-		ESSAY_MODES,
 		OVERLAP_SLIDERS,
 		experiments,
 		panelOpen,
 		toggleExperiment,
-		setPreset,
-		setEssayMode,
 		setSlider,
 		setPanelOpen
 	} from './experiments.js';
@@ -87,14 +83,6 @@
 					<span class="exp-text"><span class="exp-name">{f.label}</span><span class="exp-hint">{f.hint}</span></span>
 				</label>
 				{#if f.id === 'overlap' && $experiments.overlap}
-					<fieldset class="exp-field">
-						<legend class="exp-legend">Preset</legend>
-						{#each PRESETS as p (p.id)}
-							<label class="exp-radio" title={p.hint}
-								><input type="radio" name="exp-preset" value={p.id} checked={$experiments.preset === p.id} on:change={() => setPreset(p.id)} /><span>{p.label}</span></label
-							>
-						{/each}
-					</fieldset>
 					<div class="exp-sliders">
 						{#each OVERLAP_SLIDERS as s (s.id)}
 							<label class="exp-slider"
@@ -103,16 +91,6 @@
 							>
 						{/each}
 					</div>
-				{/if}
-				{#if f.id === 'essayLayout' && $experiments.essayLayout}
-					<fieldset class="exp-field">
-						<legend class="exp-legend">Mode</legend>
-						{#each ESSAY_MODES as m (m.id)}
-							<label class="exp-radio" title={m.hint}
-								><input type="radio" name="exp-essay-mode" value={m.id} checked={$experiments.essayMode === m.id} on:change={() => setEssayMode(m.id)} /><span>{m.label}</span></label
-							>
-						{/each}
-					</fieldset>
 				{/if}
 			{/each}
 

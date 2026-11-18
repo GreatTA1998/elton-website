@@ -6,21 +6,18 @@ import { writable, get } from 'svelte/store';
 import { ALBUM_IDS, nowPlaying } from './nowPlaying.js';
 
 /** @typedef {{ id: string, key: string, label: string, hint: string }} FlagDef */
-/** @typedef {{ id: string, label: string, hint: string }} PresetDef */
 /** @typedef {{ id: string, key: string, label: string, min: number, max: number, step: number, def: number }} SliderDef */
 
-/** Winners default-on. Modes: tilt + pair. Rev clears stale LS so classic/caption cannot stick. */
+/** Winners default-on. Tilted dock + Title+copy pair. Rev clears stale LS. */
 export const DEFAULT_ON = new Set(['defaultSecond', 'overlap', 'essayLayout']);
-export const DEFAULT_PRESET = 'tilt';
-export const DEFAULT_ESSAY_MODE = 'pair';
 const WINNERS_REV_KEY = 'elton-exp-winners-rev';
-const WINNERS_REV = '2';
+const WINNERS_REV = '3';
 
 /** @type {FlagDef[]} */
 export const FLAG_DEFS = [
 	{ id: 'defaultSecond', key: 'elton-exp-default-second', label: 'Default select second', hint: 'Winner — 2nd album / app' },
-	{ id: 'overlap', key: 'elton-exp-overlap', label: 'Enable overlap', hint: 'Winner: tilted dock' },
-	{ id: 'essayLayout', key: 'elton-exp-essay-layout', label: 'Essay layout modes', hint: 'Winner: Title+copy pair' }
+	{ id: 'overlap', key: 'elton-exp-overlap', label: 'Tilted dock', hint: 'Winner — overlap + tilt' },
+	{ id: 'essayLayout', key: 'elton-exp-essay-layout', label: 'Essay Title+copy pair', hint: 'Winner — copy under title' }
 ];
 
 /** Archived — themed card/player bg/border stay off (not winners). */
@@ -34,26 +31,14 @@ export const ARCHIVED_FLAG_DEFS = [
 
 export const ALL_FLAG_DEFS = [...FLAG_DEFS, ...ARCHIVED_FLAG_DEFS];
 
-/** @type {PresetDef[]} */
-export const PRESETS = [
-	{ id: 'soft', label: 'Soft dock', hint: 'Slight peek' },
-	{ id: 'deep', label: 'Deep dock', hint: 'Nests further' },
-	{ id: 'tilt', label: 'Tilted dock', hint: 'Winner' }
-];
 const COLOR_IDS = ['crop', 'wash', 'gen'];
 const READ_IDS = ['ink', 'scrim', 'outline'];
-
-/** @type {PresetDef[]} */
-export const ESSAY_MODES = [
-	{ id: 'caption', label: 'Caption stack', hint: 'Media+copy stacked' },
-	{ id: 'sheet', label: 'Feature sheet', hint: 'Titles above sheet' },
-	{ id: 'pair', label: 'Title+copy pair', hint: 'Winner — copy under title' }
-];
 
 /** @type {SliderDef[]} */
 export const OVERLAP_SLIDERS = [
 	{ id: 'overlapV', key: 'elton-exp-v', label: 'Vertical overlap', min: 0, max: 25, step: 1, def: 15 },
 	{ id: 'overlapH', key: 'elton-exp-h', label: 'Horizontal nudge', min: 0, max: 20, step: 1, def: 4 },
+	{ id: 'tiltDeg', key: 'elton-exp-tilt', label: 'Tilt degree', min: 0, max: 12, step: 1, def: 2 },
 	{ id: 'baseScale', key: 'elton-exp-scale', label: 'Base scale', min: 85, max: 110, step: 1, def: 100 },
 	{ id: 'activeScale', key: 'elton-exp-active', label: 'Active scale', min: 105, max: 120, step: 1, def: 110 },
 	{ id: 'inactiveBlur', key: 'elton-exp-blur', label: 'Inactive blur', min: 0, max: 12, step: 1, def: 0 }
@@ -67,18 +52,18 @@ const EXTRA_SLIDERS = [
 ];
 
 const ALL_SLIDERS = [...OVERLAP_SLIDERS, ...EXTRA_SLIDERS];
-const PRESET_KEY = 'elton-exp-preset';
 const COLOR_MODE_KEY = 'elton-exp-color-mode';
-const ESSAY_MODE_KEY = 'elton-exp-essay-mode';
 const READ_MODE_KEY = 'elton-exp-read-mode';
 const PANEL_KEY = 'elton-exp-panel-open';
+const LEGACY_PRESET_KEY = 'elton-exp-preset';
+const LEGACY_ESSAY_MODE_KEY = 'elton-exp-essay-mode';
 
 function migrateWinnersRev() {
 	try {
 		if (typeof localStorage === 'undefined' || localStorage.getItem(WINNERS_REV_KEY) === WINNERS_REV) return;
 		for (const def of ALL_FLAG_DEFS) localStorage.removeItem(def.key);
-		localStorage.removeItem(PRESET_KEY);
-		localStorage.removeItem(ESSAY_MODE_KEY);
+		localStorage.removeItem(LEGACY_PRESET_KEY);
+		localStorage.removeItem(LEGACY_ESSAY_MODE_KEY);
 		localStorage.setItem(WINNERS_REV_KEY, WINNERS_REV);
 	} catch {
 		/* ignore */
@@ -116,9 +101,7 @@ function readAll() {
 	/** @type {Record<string, boolean | string | number>} */
 	const state = {};
 	for (const def of ALL_FLAG_DEFS) state[def.id] = readFlag(def.key, DEFAULT_ON.has(def.id));
-	state.preset = readMode(PRESET_KEY, PRESETS.map((p) => p.id), DEFAULT_PRESET);
 	state.colorMode = readMode(COLOR_MODE_KEY, COLOR_IDS, 'crop');
-	state.essayMode = readMode(ESSAY_MODE_KEY, ESSAY_MODES.map((m) => m.id), DEFAULT_ESSAY_MODE);
 	state.readMode = readMode(READ_MODE_KEY, READ_IDS, 'ink');
 	for (const def of ALL_SLIDERS) {
 		state[def.id] = def.def;
@@ -144,17 +127,6 @@ function writeFlag(key, on, defaultOn = false) {
 			else localStorage.setItem(key, '1');
 		} else if (defaultOn) localStorage.setItem(key, '0');
 		else localStorage.removeItem(key);
-	} catch {
-		/* ignore */
-	}
-}
-
-/** @param {string} key @param {string} value @param {string} [defaultValue] */
-function writeStr(key, value, defaultValue) {
-	try {
-		if (typeof localStorage === 'undefined') return;
-		if (defaultValue != null && value === defaultValue) localStorage.removeItem(key);
-		else localStorage.setItem(key, value);
 	} catch {
 		/* ignore */
 	}
@@ -234,20 +206,6 @@ export function toggleExperiment(id) {
 	setExperiment(id, !get(experiments)[id]);
 }
 
-/** @param {string} presetId */
-export function setPreset(presetId) {
-	if (!PRESETS.some((p) => p.id === presetId)) return;
-	writeStr(PRESET_KEY, presetId, DEFAULT_PRESET);
-	experiments.update((prev) => ({ ...prev, preset: presetId }));
-}
-
-/** @param {string} modeId */
-export function setEssayMode(modeId) {
-	if (!ESSAY_MODES.some((p) => p.id === modeId)) return;
-	writeStr(ESSAY_MODE_KEY, modeId, DEFAULT_ESSAY_MODE);
-	experiments.update((prev) => ({ ...prev, essayMode: modeId }));
-}
-
 /** True when any surface experiment needs art URL / overlap CSS vars. */
 /** @param {Record<string, boolean | string | number>} e */
 export function needsSurfaceStyle(e) {
@@ -296,14 +254,10 @@ export function overlapStyle(e, colorCss = '') {
 	let nudge = 0;
 	let tilt = 0;
 	if (e.overlap) {
-		let v = Number(e.overlapV) || 0;
+		const v = (Number(e.overlapV) || 0) * 1.1;
 		const h = Number(e.overlapH) || 0;
-		if (e.preset === 'deep') v *= 1.25;
-		else if (e.preset === 'tilt') {
-			v *= 1.1;
-			nudge = -Math.max(h, 1);
-			tilt = 2;
-		}
+		nudge = -Math.max(h, 1);
+		tilt = Math.min(12, Math.max(0, Number(e.tiltDeg) || 0));
 		lift += v;
 	}
 	if (e.dockSelected) lift += Number(e.dockDepth) || 0;
