@@ -429,90 +429,66 @@
 		filter: none;
 	}
 
-	/* TEMP experiments — logos overlap feature card */
-	.spotlight.exp-overlap {
-		gap: 0;
+	/* TEMP experiments — selected logo only docks into card; inactive stay clear */
+	.spotlight.exp-overlap,
+	.spotlight.exp-dock {
+		gap: 0.14rem;
 	}
 
-	.spotlight.exp-overlap .spotlight-thumbs {
-		position: relative;
-		z-index: 2;
-		margin-bottom: calc(-1 * var(--exp-av, 0.7rem));
-		gap: max(0.15rem, calc(0.45rem - var(--exp-ah, 0.2rem)));
-		padding-bottom: 0.1rem;
-	}
-
-	.spotlight.exp-overlap .spotlight-feature {
-		position: relative;
-		z-index: 1;
-	}
-
-	.spotlight.exp-overlap .spotlight-thumb {
-		width: calc(3rem * var(--exp-as, 1));
-		transform-origin: bottom center;
-		transition: width 0.22s ease, transform 0.22s ease;
-	}
-
-	.spotlight.exp-overlap .spotlight-thumb.selected {
-		width: calc(3.55rem * var(--exp-as, 1));
-	}
-
-	.spotlight.exp-overlap[data-exp-preset='hang'] .spotlight-thumbs {
-		z-index: 2;
-	}
-
-	.spotlight.exp-overlap[data-exp-preset='sit'] .spotlight-thumbs {
-		margin-bottom: calc(-0.42 * var(--exp-av, 0.7rem));
-		z-index: 2;
-	}
-
-	.spotlight.exp-overlap[data-exp-preset='sit'] .spotlight-feature {
-		z-index: 1;
-	}
-
-	.spotlight.exp-overlap[data-exp-preset='fan'] .spotlight-thumb:nth-child(1) {
-		transform: translate(calc(0.2 * var(--exp-ah, 0.2rem)), calc(0.35 * var(--exp-av, 0.7rem)))
-			rotate(-5deg);
-	}
-
-	.spotlight.exp-overlap[data-exp-preset='fan'] .spotlight-thumb:nth-child(2) {
-		transform: translate(0, calc(0.05 * var(--exp-av, 0.7rem))) rotate(-1deg);
-		z-index: 1;
-	}
-
-	.spotlight.exp-overlap[data-exp-preset='fan'] .spotlight-thumb:nth-child(3) {
-		transform: translate(calc(-0.15 * var(--exp-ah, 0.2rem)), calc(0.4 * var(--exp-av, 0.7rem)))
-			rotate(3deg);
-	}
-
-	.spotlight.exp-overlap[data-exp-preset='fan'] .spotlight-thumb:nth-child(4) {
-		transform: translate(calc(-0.35 * var(--exp-ah, 0.2rem)), calc(0.7 * var(--exp-av, 0.7rem)))
-			rotate(6deg);
-	}
-
-	/* TEMP experiments — selected logo docks into card top edge */
-	.spotlight.exp-dock:not(.exp-overlap) {
-		gap: 0.2rem;
-	}
-
+	.spotlight.exp-overlap .spotlight-thumbs,
 	.spotlight.exp-dock .spotlight-thumbs {
 		position: relative;
-		z-index: 3;
+		z-index: 2;
+		gap: max(0.16rem, calc(0.45rem - var(--exp-ah, 0.12rem)));
 	}
 
+	.spotlight.exp-overlap .spotlight-feature,
 	.spotlight.exp-dock .spotlight-feature {
 		position: relative;
 		z-index: 1;
 	}
 
-	.spotlight.exp-dock .spotlight-thumb.selected {
-		transform: translateY(var(--exp-dock, 0.7rem));
-		z-index: 4;
+	.spotlight.exp-overlap .spotlight-thumb,
+	.spotlight.exp-dock .spotlight-thumb {
+		width: calc(3rem * var(--exp-as, 1));
+		position: relative;
+		z-index: 0;
+		transform-origin: bottom center;
 		transition: width 0.22s ease, transform 0.22s ease;
 	}
 
+	.spotlight.exp-overlap .spotlight-thumb.selected {
+		width: calc(3rem * var(--exp-as, 1) * var(--exp-aa, 1.32));
+		transform: translateY(calc(0.78 * var(--exp-av, 0.85rem)));
+		z-index: 3;
+	}
+
+	.spotlight.exp-overlap[data-exp-preset='sit'] .spotlight-thumb.selected {
+		transform: translateY(calc(0.42 * var(--exp-av, 0.85rem)));
+	}
+
+	.spotlight.exp-overlap[data-exp-preset='fan'] .spotlight-thumb.selected {
+		transform: translate(calc(-0.15 * var(--exp-ah, 0.12rem)), calc(0.9 * var(--exp-av, 0.85rem)))
+			rotate(2.5deg);
+	}
+
+	.spotlight.exp-dock .spotlight-thumb.selected {
+		width: calc(3rem * var(--exp-as, 1) * var(--exp-aa, 1.32));
+		transform: translateY(var(--exp-dock, 0.5rem));
+		z-index: 3;
+	}
+
+	.spotlight.exp-dock.exp-overlap .spotlight-thumb.selected {
+		transform: translateY(calc(0.78 * var(--exp-av, 0.85rem) + var(--exp-dock, 0.5rem)));
+	}
+
+	.spotlight.exp-dock.exp-overlap[data-exp-preset='sit'] .spotlight-thumb.selected {
+		transform: translateY(calc(0.42 * var(--exp-av, 0.85rem) + var(--exp-dock, 0.5rem)));
+	}
+
 	.spotlight.exp-dock.exp-overlap[data-exp-preset='fan'] .spotlight-thumb.selected {
-		transform: translateY(var(--exp-dock, 0.7rem));
+		transform: translate(calc(-0.15 * var(--exp-ah, 0.12rem)), calc(0.9 * var(--exp-av, 0.85rem) + var(--exp-dock, 0.5rem)))
+			rotate(2.5deg);
 	}
 
 	.essay-row {
@@ -671,9 +647,9 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.spotlight-thumb { transition: none; }
-		.spotlight-thumbs.exp-gray .spotlight-thumb:not(.selected) img { transition: none; }
+		.spotlight-thumb,
 		.spotlight.exp-overlap .spotlight-thumb,
-		.spotlight.exp-dock .spotlight-thumb.selected { transition: none; }
+		.spotlight.exp-dock .spotlight-thumb { transition: none; }
+		.spotlight-thumbs.exp-gray .spotlight-thumb:not(.selected) img { transition: none; }
 	}
 </style>
