@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { nowPlaying, currentTrack, TRACKS, ALBUM_IDS, playTrack } from './nowPlaying.js';
 	import { messages } from './i18n.js';
-	import { experiments } from './experiments.js'; // TEMP experiments
+	import { experiments, overlapStyle } from './experiments.js'; // TEMP experiments
 
 	let playing = false;
 	let ytReady = false;
@@ -211,6 +211,10 @@
 <div
 	class="unit"
 	class:exp-gray={$experiments.grayscaleUnselected}
+	class:exp-overlap={$experiments.overlapMusic}
+	class:exp-dock={$experiments.dockSelected}
+	data-exp-preset={$experiments.overlapMusic ? $experiments.musicPreset : null}
+	style={$experiments.overlapMusic || $experiments.dockSelected ? overlapStyle($experiments) : null}
 	role="region"
 	aria-label={$messages.musicPlayer}
 >
@@ -426,8 +430,111 @@
 		filter: none;
 	}
 
+	/* TEMP experiments — overlap album arts with player pill */
+	.unit.exp-overlap {
+		gap: 0;
+	}
+
+	.unit.exp-overlap .pill {
+		position: relative;
+		z-index: 2;
+	}
+
+	.unit.exp-overlap .thumbs {
+		position: relative;
+		z-index: 1;
+		margin-top: calc(-1 * var(--exp-mv, 0.9rem));
+		gap: max(0.12rem, calc(0.45rem - var(--exp-mh, 0.25rem)));
+		padding-top: 0.15rem;
+		min-height: calc(var(--thumb-on) + 0.2rem);
+	}
+
+	.unit.exp-overlap .thumb {
+		width: calc(var(--thumb) * var(--exp-ms, 1));
+		transform-origin: bottom center;
+		transition: width 0.22s ease, transform 0.22s ease;
+	}
+
+	.unit.exp-overlap .thumb.selected {
+		width: calc(var(--thumb-on) * var(--exp-ms, 1));
+	}
+
+	.unit.exp-overlap[data-exp-preset='tuck'] .thumbs {
+		z-index: 0;
+	}
+
+	.unit.exp-overlap[data-exp-preset='tuck'] .pill {
+		z-index: 2;
+		/* keep tucked thumbs clickable under the translucent wash */
+		pointer-events: none;
+	}
+
+	.unit.exp-overlap[data-exp-preset='tuck'] .pill > * {
+		pointer-events: auto;
+	}
+
+	.unit.exp-overlap[data-exp-preset='straddle'] .thumbs {
+		z-index: 1;
+		margin-top: calc(-0.55 * var(--exp-mv, 0.9rem));
+	}
+
+	.unit.exp-overlap[data-exp-preset='straddle'] .thumb {
+		transform: translateY(calc(-0.22 * var(--exp-mv, 0.9rem)));
+	}
+
+	.unit.exp-overlap[data-exp-preset='fan'] .thumb:nth-child(1) {
+		transform: translate(calc(0.35 * var(--exp-mh, 0.25rem)), calc(0.15 * var(--exp-mv, 0.9rem)))
+			rotate(-4deg);
+	}
+
+	.unit.exp-overlap[data-exp-preset='fan'] .thumb:nth-child(2) {
+		transform: translate(0, calc(-0.05 * var(--exp-mv, 0.9rem))) rotate(-1deg);
+		z-index: 1;
+	}
+
+	.unit.exp-overlap[data-exp-preset='fan'] .thumb:nth-child(3) {
+		transform: translate(calc(-0.2 * var(--exp-mh, 0.25rem)), calc(0.28 * var(--exp-mv, 0.9rem)))
+			rotate(3deg);
+	}
+
+	.unit.exp-overlap[data-exp-preset='fan'] .thumb:nth-child(4) {
+		transform: translate(calc(-0.45 * var(--exp-mh, 0.25rem)), calc(0.55 * var(--exp-mv, 0.9rem)))
+			rotate(6deg);
+	}
+
+	/* TEMP experiments — selected album docks into pill edge */
+	.unit.exp-dock:not(.exp-overlap) {
+		gap: 0.18rem;
+	}
+
+	.unit.exp-dock .pill {
+		position: relative;
+		z-index: 2;
+	}
+
+	.unit.exp-dock .thumbs {
+		position: relative;
+		z-index: 3;
+	}
+
+	.unit.exp-dock .thumb.selected {
+		transform: translateY(calc(-1 * var(--exp-dock, 0.7rem)));
+		z-index: 4;
+		transition: width 0.22s ease, transform 0.22s ease;
+	}
+
+	.unit.exp-dock.exp-overlap[data-exp-preset='straddle'] .thumb.selected {
+		transform: translateY(calc(-0.22 * var(--exp-mv, 0.9rem) - var(--exp-dock, 0.7rem)));
+	}
+
+	.unit.exp-dock.exp-overlap[data-exp-preset='fan'] .thumb.selected {
+		transform: translateY(calc(-1 * var(--exp-dock, 0.7rem)));
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.thumb { transition: none; }
 		.unit.exp-gray .thumb:not(.selected) img { transition: none; }
+		.unit.exp-overlap .thumb,
+		.unit.exp-dock .thumb.selected { transition: none; }
 	}
 </style>
