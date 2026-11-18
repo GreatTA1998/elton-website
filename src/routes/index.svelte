@@ -34,7 +34,7 @@
 			{#key selectedAppId}
 				<div class="spotlight-feature" in:fade={{ duration: fadeMs }}>
 					<div class="feature-copy">
-						<strong class="feature-title">
+						<strong class="feature-title type-title">
 							{selectedApp.name}
 							{#if selectedApp.ready}
 								<span class="ready-tick" role="img" title={$messages.ready} aria-label={$messages.ready}
@@ -42,8 +42,8 @@
 								>
 							{/if}
 						</strong>
-						<span class="feature-desc">{$messages[selectedApp.descKey]}</span>
-						<span class="feature-status">{$messages[selectedApp.statusKey]}</span>
+						<span class="feature-desc type-body">{$messages[selectedApp.descKey]}</span>
+						<span class="feature-status type-caption">{$messages[selectedApp.statusKey]}</span>
 						<div class="feature-actions">
 							{#if selectedApp.visit}
 								<a
@@ -76,8 +76,8 @@
 					{#each essays as essay (essay.id)}
 						<button
 							type="button"
-							class="essay-title-btn"
-							class:selected={selectedEssayId === essay.id}
+							class="essay-title-btn type-list"
+							class:type-list-on={selectedEssayId === essay.id}
 							class:soon={essay.kind === 'soon'}
 							aria-pressed={selectedEssayId === essay.id}
 							title={essay.title}
@@ -87,7 +87,7 @@
 							{truncateTitle(essay.title)}
 						</button>
 						{#if essayPair && selectedEssayId === essay.id}
-							<p class="feature-desc">{essayDesc}</p>
+							<p class="type-caption essay-pair-desc">{essayDesc}</p>
 						{/if}
 					{/each}
 				</div>
@@ -137,7 +137,7 @@
 						{/if}
 
 						{#if !essayPair}
-							<p class="feature-desc">{essayDesc}</p>
+							<p class="feature-desc type-body">{essayDesc}</p>
 						{/if}
 					</div>
 				{/key}
@@ -318,17 +318,13 @@
 <style>
 	.home{width:100%;max-width:none;padding:2.25rem 2rem 3.5rem;box-sizing:border-box}
 	.spotlights{display:flex;align-items:flex-start;gap:2rem;margin-top:1.75em;width:100%}
-	.spotlight-col{min-width:0}
-	.apps-col{flex:0 1 20rem;max-width:22rem}
-	.essays-col{flex:0 1 auto;min-width:0;max-width:100%}
+	.spotlight-col{min-width:0}.apps-col{flex:0 1 20rem;max-width:22rem}.essays-col{flex:0 1 auto;min-width:0;max-width:100%}
 	.spotlight{display:flex;flex-direction:column;gap:.65rem;width:100%}
 	.spotlight-feature{display:flex;align-items:center;width:auto;max-width:100%;padding:.85rem 1rem;box-sizing:border-box;border:1px solid rgba(40,40,40,.08);border-radius:1.15rem;background:linear-gradient(160deg,rgba(255,252,248,.92),rgba(255,255,255,.82));box-shadow:0 6px 20px rgba(40,36,30,.04)}
 	.feature-copy{display:flex;flex-direction:column;gap:.22rem;min-width:0;width:100%}
-	.feature-title{display:inline-flex;align-items:center;margin:0;font-weight:600;font-size:.92rem;color:#1a1a1a;line-height:1.3}
-	.feature-desc{margin:0;font-size:.82rem;color:#6a6a6a;line-height:1.4}
-	.feature-status{font-size:.72rem;color:#9a9a9a;line-height:1.35}
+	.feature-title{display:inline-flex;align-items:center;margin:0}
 	.feature-actions{display:flex;gap:.35rem;margin-top:.35rem}
-	.feature-action{display:inline-flex;align-items:center;padding:.22rem .62rem;border:1px solid #d8d8d8;border-radius:999px;background:#fff;color:#2c2c2c;font:inherit;font-size:.7rem;font-weight:500;line-height:1.3;text-decoration:none;cursor:pointer}
+	.feature-action{display:inline-flex;align-items:center;padding:.22rem .62rem;border:1px solid #d8d8d8;border-radius:999px;background:#fff;color:var(--ink-body);font:inherit;font-size:var(--text-xs);font-weight:var(--w-medium);line-height:var(--lh-tight);text-decoration:none;cursor:pointer}
 	.ready-tick{margin-left:6px;color:#2f9e44}
 	.spotlight-thumbs{display:flex;align-items:flex-start;gap:.45rem}
 	.spotlight-thumb{appearance:none;margin:0;padding:0;border:none;background:transparent;width:3rem;aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer;flex-shrink:0;transition:width .22s ease}
@@ -337,18 +333,14 @@
 	.essay-row{display:flex;align-items:flex-start;gap:.65rem;max-width:100%;min-width:0}
 	.essay-side{flex:0 1 auto;width:max-content;max-width:min(52ch,100%);min-width:0}
 	.essay-media-wrap{flex:0 1 auto;min-width:0;max-width:100%;display:grid;grid-template-columns:minmax(0,16rem) minmax(0,22rem);gap:.65rem;align-items:start}
-	/* TEMP essay Title+copy pair */
 	.spotlight[data-essay-layout='pair'] .essay-media-wrap{grid-template-columns:minmax(0,18rem)}
-	.spotlight[data-essay-layout='pair'] .essay-side .feature-desc{margin:.12rem 0 .4rem;max-width:36ch}
+	.essay-pair-desc{margin:.4rem 0 .6rem;max-width:36ch;font-size:var(--text-xs);line-height:var(--lh-body)}
 	.essay-feature-media{display:block;position:relative;width:100%;aspect-ratio:16/9;padding:0;border:none;background:transparent;border-radius:10px;overflow:hidden;cursor:pointer}
 	.essay-feature-media img{display:block;width:100%;height:100%;object-fit:cover}
-	.essay-video-frame{cursor:default;background:#111}
-	.essay-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+	.essay-video-frame{cursor:default;background:#111}.essay-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 	.essay-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:2.6rem;height:2.6rem;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;display:inline-flex;align-items:center;justify-content:center;pointer-events:none}
-	.essay-play svg{display:block;margin-left:2px}
-	.essay-thumb-placeholder{background:#e8e8e8}
-	.essay-title-btn{appearance:none;display:block;width:100%;margin:0;padding:.32rem 0;border:none;background:transparent;color:#7a7a7a;font:inherit;font-size:.8rem;line-height:1.35;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-	.essay-title-btn.selected{color:#1a1a1a;font-weight:500}
+	.essay-play svg{display:block;margin-left:2px}.essay-thumb-placeholder{background:#e8e8e8}
+	.essay-title-btn{appearance:none;display:block;width:100%;margin:0;padding:.32rem 0;border:none;background:transparent;font-family:inherit;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 	.essay-title-btn.soon{opacity:.72}
 	.updates-dialog{box-sizing:border-box;width:min(28rem,calc(100vw - 2rem));padding:1.15rem 1.2rem 1.35rem;border:1px solid rgba(40,40,40,.1);border-radius:1rem;background:#faf9f7}
 	.updates-dialog::backdrop{background:rgba(40,36,30,.28)}

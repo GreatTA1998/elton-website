@@ -5,6 +5,7 @@
 	import WelcomeSplash from '$lib/WelcomeSplash.svelte';
 	import { hydrateExperiments } from '$lib/experiments.js'; // TEMP experiments
 	import '$lib/expSurfaces.css'; // TEMP experiments
+	import '$lib/type.css';
 
 	// TEMP experiments
 	onMount(hydrateExperiments);
