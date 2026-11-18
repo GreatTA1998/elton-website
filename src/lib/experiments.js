@@ -9,41 +9,51 @@ import { ALBUM_IDS, nowPlaying } from './nowPlaying.js';
 /** @typedef {{ id: string, label: string, hint: string }} PresetDef */
 /** @typedef {{ id: string, key: string, label: string, min: number, max: number, step: number, def: number }} SliderDef */
 
+/** Winners locked default-on (missing key → on; `0` off). */
+export const DEFAULT_ON = new Set(['defaultSecond', 'overlap', 'essayLayout']);
+
 /** @type {FlagDef[]} */
 export const FLAG_DEFS = [
-	{ id: 'defaultSecond', key: 'elton-exp-default-second', label: 'Default select second', hint: 'Start on 2nd album / app' },
-	{ id: 'overlap', key: 'elton-exp-overlap', label: 'Enable overlap', hint: 'Selected thumb docks into music pill / app card' },
-	{ id: 'dockSelected', key: 'elton-exp-dock-selected', label: 'Extra dock depth', hint: 'Adds a little more depth on the selected item' },
-	{ id: 'colorTheme', key: 'elton-exp-color-theme', label: 'Art color theme', hint: 'Restyle music pill / app card from selected art' },
-	{ id: 'essayLayout', key: 'elton-exp-essay-layout', label: 'Essay layout modes', hint: 'Consolidate title / media / copy so reading is not split across columns' },
-	{ id: 'textRead', key: 'elton-exp-text-read', label: 'Text readability', hint: 'Stronger type contrast on music pill / app card' },
-	{ id: 'paletteBorder', key: 'elton-exp-palette-border', label: 'Palette border', hint: 'Outline from art colors (mono or multi gradient)' }
+	{ id: 'defaultSecond', key: 'elton-exp-default-second', label: 'Default select second', hint: 'Winner — 2nd album / app' },
+	{ id: 'overlap', key: 'elton-exp-overlap', label: 'Enable overlap', hint: 'Winner: tilted dock' },
+	{ id: 'essayLayout', key: 'elton-exp-essay-layout', label: 'Essay layout modes', hint: 'Winner: Title+copy pair' }
 ];
+
+/** Tried paths — default off; panel “Archived tries”. */
+/** @type {FlagDef[]} */
+export const ARCHIVED_FLAG_DEFS = [
+	{ id: 'dockSelected', key: 'elton-exp-dock-selected', label: 'Extra dock depth', hint: 'Archived — extra selected depth' },
+	{ id: 'colorTheme', key: 'elton-exp-color-theme', label: 'Art color theme', hint: 'Archived — art bg wash' },
+	{ id: 'textRead', key: 'elton-exp-text-read', label: 'Text readability', hint: 'Archived — ink / scrim / outline' },
+	{ id: 'paletteBorder', key: 'elton-exp-palette-border', label: 'Palette border', hint: 'Archived — art-color outline' }
+];
+
+export const ALL_FLAG_DEFS = [...FLAG_DEFS, ...ARCHIVED_FLAG_DEFS];
 
 /** @type {PresetDef[]} */
 export const PRESETS = [
-	{ id: 'soft', label: 'Soft dock', hint: 'Selected peeks slightly into the parent' },
-	{ id: 'deep', label: 'Deep dock', hint: 'Selected nests a bit further' },
-	{ id: 'tilt', label: 'Tilted dock', hint: 'Selected docks with a slight tilt' }
+	{ id: 'soft', label: 'Soft dock', hint: 'Slight peek into parent' },
+	{ id: 'deep', label: 'Deep dock', hint: 'Nests further' },
+	{ id: 'tilt', label: 'Tilted dock', hint: 'Winner — slight tilt' }
 ];
 /** @type {PresetDef[]} */
 export const COLOR_MODES = [
-	{ id: 'crop', label: 'Art crop bg', hint: 'Enlarged selected art as background' },
-	{ id: 'wash', label: 'Palette wash', hint: 'Colors sampled from the art' },
-	{ id: 'gen', label: 'Generated art', hint: 'Complementary generated wash from the palette' }
+	{ id: 'crop', label: 'Art crop bg', hint: 'Enlarged art bg' },
+	{ id: 'wash', label: 'Palette wash', hint: 'Sampled colors' },
+	{ id: 'gen', label: 'Generated art', hint: 'Complementary wash' }
 ];
 /** @type {PresetDef[]} */
 export const READ_MODES = [
-	{ id: 'ink', label: 'Adaptive ink', hint: 'Dark/light type from art luminance' },
-	{ id: 'scrim', label: 'Soft scrim', hint: 'Light veil under the text block' },
-	{ id: 'outline', label: 'Outlined type', hint: 'Halo / shadow so type clears the art' }
+	{ id: 'ink', label: 'Adaptive ink', hint: 'Type from luminance' },
+	{ id: 'scrim', label: 'Soft scrim', hint: 'Light veil under text' },
+	{ id: 'outline', label: 'Outlined type', hint: 'Halo / shadow' }
 ];
 
 /** @type {PresetDef[]} */
 export const ESSAY_MODES = [
-	{ id: 'caption', label: 'Caption stack', hint: 'Titles left; media with copy stacked under it' },
-	{ id: 'sheet', label: 'Feature sheet', hint: 'Titles above; media + copy as one sheet below' },
-	{ id: 'pair', label: 'Title+copy pair', hint: 'Selected title keeps copy beside it; media alone' }
+	{ id: 'caption', label: 'Caption stack', hint: 'Titles left; media+copy stacked' },
+	{ id: 'sheet', label: 'Feature sheet', hint: 'Titles above; media+copy sheet' },
+	{ id: 'pair', label: 'Title+copy pair', hint: 'Winner — copy under title; media alone' }
 ];
 
 /** @type {SliderDef[]} */
@@ -72,21 +82,29 @@ const ESSAY_MODE_KEY = 'elton-exp-essay-mode';
 const READ_MODE_KEY = 'elton-exp-read-mode';
 const PANEL_KEY = 'elton-exp-panel-open';
 
+/** @param {string} key @param {boolean} fallback */
+function readFlag(key, fallback) {
+	try {
+		if (typeof localStorage === 'undefined') return fallback;
+		const raw = localStorage.getItem(key);
+		if (raw === '1') return true;
+		if (raw === '0') return false;
+	} catch {
+		/* ignore */
+	}
+	return fallback;
+}
+
 /** @returns {Record<string, boolean | string | number>} */
 function readAll() {
 	/** @type {Record<string, boolean | string | number>} */
 	const state = {};
-	for (const def of FLAG_DEFS) {
-		state[def.id] = false;
-		try {
-			if (typeof localStorage !== 'undefined') state[def.id] = localStorage.getItem(def.key) === '1';
-		} catch {
-			/* ignore */
-		}
+	for (const def of ALL_FLAG_DEFS) {
+		state[def.id] = readFlag(def.key, DEFAULT_ON.has(def.id));
 	}
-	state.preset = 'soft';
+	state.preset = 'tilt';
 	state.colorMode = 'crop';
-	state.essayMode = 'caption';
+	state.essayMode = 'pair';
 	state.readMode = 'ink';
 	try {
 		if (typeof localStorage !== 'undefined') {
@@ -117,11 +135,14 @@ function readAll() {
 	return state;
 }
 
-/** @param {string} key @param {boolean} on */
-function writeFlag(key, on) {
+/** @param {string} key @param {boolean} on @param {boolean} [defaultOn] */
+function writeFlag(key, on, defaultOn = false) {
 	try {
 		if (typeof localStorage === 'undefined') return;
-		if (on) localStorage.setItem(key, '1');
+		if (on) {
+			if (defaultOn) localStorage.removeItem(key);
+			else localStorage.setItem(key, '1');
+		} else if (defaultOn) localStorage.setItem(key, '0');
 		else localStorage.removeItem(key);
 	} catch {
 		/* ignore */
@@ -196,9 +217,9 @@ export function hydrateExperiments() {
 
 /** @param {string} id @param {boolean} on */
 export function setExperiment(id, on) {
-	const def = FLAG_DEFS.find((d) => d.id === id);
+	const def = ALL_FLAG_DEFS.find((d) => d.id === id);
 	if (!def) return;
-	writeFlag(def.key, on);
+	writeFlag(def.key, on, DEFAULT_ON.has(id));
 	experiments.update((prev) => ({ ...prev, [id]: on }));
 	if (id === 'defaultSecond') {
 		syncAlbum(on);
@@ -219,24 +240,10 @@ export function setPreset(presetId) {
 }
 
 /** @param {string} modeId */
-export function setColorMode(modeId) {
-	if (!COLOR_MODES.some((p) => p.id === modeId)) return;
-	writeStr(COLOR_MODE_KEY, modeId);
-	experiments.update((prev) => ({ ...prev, colorMode: modeId }));
-}
-
-/** @param {string} modeId */
 export function setEssayMode(modeId) {
 	if (!ESSAY_MODES.some((p) => p.id === modeId)) return;
 	writeStr(ESSAY_MODE_KEY, modeId);
 	experiments.update((prev) => ({ ...prev, essayMode: modeId }));
-}
-
-/** @param {string} modeId */
-export function setReadMode(modeId) {
-	if (!READ_MODES.some((p) => p.id === modeId)) return;
-	writeStr(READ_MODE_KEY, modeId);
-	experiments.update((prev) => ({ ...prev, readMode: modeId }));
 }
 
 /** True when any surface experiment needs art URL / overlap CSS vars. */
