@@ -153,6 +153,8 @@
 		pointer-events: auto;
 		max-height: min(46vh, 22rem);
 		overflow: auto;
+		overscroll-behavior: contain;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.exp.collapsed {
@@ -294,8 +296,15 @@
 	}
 
 	.exp-slider input[type='range'] {
+		display: block;
 		width: 100%;
 		margin: 0;
+		padding: 0;
+		height: 1.75rem;
 		accent-color: #6a6a6a;
+		/* don’t let the panel’s overflow scroll steal the drag (esp. Active scale on phone) */
+		touch-action: none;
+		cursor: pointer;
+		pointer-events: auto;
 	}
 </style>
