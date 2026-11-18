@@ -34,6 +34,12 @@ export const FLAG_DEFS = [
 		key: 'elton-exp-color-theme',
 		label: 'Art color theme',
 		hint: 'Restyle music pill / app card from selected art'
+	},
+	{
+		id: 'essayLayout',
+		key: 'elton-exp-essay-layout',
+		label: 'Essay layout modes',
+		hint: 'Consolidate title / media / copy so reading is not split across columns'
 	}
 ];
 
@@ -51,6 +57,13 @@ export const COLOR_MODES = [
 	{ id: 'crop', label: 'Art crop bg', hint: 'Enlarged selected art as background' },
 	{ id: 'wash', label: 'Palette wash', hint: 'Colors sampled from the art' },
 	{ id: 'gen', label: 'Generated art', hint: 'Complementary generated wash from the palette' }
+];
+
+/** @type {PresetDef[]} */
+export const ESSAY_MODES = [
+	{ id: 'caption', label: 'Caption stack', hint: 'Titles left; media with copy stacked under it' },
+	{ id: 'sheet', label: 'Feature sheet', hint: 'Titles above; media + copy as one sheet below' },
+	{ id: 'pair', label: 'Title+copy pair', hint: 'Selected title keeps copy beside it; media alone' }
 ];
 
 /** Shared V / H / scale / active-scale / blur (music + apps). V units ≈ 0.1px. */
@@ -78,6 +91,7 @@ export const COLOR_SLIDERS = [
 const ALL_SLIDERS = [...OVERLAP_SLIDERS, ...DOCK_SLIDERS, ...COLOR_SLIDERS];
 const PRESET_KEY = 'elton-exp-preset';
 const COLOR_MODE_KEY = 'elton-exp-color-mode';
+const ESSAY_MODE_KEY = 'elton-exp-essay-mode';
 const PANEL_KEY = 'elton-exp-panel-open';
 
 /** @returns {Record<string, boolean | string | number>} */
@@ -94,12 +108,15 @@ function readAll() {
 	}
 	state.preset = 'soft';
 	state.colorMode = 'crop';
+	state.essayMode = 'caption';
 	try {
 		if (typeof localStorage !== 'undefined') {
 			const p = localStorage.getItem(PRESET_KEY);
 			if (p && PRESETS.some((x) => x.id === p)) state.preset = p;
 			const m = localStorage.getItem(COLOR_MODE_KEY);
 			if (m && COLOR_MODES.some((x) => x.id === m)) state.colorMode = m;
+			const em = localStorage.getItem(ESSAY_MODE_KEY);
+			if (em && ESSAY_MODES.some((x) => x.id === em)) state.essayMode = em;
 		}
 	} catch {
 		/* ignore */
@@ -225,6 +242,13 @@ export function setColorMode(modeId) {
 	if (!COLOR_MODES.some((p) => p.id === modeId)) return;
 	writeStr(COLOR_MODE_KEY, modeId);
 	experiments.update((prev) => ({ ...prev, colorMode: modeId }));
+}
+
+/** @param {string} modeId */
+export function setEssayMode(modeId) {
+	if (!ESSAY_MODES.some((p) => p.id === modeId)) return;
+	writeStr(ESSAY_MODE_KEY, modeId);
+	experiments.update((prev) => ({ ...prev, essayMode: modeId }));
 }
 
 /** @param {string} id @param {number} value */
