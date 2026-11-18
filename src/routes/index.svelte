@@ -340,7 +340,7 @@
 	.essay-video-frame{cursor:default;background:#111}.essay-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 	.essay-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:2.6rem;height:2.6rem;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;display:inline-flex;align-items:center;justify-content:center;pointer-events:none}
 	.essay-play svg{display:block;margin-left:2px}.essay-thumb-placeholder{background:#e8e8e8}
-	.essay-title-btn{appearance:none;display:block;width:100%;margin:0;padding:.32rem 0;border:none;background:transparent;font:inherit;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+	.essay-title-btn{appearance:none;display:block;width:100%;margin:0;padding:.32rem 0;border:none;background:transparent;font-family:inherit;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 	.essay-title-btn.soon{opacity:.72}
 	.updates-dialog{box-sizing:border-box;width:min(28rem,calc(100vw - 2rem));padding:1.15rem 1.2rem 1.35rem;border:1px solid rgba(40,40,40,.1);border-radius:1rem;background:#faf9f7}
 	.updates-dialog::backdrop{background:rgba(40,36,30,.28)}
