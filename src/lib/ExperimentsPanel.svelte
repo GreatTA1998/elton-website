@@ -2,20 +2,15 @@
 <script>
 	import {
 		FLAG_DEFS,
+		ARCHIVED_FLAG_DEFS,
 		PRESETS,
-		COLOR_MODES,
 		ESSAY_MODES,
-		READ_MODES,
 		OVERLAP_SLIDERS,
-		DOCK_SLIDERS,
-		COLOR_SLIDERS,
 		experiments,
 		panelOpen,
 		toggleExperiment,
 		setPreset,
-		setColorMode,
 		setEssayMode,
-		setReadMode,
 		setSlider,
 		setPanelOpen
 	} from './experiments.js';
@@ -109,34 +104,6 @@
 						{/each}
 					</div>
 				{/if}
-				{#if f.id === 'dockSelected' && $experiments.dockSelected}
-					<div class="exp-sliders">
-						{#each DOCK_SLIDERS as s (s.id)}
-							<label class="exp-slider"
-								><span class="exp-slider-meta"><span>{s.label}</span><span class="exp-val">{$experiments[s.id]}</span></span>
-								<input type="range" min={s.min} max={s.max} step={s.step} use:liveRange={s.id} /></label
-							>
-						{/each}
-					</div>
-				{/if}
-				{#if f.id === 'colorTheme' && $experiments.colorTheme}
-					<fieldset class="exp-field">
-						<legend class="exp-legend">Mode</legend>
-						{#each COLOR_MODES as m (m.id)}
-							<label class="exp-radio" title={m.hint}
-								><input type="radio" name="exp-color-mode" value={m.id} checked={$experiments.colorMode === m.id} on:change={() => setColorMode(m.id)} /><span>{m.label}</span></label
-							>
-						{/each}
-					</fieldset>
-					<div class="exp-sliders">
-						{#each COLOR_SLIDERS as s (s.id)}
-							<label class="exp-slider"
-								><span class="exp-slider-meta"><span>{s.label}</span><span class="exp-val">{$experiments[s.id]}</span></span>
-								<input type="range" min={s.min} max={s.max} step={s.step} use:liveRange={s.id} /></label
-							>
-						{/each}
-					</div>
-				{/if}
 				{#if f.id === 'essayLayout' && $experiments.essayLayout}
 					<fieldset class="exp-field">
 						<legend class="exp-legend">Mode</legend>
@@ -147,17 +114,17 @@
 						{/each}
 					</fieldset>
 				{/if}
-				{#if f.id === 'textRead' && $experiments.textRead}
-					<fieldset class="exp-field">
-						<legend class="exp-legend">Read mode</legend>
-						{#each READ_MODES as m (m.id)}
-							<label class="exp-radio" title={m.hint}
-								><input type="radio" name="exp-read-mode" value={m.id} checked={$experiments.readMode === m.id} on:change={() => setReadMode(m.id)} /><span>{m.label}</span></label
-							>
-						{/each}
-					</fieldset>
-				{/if}
 			{/each}
+
+			<details class="exp-archive">
+				<summary class="exp-archive-sum">Archived tries <span class="exp-archive-note">not primary</span></summary>
+				{#each ARCHIVED_FLAG_DEFS as f (f.id)}
+					<label class="exp-row exp-row-archive" title={f.hint}>
+						<input type="checkbox" checked={!!$experiments[f.id]} on:change={() => toggleExperiment(f.id)} />
+						<span class="exp-text"><span class="exp-name">{f.label}</span><span class="exp-hint">{f.hint}</span></span>
+					</label>
+				{/each}
+			</details>
 		</div>
 	{/if}
 </aside>

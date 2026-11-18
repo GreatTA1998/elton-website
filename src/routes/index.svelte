@@ -331,9 +331,9 @@
 	.feature-action{display:inline-flex;align-items:center;padding:.22rem .62rem;border:1px solid #d8d8d8;border-radius:999px;background:#fff;color:#2c2c2c;font:inherit;font-size:.7rem;font-weight:500;line-height:1.3;text-decoration:none;cursor:pointer}
 	.ready-tick{margin-left:6px;color:#2f9e44}
 	.spotlight-thumbs{display:flex;align-items:flex-start;gap:.45rem}
-	.spotlight-thumb{appearance:none;margin:0;padding:0;border:none;background:transparent;width:3rem;aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer;flex-shrink:0;transition:width .22s ease}
-	.spotlight-thumb img{display:block;width:100%;height:100%;object-fit:cover}
-	.spotlight-thumb.selected{width:3.55rem}
+	.spotlight-thumb{appearance:none;margin:0;padding:0;border:none;background:transparent;width:24px;aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer;flex-shrink:0;transition:width .22s ease}
+	.spotlight-thumb img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+	.spotlight-thumb.selected{width:48px}
 	.essay-row{display:flex;align-items:flex-start;gap:.65rem;max-width:100%;min-width:0}
 	.essay-side{flex:0 1 auto;width:max-content;max-width:min(52ch,100%);min-width:0}
 	.essay-media-wrap{flex:0 1 auto;min-width:0;max-width:100%;display:grid;grid-template-columns:minmax(0,16rem) minmax(0,22rem);gap:.65rem;align-items:start}
@@ -352,7 +352,7 @@
 	.essay-play svg{display:block;margin-left:2px}
 	.essay-thumb-placeholder{background:#e8e8e8}
 	.essay-title-btn{appearance:none;display:block;width:100%;margin:0;padding:.32rem 0;border:none;background:transparent;color:#7a7a7a;font:inherit;font-size:.8rem;line-height:1.35;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-	.essay-title-btn.selected{color:#1a1a1a;font-weight:500;font-size:.9rem}
+	.essay-title-btn.selected{color:#1a1a1a;font-weight:500}
 	.essay-title-btn.soon{opacity:.72}
 	.updates-dialog{box-sizing:border-box;width:min(28rem,calc(100vw - 2rem));padding:1.15rem 1.2rem 1.35rem;border:1px solid rgba(40,40,40,.1);border-radius:1rem;background:#faf9f7}
 	.updates-dialog::backdrop{background:rgba(40,36,30,.28)}
