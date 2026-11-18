@@ -9,8 +9,12 @@ import { ALBUM_IDS, nowPlaying } from './nowPlaying.js';
 /** @typedef {{ id: string, label: string, hint: string }} PresetDef */
 /** @typedef {{ id: string, key: string, label: string, min: number, max: number, step: number, def: number }} SliderDef */
 
-/** Winners locked default-on (missing key → on; `0` off). */
+/** Winners default-on. Modes: tilt + pair. Rev clears stale LS so classic/caption cannot stick. */
 export const DEFAULT_ON = new Set(['defaultSecond', 'overlap', 'essayLayout']);
+export const DEFAULT_PRESET = 'tilt';
+export const DEFAULT_ESSAY_MODE = 'pair';
+const WINNERS_REV_KEY = 'elton-exp-winners-rev';
+const WINNERS_REV = '2';
 
 /** @type {FlagDef[]} */
 export const FLAG_DEFS = [
@@ -19,41 +23,31 @@ export const FLAG_DEFS = [
 	{ id: 'essayLayout', key: 'elton-exp-essay-layout', label: 'Essay layout modes', hint: 'Winner: Title+copy pair' }
 ];
 
-/** Tried paths — default off; panel “Archived tries”. */
+/** Archived — themed card/player bg/border stay off (not winners). */
 /** @type {FlagDef[]} */
 export const ARCHIVED_FLAG_DEFS = [
-	{ id: 'dockSelected', key: 'elton-exp-dock-selected', label: 'Extra dock depth', hint: 'Archived — extra selected depth' },
-	{ id: 'colorTheme', key: 'elton-exp-color-theme', label: 'Art color theme', hint: 'Archived — art bg wash' },
-	{ id: 'textRead', key: 'elton-exp-text-read', label: 'Text readability', hint: 'Archived — ink / scrim / outline' },
-	{ id: 'paletteBorder', key: 'elton-exp-palette-border', label: 'Palette border', hint: 'Archived — art-color outline' }
+	{ id: 'dockSelected', key: 'elton-exp-dock-selected', label: 'Extra dock depth', hint: 'Archived' },
+	{ id: 'colorTheme', key: 'elton-exp-color-theme', label: 'Art color theme', hint: 'Archived — card/player bg' },
+	{ id: 'textRead', key: 'elton-exp-text-read', label: 'Text readability', hint: 'Archived' },
+	{ id: 'paletteBorder', key: 'elton-exp-palette-border', label: 'Palette border', hint: 'Archived — card/player border' }
 ];
 
 export const ALL_FLAG_DEFS = [...FLAG_DEFS, ...ARCHIVED_FLAG_DEFS];
 
 /** @type {PresetDef[]} */
 export const PRESETS = [
-	{ id: 'soft', label: 'Soft dock', hint: 'Slight peek into parent' },
+	{ id: 'soft', label: 'Soft dock', hint: 'Slight peek' },
 	{ id: 'deep', label: 'Deep dock', hint: 'Nests further' },
-	{ id: 'tilt', label: 'Tilted dock', hint: 'Winner — slight tilt' }
+	{ id: 'tilt', label: 'Tilted dock', hint: 'Winner' }
 ];
-/** @type {PresetDef[]} */
-export const COLOR_MODES = [
-	{ id: 'crop', label: 'Art crop bg', hint: 'Enlarged art bg' },
-	{ id: 'wash', label: 'Palette wash', hint: 'Sampled colors' },
-	{ id: 'gen', label: 'Generated art', hint: 'Complementary wash' }
-];
-/** @type {PresetDef[]} */
-export const READ_MODES = [
-	{ id: 'ink', label: 'Adaptive ink', hint: 'Type from luminance' },
-	{ id: 'scrim', label: 'Soft scrim', hint: 'Light veil under text' },
-	{ id: 'outline', label: 'Outlined type', hint: 'Halo / shadow' }
-];
+const COLOR_IDS = ['crop', 'wash', 'gen'];
+const READ_IDS = ['ink', 'scrim', 'outline'];
 
 /** @type {PresetDef[]} */
 export const ESSAY_MODES = [
-	{ id: 'caption', label: 'Caption stack', hint: 'Titles left; media+copy stacked' },
-	{ id: 'sheet', label: 'Feature sheet', hint: 'Titles above; media+copy sheet' },
-	{ id: 'pair', label: 'Title+copy pair', hint: 'Winner — copy under title; media alone' }
+	{ id: 'caption', label: 'Caption stack', hint: 'Media+copy stacked' },
+	{ id: 'sheet', label: 'Feature sheet', hint: 'Titles above sheet' },
+	{ id: 'pair', label: 'Title+copy pair', hint: 'Winner — copy under title' }
 ];
 
 /** @type {SliderDef[]} */
@@ -65,22 +59,31 @@ export const OVERLAP_SLIDERS = [
 	{ id: 'inactiveBlur', key: 'elton-exp-blur', label: 'Inactive blur', min: 0, max: 12, step: 1, def: 0 }
 ];
 /** @type {SliderDef[]} */
-export const DOCK_SLIDERS = [
-	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Extra dock depth', min: 0, max: 20, step: 1, def: 8 }
-];
-/** @type {SliderDef[]} */
-export const COLOR_SLIDERS = [
+const EXTRA_SLIDERS = [
+	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Extra dock depth', min: 0, max: 20, step: 1, def: 8 },
 	{ id: 'colorStrength', key: 'elton-exp-color-str', label: 'Strength', min: 20, max: 100, step: 5, def: 70 },
 	{ id: 'colorZoom', key: 'elton-exp-color-zoom', label: 'Crop zoom', min: 140, max: 360, step: 10, def: 220 },
 	{ id: 'colorArtBlur', key: 'elton-exp-color-blur', label: 'Art blur', min: 0, max: 40, step: 2, def: 18 }
 ];
 
-const ALL_SLIDERS = [...OVERLAP_SLIDERS, ...DOCK_SLIDERS, ...COLOR_SLIDERS];
+const ALL_SLIDERS = [...OVERLAP_SLIDERS, ...EXTRA_SLIDERS];
 const PRESET_KEY = 'elton-exp-preset';
 const COLOR_MODE_KEY = 'elton-exp-color-mode';
 const ESSAY_MODE_KEY = 'elton-exp-essay-mode';
 const READ_MODE_KEY = 'elton-exp-read-mode';
 const PANEL_KEY = 'elton-exp-panel-open';
+
+function migrateWinnersRev() {
+	try {
+		if (typeof localStorage === 'undefined' || localStorage.getItem(WINNERS_REV_KEY) === WINNERS_REV) return;
+		for (const def of ALL_FLAG_DEFS) localStorage.removeItem(def.key);
+		localStorage.removeItem(PRESET_KEY);
+		localStorage.removeItem(ESSAY_MODE_KEY);
+		localStorage.setItem(WINNERS_REV_KEY, WINNERS_REV);
+	} catch {
+		/* ignore */
+	}
+}
 
 /** @param {string} key @param {boolean} fallback */
 function readFlag(key, fallback) {
@@ -95,31 +98,28 @@ function readFlag(key, fallback) {
 	return fallback;
 }
 
-/** @returns {Record<string, boolean | string | number>} */
-function readAll() {
-	/** @type {Record<string, boolean | string | number>} */
-	const state = {};
-	for (const def of ALL_FLAG_DEFS) {
-		state[def.id] = readFlag(def.key, DEFAULT_ON.has(def.id));
-	}
-	state.preset = 'tilt';
-	state.colorMode = 'crop';
-	state.essayMode = 'pair';
-	state.readMode = 'ink';
+/** @param {string} key @param {string[]} allowed @param {string} fallback */
+function readMode(key, allowed, fallback) {
 	try {
-		if (typeof localStorage !== 'undefined') {
-			const p = localStorage.getItem(PRESET_KEY);
-			if (p && PRESETS.some((x) => x.id === p)) state.preset = p;
-			const m = localStorage.getItem(COLOR_MODE_KEY);
-			if (m && COLOR_MODES.some((x) => x.id === m)) state.colorMode = m;
-			const em = localStorage.getItem(ESSAY_MODE_KEY);
-			if (em && ESSAY_MODES.some((x) => x.id === em)) state.essayMode = em;
-			const r = localStorage.getItem(READ_MODE_KEY);
-			if (r && READ_MODES.some((x) => x.id === r)) state.readMode = r;
-		}
+		if (typeof localStorage === 'undefined') return fallback;
+		const raw = localStorage.getItem(key);
+		if (raw && allowed.includes(raw)) return raw;
 	} catch {
 		/* ignore */
 	}
+	return fallback;
+}
+
+/** @returns {Record<string, boolean | string | number>} */
+function readAll() {
+	migrateWinnersRev();
+	/** @type {Record<string, boolean | string | number>} */
+	const state = {};
+	for (const def of ALL_FLAG_DEFS) state[def.id] = readFlag(def.key, DEFAULT_ON.has(def.id));
+	state.preset = readMode(PRESET_KEY, PRESETS.map((p) => p.id), DEFAULT_PRESET);
+	state.colorMode = readMode(COLOR_MODE_KEY, COLOR_IDS, 'crop');
+	state.essayMode = readMode(ESSAY_MODE_KEY, ESSAY_MODES.map((m) => m.id), DEFAULT_ESSAY_MODE);
+	state.readMode = readMode(READ_MODE_KEY, READ_IDS, 'ink');
 	for (const def of ALL_SLIDERS) {
 		state[def.id] = def.def;
 		try {
@@ -149,10 +149,12 @@ function writeFlag(key, on, defaultOn = false) {
 	}
 }
 
-/** @param {string} key @param {string} value */
-function writeStr(key, value) {
+/** @param {string} key @param {string} value @param {string} [defaultValue] */
+function writeStr(key, value, defaultValue) {
 	try {
-		if (typeof localStorage !== 'undefined') localStorage.setItem(key, value);
+		if (typeof localStorage === 'undefined') return;
+		if (defaultValue != null && value === defaultValue) localStorage.removeItem(key);
+		else localStorage.setItem(key, value);
 	} catch {
 		/* ignore */
 	}
@@ -235,14 +237,14 @@ export function toggleExperiment(id) {
 /** @param {string} presetId */
 export function setPreset(presetId) {
 	if (!PRESETS.some((p) => p.id === presetId)) return;
-	writeStr(PRESET_KEY, presetId);
+	writeStr(PRESET_KEY, presetId, DEFAULT_PRESET);
 	experiments.update((prev) => ({ ...prev, preset: presetId }));
 }
 
 /** @param {string} modeId */
 export function setEssayMode(modeId) {
 	if (!ESSAY_MODES.some((p) => p.id === modeId)) return;
-	writeStr(ESSAY_MODE_KEY, modeId);
+	writeStr(ESSAY_MODE_KEY, modeId, DEFAULT_ESSAY_MODE);
 	experiments.update((prev) => ({ ...prev, essayMode: modeId }));
 }
 
