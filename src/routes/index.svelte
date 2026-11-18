@@ -3,7 +3,14 @@
 
 <div class="spotlights">
 	<div class="spotlight-col apps-col">
-		<section class="spotlight" aria-label={$messages.softwareApps}>
+		<section
+			class="spotlight"
+			class:exp-overlap={$experiments.overlapApps}
+			class:exp-dock={$experiments.dockSelected}
+			data-exp-preset={$experiments.overlapApps ? $experiments.appsPreset : null}
+			style={$experiments.overlapApps || $experiments.dockSelected ? overlapStyle($experiments) : null}
+			aria-label={$messages.softwareApps}
+		>
 			<div class="spotlight-thumbs" class:exp-gray={$experiments.grayscaleUnselected}>
 				{#each apps as app (app.id)}
 					<button
@@ -154,7 +161,7 @@
 	import SiteFooter from '$lib/SiteFooter.svelte';
 	import SubscribeForm from '$lib/SubscribeForm.svelte';
 	import { messages } from '$lib/i18n.js';
-	import { experiments, defaultSecondApply } from '$lib/experiments.js'; // TEMP experiments
+	import { experiments, defaultSecondApply, overlapStyle } from '$lib/experiments.js'; // TEMP experiments
 
 	const reduceMotion =
 		typeof window !== 'undefined' &&
@@ -422,6 +429,92 @@
 		filter: none;
 	}
 
+	/* TEMP experiments — logos overlap feature card */
+	.spotlight.exp-overlap {
+		gap: 0;
+	}
+
+	.spotlight.exp-overlap .spotlight-thumbs {
+		position: relative;
+		z-index: 2;
+		margin-bottom: calc(-1 * var(--exp-av, 0.7rem));
+		gap: max(0.15rem, calc(0.45rem - var(--exp-ah, 0.2rem)));
+		padding-bottom: 0.1rem;
+	}
+
+	.spotlight.exp-overlap .spotlight-feature {
+		position: relative;
+		z-index: 1;
+	}
+
+	.spotlight.exp-overlap .spotlight-thumb {
+		width: calc(3rem * var(--exp-as, 1));
+		transform-origin: bottom center;
+		transition: width 0.22s ease, transform 0.22s ease;
+	}
+
+	.spotlight.exp-overlap .spotlight-thumb.selected {
+		width: calc(3.55rem * var(--exp-as, 1));
+	}
+
+	.spotlight.exp-overlap[data-exp-preset='hang'] .spotlight-thumbs {
+		z-index: 2;
+	}
+
+	.spotlight.exp-overlap[data-exp-preset='sit'] .spotlight-thumbs {
+		margin-bottom: calc(-0.42 * var(--exp-av, 0.7rem));
+		z-index: 2;
+	}
+
+	.spotlight.exp-overlap[data-exp-preset='sit'] .spotlight-feature {
+		z-index: 1;
+	}
+
+	.spotlight.exp-overlap[data-exp-preset='fan'] .spotlight-thumb:nth-child(1) {
+		transform: translate(calc(0.2 * var(--exp-ah, 0.2rem)), calc(0.35 * var(--exp-av, 0.7rem)))
+			rotate(-5deg);
+	}
+
+	.spotlight.exp-overlap[data-exp-preset='fan'] .spotlight-thumb:nth-child(2) {
+		transform: translate(0, calc(0.05 * var(--exp-av, 0.7rem))) rotate(-1deg);
+		z-index: 1;
+	}
+
+	.spotlight.exp-overlap[data-exp-preset='fan'] .spotlight-thumb:nth-child(3) {
+		transform: translate(calc(-0.15 * var(--exp-ah, 0.2rem)), calc(0.4 * var(--exp-av, 0.7rem)))
+			rotate(3deg);
+	}
+
+	.spotlight.exp-overlap[data-exp-preset='fan'] .spotlight-thumb:nth-child(4) {
+		transform: translate(calc(-0.35 * var(--exp-ah, 0.2rem)), calc(0.7 * var(--exp-av, 0.7rem)))
+			rotate(6deg);
+	}
+
+	/* TEMP experiments — selected logo docks into card top edge */
+	.spotlight.exp-dock:not(.exp-overlap) {
+		gap: 0.2rem;
+	}
+
+	.spotlight.exp-dock .spotlight-thumbs {
+		position: relative;
+		z-index: 3;
+	}
+
+	.spotlight.exp-dock .spotlight-feature {
+		position: relative;
+		z-index: 1;
+	}
+
+	.spotlight.exp-dock .spotlight-thumb.selected {
+		transform: translateY(var(--exp-dock, 0.7rem));
+		z-index: 4;
+		transition: width 0.22s ease, transform 0.22s ease;
+	}
+
+	.spotlight.exp-dock.exp-overlap[data-exp-preset='fan'] .spotlight-thumb.selected {
+		transform: translateY(var(--exp-dock, 0.7rem));
+	}
+
 	.essay-row {
 		display: flex;
 		align-items: flex-start;
@@ -580,5 +673,7 @@
 	@media (prefers-reduced-motion: reduce) {
 		.spotlight-thumb { transition: none; }
 		.spotlight-thumbs.exp-gray .spotlight-thumb:not(.selected) img { transition: none; }
+		.spotlight.exp-overlap .spotlight-thumb,
+		.spotlight.exp-dock .spotlight-thumb.selected { transition: none; }
 	}
 </style>
