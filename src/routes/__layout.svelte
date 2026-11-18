@@ -4,6 +4,7 @@
 	import LanguageToggle from '$lib/LanguageToggle.svelte';
 	import WelcomeSplash from '$lib/WelcomeSplash.svelte';
 	import { hydrateExperiments } from '$lib/experiments.js'; // TEMP experiments
+	import '$lib/expSurfaces.css'; // TEMP experiments
 
 	// TEMP experiments
 	onMount(hydrateExperiments);
