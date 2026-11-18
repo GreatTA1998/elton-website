@@ -1,5 +1,6 @@
 <script>
 	import { messages } from './i18n.js';
+	import ExperimentsPanel from './ExperimentsPanel.svelte'; // TEMP experiments
 </script>
 
 <footer class="site-footer">
@@ -62,6 +63,7 @@
 			</svg>
 		</a>
 	</nav>
+	<ExperimentsPanel />
 </footer>
 
 <style>

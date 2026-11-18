@@ -1,7 +1,12 @@
 <script>
+	import { onMount } from 'svelte';
 	import CompactMusicPlayer from '$lib/CompactMusicPlayer.svelte';
 	import LanguageToggle from '$lib/LanguageToggle.svelte';
 	import WelcomeSplash from '$lib/WelcomeSplash.svelte';
+	import { hydrateExperiments } from '$lib/experiments.js'; // TEMP experiments
+
+	// TEMP experiments
+	onMount(hydrateExperiments);
 </script>
 
 <WelcomeSplash />

@@ -4,7 +4,7 @@
 <div class="spotlights">
 	<div class="spotlight-col apps-col">
 		<section class="spotlight" aria-label={$messages.softwareApps}>
-			<div class="spotlight-thumbs">
+			<div class="spotlight-thumbs" class:exp-gray={$experiments.grayscaleUnselected}>
 				{#each apps as app (app.id)}
 					<button
 						type="button"
@@ -148,11 +148,13 @@
 <SiteFooter />
 
 <script>
+	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import HomeAtmosphere from '$lib/HomeAtmosphere.svelte';
 	import SiteFooter from '$lib/SiteFooter.svelte';
 	import SubscribeForm from '$lib/SubscribeForm.svelte';
 	import { messages } from '$lib/i18n.js';
+	import { experiments, defaultSecondApply } from '$lib/experiments.js'; // TEMP experiments
 
 	const reduceMotion =
 		typeof window !== 'undefined' &&
@@ -232,6 +234,13 @@
 	let notionPlaying = false;
 	let updatesDialog;
 	let updatesFormKey = 0;
+
+	// TEMP experiments — default select second app when flag is on
+	onMount(() =>
+		defaultSecondApply.subscribe((on) => {
+			selectedAppId = on ? apps[1].id : apps[0].id;
+		})
+	);
 
 	const TITLE_MAX = 52;
 
@@ -403,6 +412,16 @@
 		width: 3.55rem;
 	}
 
+	/* TEMP experiments — grayscale unselected app logos */
+	.spotlight-thumbs.exp-gray .spotlight-thumb:not(.selected) img {
+		filter: grayscale(0.92);
+		transition: filter 0.22s ease;
+	}
+
+	.spotlight-thumbs.exp-gray .spotlight-thumb.selected img {
+		filter: none;
+	}
+
 	.essay-row {
 		display: flex;
 		align-items: flex-start;
@@ -560,5 +579,6 @@
 
 	@media (prefers-reduced-motion: reduce) {
 		.spotlight-thumb { transition: none; }
+		.spotlight-thumbs.exp-gray .spotlight-thumb:not(.selected) img { transition: none; }
 	}
 </style>
