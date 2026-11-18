@@ -334,7 +334,7 @@
 	.essay-side{flex:0 1 auto;width:max-content;max-width:min(52ch,100%);min-width:0}
 	.essay-media-wrap{flex:0 1 auto;min-width:0;max-width:100%;display:grid;grid-template-columns:minmax(0,16rem) minmax(0,22rem);gap:.65rem;align-items:start}
 	.spotlight[data-essay-layout='pair'] .essay-media-wrap{grid-template-columns:minmax(0,18rem)}
-	.essay-pair-desc{margin:.35rem 0 .55rem;max-width:36ch;font-size:var(--text-xs)}
+	.essay-pair-desc{margin:.4rem 0 .6rem;max-width:36ch;font-size:var(--text-xs);line-height:var(--lh-body)}
 	.essay-feature-media{display:block;position:relative;width:100%;aspect-ratio:16/9;padding:0;border:none;background:transparent;border-radius:10px;overflow:hidden;cursor:pointer}
 	.essay-feature-media img{display:block;width:100%;height:100%;object-fit:cover}
 	.essay-video-frame{cursor:default;background:#111}.essay-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
