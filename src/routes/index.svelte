@@ -67,8 +67,8 @@
 					{#each essays as essay (essay.id)}
 						<button
 							type="button"
-							class="essay-title-btn type-list"
-							class:type-list-on={selectedEssayId === essay.id}
+							class="essay-title-btn"
+							class:on={selectedEssayId === essay.id}
 							class:soon={essay.kind === 'soon'}
 							aria-pressed={selectedEssayId === essay.id}
 							title={essay.title}
@@ -79,9 +79,9 @@
 						</button>
 						{#if essayPair && selectedEssayId === essay.id}
 							{#if essay.date}
-								<time class="essay-date type-caption" datetime={essay.date}>{fmtDate(essay.date)}</time>
+								<time class="essay-date" datetime={essay.date}>{fmtDate(essay.date)}</time>
 							{/if}
-							<p class="type-caption essay-pair-desc">{essayDesc}</p>
+							<p class="essay-pair-desc">{essayDesc}</p>
 							{#if essay.href}
 								<div class="feature-actions"><a class="feature-action" href={essay.href}>{$messages.readMore}</a></div>
 							{:else if essay.kind === 'video' && !essayThumbs}
@@ -345,14 +345,14 @@
 	.spotlight-thumb img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}.spotlight-thumb.selected{width:3.55rem}
 	.essay-row{display:flex;align-items:flex-start;gap:.65rem;max-width:100%;min-width:0}
 	.essay-side{flex:0 1 auto;width:max-content;max-width:min(52ch,100%);min-width:0}.essay-media-wrap{flex:0 1 auto;min-width:0;max-width:18rem;width:100%;display:grid;gap:.65rem}
-	.essay-date{display:block;margin:.02rem 0 0;font-size:var(--text-xs);color:var(--ink-quiet);line-height:var(--lh-tight)}.essay-pair-desc{margin:.4rem 0 .35rem;max-width:36ch;font-size:var(--text-md);color:var(--ink-soft);line-height:var(--lh-body)}.essay-date+.essay-pair-desc{margin-top:.22rem}
+	.essay-title-btn~.essay-title-btn{border-top:1px solid rgba(40,40,40,.1);margin-top:.18rem;padding-top:.42rem}
+	.essay-title-btn{appearance:none;display:block;width:100%;margin:0;padding:.32rem 0;border:none;background:0 0;font:inherit;font-size:var(--text-lg);font-weight:var(--w-medium);color:var(--ink-soft);line-height:var(--lh-snug);text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.essay-title-btn.on{font-weight:var(--w-semibold);color:var(--ink)}.essay-title-btn.soon{opacity:.72}
+	.essay-date{display:block;margin:.08rem 0 0;font-size:var(--text-sm);color:var(--ink-faint);line-height:var(--lh-tight)}.essay-pair-desc,.essay-media-wrap .feature-desc{margin:.4rem 0 .35rem;max-width:36ch;font-size:var(--text-lg);color:var(--ink-body);line-height:var(--lh-body)}.essay-date+.essay-pair-desc{margin-top:.22rem}
 	.essay-feature-media{display:block;position:relative;width:100%;aspect-ratio:16/9;padding:0;border:none;background:transparent;border-radius:10px;overflow:hidden;cursor:pointer}
 	.essay-feature-media img{display:block;width:100%;height:100%;object-fit:cover}
 	.essay-video-frame{cursor:default;background:#111}.essay-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 	.essay-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:2.6rem;height:2.6rem;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;display:inline-flex;align-items:center;justify-content:center;pointer-events:none}
 	.essay-play svg{display:block;margin-left:2px}.essay-thumb-placeholder{background:#e8e8e8}
-	.essay-title-btn{appearance:none;display:block;width:100%;margin:0;padding:.32rem 0;border:none;background:transparent;font-family:inherit;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-	.essay-title-btn.soon{opacity:.72}
 	.updates-dialog{box-sizing:border-box;width:min(28rem,calc(100vw - 2rem));padding:1.15rem 1.2rem 1.35rem;border:1px solid rgba(40,40,40,.1);border-radius:1rem;background:#faf9f7}.updates-dialog::backdrop{background:rgba(40,36,30,.28)}
 	@media (max-width:900px){.spotlights{flex-direction:column;gap:2.5rem}.apps-col,.essays-col{flex:1 1 auto;max-width:none;width:100%}.essay-row{flex-direction:column;gap:.75rem}}
 	@media (prefers-reduced-motion:reduce){.spotlight-thumb{transition:none}}</style>
