@@ -313,6 +313,13 @@
 	.essay-row{display:flex;align-items:flex-start;gap:.65rem;max-width:100%;min-width:0}
 	.essay-side{flex:0 1 auto;width:max-content;max-width:min(52ch,100%);min-width:0}
 	.essay-media-wrap{flex:0 1 auto;min-width:0;max-width:100%;display:grid;grid-template-columns:minmax(0,16rem) minmax(0,22rem);gap:.65rem;align-items:start}
+	/* TEMP essay layout modes — scoped so they beat classic grid */
+	.spotlight[data-essay-layout='caption'] .essay-media-wrap,
+	.spotlight[data-essay-layout='pair'] .essay-media-wrap{grid-template-columns:minmax(0,18rem)}
+	.spotlight[data-essay-layout='sheet'] .essay-row{flex-direction:column;gap:.55rem}
+	.spotlight[data-essay-layout='sheet'] .essay-side{max-width:100%;width:100%}
+	.spotlight[data-essay-layout='sheet'] .essay-media-wrap{grid-template-columns:minmax(0,18rem);max-width:22rem}
+	.spotlight[data-essay-layout='pair'] .essay-side .feature-desc{margin:.12rem 0 .4rem;max-width:36ch}
 	.essay-feature-media{display:block;position:relative;width:100%;aspect-ratio:16/9;padding:0;border:none;background:transparent;border-radius:10px;overflow:hidden;cursor:pointer}
 	.essay-feature-media img{display:block;width:100%;height:100%;object-fit:cover}
 	.essay-video-frame{cursor:default;background:#111}
@@ -325,7 +332,7 @@
 	.essay-title-btn.soon{opacity:.72}
 	.updates-dialog{box-sizing:border-box;width:min(28rem,calc(100vw - 2rem));padding:1.15rem 1.2rem 1.35rem;border:1px solid rgba(40,40,40,.1);border-radius:1rem;background:#faf9f7}
 	.updates-dialog::backdrop{background:rgba(40,36,30,.28)}
-	@media (max-width:900px){.spotlights{flex-direction:column;gap:2.5rem}.apps-col,.essays-col{flex:1 1 auto;max-width:none;width:100%}.essay-row{flex-direction:column;gap:.75rem}.essay-media-wrap{grid-template-columns:minmax(0,24rem) minmax(0,1fr)}}
+	@media (max-width:900px){.spotlights{flex-direction:column;gap:2.5rem}.apps-col,.essays-col{flex:1 1 auto;max-width:none;width:100%}.essay-row{flex-direction:column;gap:.75rem}.essay-media-wrap{grid-template-columns:minmax(0,24rem) minmax(0,1fr)}.spotlight[data-essay-layout] .essay-media-wrap{grid-template-columns:minmax(0,1fr);max-width:24rem}}
 	@media (max-width:640px){.essay-media-wrap{grid-template-columns:minmax(0,1fr);gap:.45rem}}
 	@media (prefers-reduced-motion:reduce){.spotlight-thumb{transition:none}}
 </style>
