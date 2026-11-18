@@ -430,24 +430,31 @@
 		filter: none;
 	}
 
-	/* TEMP experiments — selected art only docks above pill; inactive stay clear */
+	/* TEMP experiments — subtle selected dock ON TOP of pill; inactive stay close under */
 	.unit.exp-overlap,
 	.unit.exp-dock {
-		gap: 0.12rem;
+		/* tight gap so inactive sit just under the pill */
+		gap: 0.1rem;
+		isolation: isolate;
+		overflow: visible;
 	}
 
 	.unit.exp-overlap .pill,
 	.unit.exp-dock .pill {
 		position: relative;
-		z-index: 1;
+		z-index: 0;
+		overflow: visible;
+		transform: translateZ(0);
 	}
 
 	.unit.exp-overlap .thumbs,
 	.unit.exp-dock .thumbs {
 		position: relative;
 		z-index: 2;
-		gap: max(0.14rem, calc(0.45rem - var(--exp-mh, 0.15rem)));
-		min-height: calc(var(--thumb) * var(--exp-ms, 1) * var(--exp-ma, 1.42) + 0.2rem);
+		overflow: visible;
+		/* inactive-sized row — selected grows via scale so it doesn't drop siblings */
+		min-height: calc(var(--thumb) * var(--exp-ms, 1));
+		gap: max(0.18rem, calc(0.45rem - var(--exp-mh, 0.1rem)));
 	}
 
 	.unit.exp-overlap .thumb,
@@ -456,41 +463,48 @@
 		position: relative;
 		z-index: 0;
 		transform-origin: bottom center;
-		transition: width 0.22s ease, transform 0.22s ease;
+		transition: transform 0.22s ease;
+	}
+
+	.unit.exp-overlap .thumb.selected,
+	.unit.exp-dock .thumb.selected {
+		/* same layout width as inactive — visual size via scale only */
+		width: calc(var(--thumb) * var(--exp-ms, 1));
 	}
 
 	.unit.exp-overlap .thumb.selected {
-		width: calc(var(--thumb) * var(--exp-ms, 1) * var(--exp-ma, 1.42));
-		transform: translateY(calc(-0.78 * var(--exp-mv, 1rem)));
-		z-index: 3;
+		/* scale keeps layout height; translate docks onto pill above */
+		transform: translate3d(0, calc(-1 * var(--exp-mv, 0.17rem)), 0) scale(var(--exp-ma, 1.28));
+		z-index: 5;
 	}
 
 	.unit.exp-overlap[data-exp-preset='straddle'] .thumb.selected {
-		transform: translateY(calc(-1 * var(--exp-mv, 1rem)));
+		transform: translate3d(0, calc(-1.25 * var(--exp-mv, 0.17rem)), 0) scale(var(--exp-ma, 1.28));
 	}
 
 	.unit.exp-overlap[data-exp-preset='fan'] .thumb.selected {
-		transform: translate(calc(-0.2 * var(--exp-mh, 0.15rem)), calc(-1.05 * var(--exp-mv, 1rem)))
-			rotate(-2.5deg);
+		transform: translate3d(calc(-0.2 * var(--exp-mh, 0.1rem)), calc(-1.15 * var(--exp-mv, 0.17rem)), 0)
+			rotate(-2deg) scale(var(--exp-ma, 1.28));
 	}
 
 	.unit.exp-dock .thumb.selected {
-		width: calc(var(--thumb) * var(--exp-ms, 1) * var(--exp-ma, 1.42));
-		transform: translateY(calc(-1 * var(--exp-dock, 0.5rem)));
-		z-index: 3;
+		transform: translate3d(0, calc(-1 * var(--exp-dock, 0.2rem)), 0) scale(var(--exp-ma, 1.28));
+		z-index: 5;
 	}
 
 	.unit.exp-dock.exp-overlap .thumb.selected {
-		transform: translateY(calc(-0.78 * var(--exp-mv, 1rem) - var(--exp-dock, 0.5rem)));
+		transform: translate3d(0, calc(-1 * var(--exp-mv, 0.17rem) - var(--exp-dock, 0.2rem)), 0)
+			scale(var(--exp-ma, 1.28));
 	}
 
 	.unit.exp-dock.exp-overlap[data-exp-preset='straddle'] .thumb.selected {
-		transform: translateY(calc(-1 * var(--exp-mv, 1rem) - var(--exp-dock, 0.5rem)));
+		transform: translate3d(0, calc(-1.25 * var(--exp-mv, 0.17rem) - var(--exp-dock, 0.2rem)), 0)
+			scale(var(--exp-ma, 1.28));
 	}
 
 	.unit.exp-dock.exp-overlap[data-exp-preset='fan'] .thumb.selected {
-		transform: translate(calc(-0.2 * var(--exp-mh, 0.15rem)), calc(-1.05 * var(--exp-mv, 1rem) - var(--exp-dock, 0.5rem)))
-			rotate(-2.5deg);
+		transform: translate3d(calc(-0.2 * var(--exp-mh, 0.1rem)), calc(-1.15 * var(--exp-mv, 0.17rem) - var(--exp-dock, 0.2rem)), 0)
+			rotate(-2deg) scale(var(--exp-ma, 1.28));
 	}
 
 	@media (prefers-reduced-motion: reduce) {

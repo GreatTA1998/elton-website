@@ -429,23 +429,28 @@
 		filter: none;
 	}
 
-	/* TEMP experiments — selected logo only docks into card; inactive stay clear */
+	/* TEMP experiments — subtle selected dock ON TOP of card; inactive stay close */
 	.spotlight.exp-overlap,
 	.spotlight.exp-dock {
-		gap: 0.14rem;
+		gap: 0.12rem;
+		isolation: isolate;
+		overflow: visible;
 	}
 
 	.spotlight.exp-overlap .spotlight-thumbs,
 	.spotlight.exp-dock .spotlight-thumbs {
 		position: relative;
 		z-index: 2;
-		gap: max(0.16rem, calc(0.45rem - var(--exp-ah, 0.12rem)));
+		overflow: visible;
+		gap: max(0.2rem, calc(0.45rem - var(--exp-ah, 0.08rem)));
 	}
 
 	.spotlight.exp-overlap .spotlight-feature,
 	.spotlight.exp-dock .spotlight-feature {
 		position: relative;
-		z-index: 1;
+		z-index: 0;
+		overflow: visible;
+		transform: translateZ(0);
 	}
 
 	.spotlight.exp-overlap .spotlight-thumb,
@@ -454,41 +459,47 @@
 		position: relative;
 		z-index: 0;
 		transform-origin: bottom center;
-		transition: width 0.22s ease, transform 0.22s ease;
+		transition: transform 0.22s ease;
+	}
+
+	.spotlight.exp-overlap .spotlight-thumb.selected,
+	.spotlight.exp-dock .spotlight-thumb.selected {
+		/* same layout width as inactive — visual size via scale only */
+		width: calc(3rem * var(--exp-as, 1));
 	}
 
 	.spotlight.exp-overlap .spotlight-thumb.selected {
-		width: calc(3rem * var(--exp-as, 1) * var(--exp-aa, 1.45));
-		transform: translateY(calc(0.78 * var(--exp-av, 0.85rem)));
-		z-index: 3;
+		transform: translate3d(0, calc(1 * var(--exp-av, 0.25rem)), 0) scale(var(--exp-aa, 1.28));
+		z-index: 5;
 	}
 
 	.spotlight.exp-overlap[data-exp-preset='sit'] .spotlight-thumb.selected {
-		transform: translateY(calc(0.42 * var(--exp-av, 0.85rem)));
+		transform: translate3d(0, calc(0.55 * var(--exp-av, 0.25rem)), 0) scale(var(--exp-aa, 1.28));
 	}
 
 	.spotlight.exp-overlap[data-exp-preset='fan'] .spotlight-thumb.selected {
-		transform: translate(calc(-0.15 * var(--exp-ah, 0.12rem)), calc(0.9 * var(--exp-av, 0.85rem)))
-			rotate(2.5deg);
+		transform: translate3d(calc(-0.15 * var(--exp-ah, 0.08rem)), calc(1.05 * var(--exp-av, 0.25rem)), 0)
+			rotate(2deg) scale(var(--exp-aa, 1.28));
 	}
 
 	.spotlight.exp-dock .spotlight-thumb.selected {
-		width: calc(3rem * var(--exp-as, 1) * var(--exp-aa, 1.45));
-		transform: translateY(var(--exp-dock, 0.5rem));
-		z-index: 3;
+		transform: translate3d(0, var(--exp-dock, 0.25rem), 0) scale(var(--exp-aa, 1.28));
+		z-index: 5;
 	}
 
 	.spotlight.exp-dock.exp-overlap .spotlight-thumb.selected {
-		transform: translateY(calc(0.78 * var(--exp-av, 0.85rem) + var(--exp-dock, 0.5rem)));
+		transform: translate3d(0, calc(1 * var(--exp-av, 0.25rem) + var(--exp-dock, 0.25rem)), 0)
+			scale(var(--exp-aa, 1.28));
 	}
 
 	.spotlight.exp-dock.exp-overlap[data-exp-preset='sit'] .spotlight-thumb.selected {
-		transform: translateY(calc(0.42 * var(--exp-av, 0.85rem) + var(--exp-dock, 0.5rem)));
+		transform: translate3d(0, calc(0.55 * var(--exp-av, 0.25rem) + var(--exp-dock, 0.25rem)), 0)
+			scale(var(--exp-aa, 1.28));
 	}
 
 	.spotlight.exp-dock.exp-overlap[data-exp-preset='fan'] .spotlight-thumb.selected {
-		transform: translate(calc(-0.15 * var(--exp-ah, 0.12rem)), calc(0.9 * var(--exp-av, 0.85rem) + var(--exp-dock, 0.5rem)))
-			rotate(2.5deg);
+		transform: translate3d(calc(-0.15 * var(--exp-ah, 0.08rem)), calc(1.05 * var(--exp-av, 0.25rem) + var(--exp-dock, 0.25rem)), 0)
+			rotate(2deg) scale(var(--exp-aa, 1.28));
 	}
 
 	.essay-row {

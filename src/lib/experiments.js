@@ -62,23 +62,23 @@ export const APPS_PRESETS = [
 
 /** @type {SliderDef[]} */
 export const MUSIC_SLIDERS = [
-	{ id: 'musicV', key: 'elton-exp-music-v', label: 'Selected overlap', min: 0, max: 100, step: 1, def: 58 },
-	{ id: 'musicH', key: 'elton-exp-music-h', label: 'Selected nudge', min: 0, max: 100, step: 1, def: 18 },
+	{ id: 'musicV', key: 'elton-exp-music-v', label: 'Selected overlap', min: 0, max: 100, step: 1, def: 18 },
+	{ id: 'musicH', key: 'elton-exp-music-h', label: 'Selected nudge', min: 0, max: 100, step: 1, def: 10 },
 	{ id: 'musicScale', key: 'elton-exp-music-scale', label: 'Base thumb scale', min: 70, max: 130, step: 1, def: 100 },
-	{ id: 'musicActive', key: 'elton-exp-music-active', label: 'Active scale ratio', min: 110, max: 170, step: 1, def: 142 }
+	{ id: 'musicActive', key: 'elton-exp-music-active', label: 'Active scale ratio', min: 110, max: 170, step: 1, def: 128 }
 ];
 
 /** @type {SliderDef[]} */
 export const APPS_SLIDERS = [
-	{ id: 'appsV', key: 'elton-exp-apps-v', label: 'Selected overlap', min: 0, max: 100, step: 1, def: 52 },
-	{ id: 'appsH', key: 'elton-exp-apps-h', label: 'Selected nudge', min: 0, max: 100, step: 1, def: 14 },
+	{ id: 'appsV', key: 'elton-exp-apps-v', label: 'Selected overlap', min: 0, max: 100, step: 1, def: 28 },
+	{ id: 'appsH', key: 'elton-exp-apps-h', label: 'Selected nudge', min: 0, max: 100, step: 1, def: 10 },
 	{ id: 'appsScale', key: 'elton-exp-apps-scale', label: 'Base logo scale', min: 70, max: 130, step: 1, def: 100 },
-	{ id: 'appsActive', key: 'elton-exp-apps-active', label: 'Active scale ratio', min: 110, max: 170, step: 1, def: 145 }
+	{ id: 'appsActive', key: 'elton-exp-apps-active', label: 'Active scale ratio', min: 110, max: 170, step: 1, def: 128 }
 ];
 
 /** @type {SliderDef[]} */
 export const DOCK_SLIDERS = [
-	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Extra dock depth', min: 0, max: 100, step: 1, def: 36 }
+	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Extra dock depth', min: 0, max: 100, step: 1, def: 24 }
 ];
 
 const MUSIC_PRESET_KEY = 'elton-exp-music-preset';
@@ -234,21 +234,21 @@ export function overlapStyle(e) {
 	const mv = Number(e.musicV) || 0;
 	const mh = Number(e.musicH) || 0;
 	const ms = Number(e.musicScale) || 100;
-	const ma = Number(e.musicActive) || 142;
+	const ma = Number(e.musicActive) || 128;
 	const av = Number(e.appsV) || 0;
 	const ah = Number(e.appsH) || 0;
 	const as_ = Number(e.appsScale) || 100;
-	const aa = Number(e.appsActive) || 145;
+	const aa = Number(e.appsActive) || 128;
 	const dd = Number(e.dockDepth) || 0;
 	return [
-		`--exp-mv:${(mv / 100) * 1.85}rem`,
-		`--exp-mh:${(mh / 100) * 0.85}rem`,
+		`--exp-mv:${(mv / 100) * 0.95}rem`,
+		`--exp-mh:${(mh / 100) * 0.55}rem`,
 		`--exp-ms:${ms / 100}`,
 		`--exp-ma:${ma / 100}`,
-		`--exp-av:${(av / 100) * 1.65}rem`,
-		`--exp-ah:${(ah / 100) * 0.75}rem`,
+		`--exp-av:${(av / 100) * 0.85}rem`,
+		`--exp-ah:${(ah / 100) * 0.5}rem`,
 		`--exp-as:${as_ / 100}`,
 		`--exp-aa:${aa / 100}`,
-		`--exp-dock:${(dd / 100) * 1.35}rem`
+		`--exp-dock:${(dd / 100) * 0.7}rem`
 	].join(';');
 }
