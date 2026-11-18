@@ -48,7 +48,8 @@ export const OVERLAP_SLIDERS = [
 	{ id: 'overlapV', key: 'elton-exp-v', label: 'Vertical overlap', min: 0, max: 25, step: 1, def: 15 },
 	{ id: 'overlapH', key: 'elton-exp-h', label: 'Horizontal nudge', min: 0, max: 20, step: 1, def: 4 },
 	{ id: 'baseScale', key: 'elton-exp-scale', label: 'Base scale', min: 85, max: 110, step: 1, def: 100 },
-	{ id: 'activeScale', key: 'elton-exp-active', label: 'Active scale', min: 105, max: 120, step: 1, def: 110 }
+	{ id: 'activeScale', key: 'elton-exp-active', label: 'Active scale', min: 105, max: 120, step: 1, def: 110 },
+	{ id: 'inactiveBlur', key: 'elton-exp-blur', label: 'Inactive blur', min: 0, max: 12, step: 1, def: 0 }
 ];
 
 /** @type {SliderDef[]} */
@@ -136,14 +137,31 @@ function writeStr(key, value) {
 	}
 }
 
-/** @param {string} key @param {number} value */
-function writeNum(key, value) {
-	if (typeof localStorage === 'undefined') return;
-	try {
-		localStorage.setItem(key, String(value));
-	} catch {
-		/* ignore */
+/** @type {Map<string, number>} */
+const pendingNums = new Map();
+let writeNumRaf = 0;
+
+function flushNums() {
+	writeNumRaf = 0;
+	if (typeof localStorage === 'undefined') {
+		pendingNums.clear();
+		return;
 	}
+	for (const [k, v] of pendingNums) {
+		try {
+			localStorage.setItem(k, String(v));
+		} catch {
+			/* ignore */
+		}
+	}
+	pendingNums.clear();
+}
+
+/** rAF-coalesce localStorage; store updates stay sync. @param {string} key @param {number} value */
+function writeNum(key, value) {
+	pendingNums.set(key, value);
+	if (typeof requestAnimationFrame === 'undefined') return flushNums();
+	if (!writeNumRaf) writeNumRaf = requestAnimationFrame(flushNums);
 }
 
 const initial = readAll();
@@ -242,12 +260,13 @@ export function overlapStyle(e) {
 	const s = Number(e.baseScale) || 100;
 	const a = Number(e.activeScale) || 110;
 	const dd = Number(e.dockDepth) || 0;
-	// V/H/dock in px (slider ≈ tenths of a px); max V = 2.5px kiss
+	const blur = Number(e.inactiveBlur) || 0;
 	return [
 		`--exp-v:${v / 10}px`,
 		`--exp-h:${h / 10}px`,
 		`--exp-s:${s / 100}`,
 		`--exp-a:${a / 100}`,
-		`--exp-dock:${dd / 10}px`
+		`--exp-dock:${dd / 10}px`,
+		`--exp-blur:${blur}px`
 	].join(';');
 }
