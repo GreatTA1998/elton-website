@@ -18,71 +18,46 @@ export const FLAG_DEFS = [
 		hint: 'Start on 2nd album / app'
 	},
 	{
-		id: 'grayscaleUnselected',
-		key: 'elton-exp-grayscale-unselected',
-		label: 'Grayscale unselected',
-		hint: 'Optional B&W — selection should read via size + dock'
-	},
-	{
-		id: 'overlapMusic',
-		key: 'elton-exp-overlap-music',
-		label: 'Enable overlap (music)',
-		hint: 'Selected album art docks onto the player (inactive stay clear)'
-	},
-	{
-		id: 'overlapApps',
-		key: 'elton-exp-overlap-apps',
-		label: 'Enable overlap (apps)',
-		hint: 'Selected logo docks into the card (inactive stay clear)'
+		id: 'overlap',
+		key: 'elton-exp-overlap',
+		label: 'Enable overlap',
+		hint: 'Selected thumb docks into music pill / app card'
 	},
 	{
 		id: 'dockSelected',
 		key: 'elton-exp-dock-selected',
 		label: 'Extra dock depth',
-		hint: 'Adds depth on top of overlap (selected only)'
+		hint: 'Adds a little more depth on the selected item'
 	}
 ];
 
 /** Keep old export name for any TEMP grep familiarity */
 export const EXPERIMENT_DEFS = FLAG_DEFS;
 
+/** Shared preset family for music + apps */
 /** @type {PresetDef[]} */
-export const MUSIC_PRESETS = [
-	{ id: 'tuck', label: 'Soft dock', hint: 'Selected art peeks onto the pill (above)' },
-	{ id: 'straddle', label: 'Deep dock', hint: 'Selected art nests further into the pill' },
-	{ id: 'fan', label: 'Tilted dock', hint: 'Selected art docks with a slight tilt' }
+export const PRESETS = [
+	{ id: 'soft', label: 'Soft dock', hint: 'Selected peeks slightly into the parent' },
+	{ id: 'deep', label: 'Deep dock', hint: 'Selected nests a bit further' },
+	{ id: 'tilt', label: 'Tilted dock', hint: 'Selected docks with a slight tilt' }
 ];
 
-/** @type {PresetDef[]} */
-export const APPS_PRESETS = [
-	{ id: 'hang', label: 'Hang into card', hint: 'Selected logo drops into the card top' },
-	{ id: 'sit', label: 'Sit on edge', hint: 'Selected logo rests on the card rim' },
-	{ id: 'fan', label: 'Tilted dock', hint: 'Selected logo docks with a slight tilt' }
-];
-
+/** Shared V / H / scale / active-scale (music + apps) */
 /** @type {SliderDef[]} */
-export const MUSIC_SLIDERS = [
-	{ id: 'musicV', key: 'elton-exp-music-v', label: 'Selected overlap', min: 0, max: 100, step: 1, def: 18 },
-	{ id: 'musicH', key: 'elton-exp-music-h', label: 'Selected nudge', min: 0, max: 100, step: 1, def: 10 },
-	{ id: 'musicScale', key: 'elton-exp-music-scale', label: 'Base thumb scale', min: 70, max: 130, step: 1, def: 100 },
-	{ id: 'musicActive', key: 'elton-exp-music-active', label: 'Active scale ratio', min: 110, max: 170, step: 1, def: 128 }
-];
-
-/** @type {SliderDef[]} */
-export const APPS_SLIDERS = [
-	{ id: 'appsV', key: 'elton-exp-apps-v', label: 'Selected overlap', min: 0, max: 100, step: 1, def: 28 },
-	{ id: 'appsH', key: 'elton-exp-apps-h', label: 'Selected nudge', min: 0, max: 100, step: 1, def: 10 },
-	{ id: 'appsScale', key: 'elton-exp-apps-scale', label: 'Base logo scale', min: 70, max: 130, step: 1, def: 100 },
-	{ id: 'appsActive', key: 'elton-exp-apps-active', label: 'Active scale ratio', min: 110, max: 170, step: 1, def: 128 }
+export const OVERLAP_SLIDERS = [
+	{ id: 'overlapV', key: 'elton-exp-v', label: 'Vertical overlap', min: 0, max: 36, step: 1, def: 12 },
+	{ id: 'overlapH', key: 'elton-exp-h', label: 'Horizontal nudge', min: 0, max: 36, step: 1, def: 6 },
+	{ id: 'baseScale', key: 'elton-exp-scale', label: 'Base scale', min: 85, max: 110, step: 1, def: 100 },
+	{ id: 'activeScale', key: 'elton-exp-active', label: 'Active scale', min: 105, max: 135, step: 1, def: 118 }
 ];
 
 /** @type {SliderDef[]} */
 export const DOCK_SLIDERS = [
-	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Extra dock depth', min: 0, max: 100, step: 1, def: 24 }
+	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Extra dock depth', min: 0, max: 36, step: 1, def: 10 }
 ];
 
-const MUSIC_PRESET_KEY = 'elton-exp-music-preset';
-const APPS_PRESET_KEY = 'elton-exp-apps-preset';
+const PRESET_KEY = 'elton-exp-preset';
+const PANEL_KEY = 'elton-exp-panel-open';
 
 /** @returns {Record<string, boolean | string | number>} */
 function readAll() {
@@ -100,20 +75,31 @@ function readAll() {
 		}
 	}
 
-	state.musicPreset = 'tuck';
-	state.appsPreset = 'hang';
-	if (typeof localStorage !== 'undefined') {
+	// Migrate prior dual music/apps overlap toggles → one enable
+	if (!state.overlap && typeof localStorage !== 'undefined') {
 		try {
-			const mp = localStorage.getItem(MUSIC_PRESET_KEY);
-			const ap = localStorage.getItem(APPS_PRESET_KEY);
-			if (mp && MUSIC_PRESETS.some((p) => p.id === mp)) state.musicPreset = mp;
-			if (ap && APPS_PRESETS.some((p) => p.id === ap)) state.appsPreset = ap;
+			if (
+				localStorage.getItem('elton-exp-overlap-music') === '1' ||
+				localStorage.getItem('elton-exp-overlap-apps') === '1'
+			) {
+				state.overlap = true;
+			}
 		} catch {
 			/* ignore */
 		}
 	}
 
-	for (const def of [...MUSIC_SLIDERS, ...APPS_SLIDERS, ...DOCK_SLIDERS]) {
+	state.preset = 'soft';
+	if (typeof localStorage !== 'undefined') {
+		try {
+			const p = localStorage.getItem(PRESET_KEY);
+			if (p && PRESETS.some((x) => x.id === p)) state.preset = p;
+		} catch {
+			/* ignore */
+		}
+	}
+
+	for (const def of [...OVERLAP_SLIDERS, ...DOCK_SLIDERS]) {
 		state[def.id] = def.def;
 		if (typeof localStorage === 'undefined') continue;
 		try {
@@ -164,6 +150,9 @@ const initial = readAll();
 
 export const experiments = writable(initial);
 
+/** Floating panel open state (UI only). */
+export const panelOpen = writable(true);
+
 /** Emits when defaultSecond should (re)apply — homepage apps subscribe. */
 export const defaultSecondApply = writable(!!initial.defaultSecond);
 
@@ -187,6 +176,15 @@ export function hydrateExperiments() {
 	experiments.set(flags);
 	syncAlbum(!!flags.defaultSecond);
 	defaultSecondApply.set(!!flags.defaultSecond);
+	if (typeof localStorage !== 'undefined') {
+		try {
+			const raw = localStorage.getItem(PANEL_KEY);
+			if (raw === '0') panelOpen.set(false);
+			else if (raw === '1') panelOpen.set(true);
+		} catch {
+			/* ignore */
+		}
+	}
 }
 
 /** @param {string} id @param {boolean} on */
@@ -206,19 +204,16 @@ export function toggleExperiment(id) {
 	setExperiment(id, !get(experiments)[id]);
 }
 
-/** @param {'music' | 'apps'} area @param {string} presetId */
-export function setPreset(area, presetId) {
-	const list = area === 'music' ? MUSIC_PRESETS : APPS_PRESETS;
-	if (!list.some((p) => p.id === presetId)) return;
-	const key = area === 'music' ? MUSIC_PRESET_KEY : APPS_PRESET_KEY;
-	const field = area === 'music' ? 'musicPreset' : 'appsPreset';
-	writeStr(key, presetId);
-	experiments.update((prev) => ({ ...prev, [field]: presetId }));
+/** @param {string} presetId */
+export function setPreset(presetId) {
+	if (!PRESETS.some((p) => p.id === presetId)) return;
+	writeStr(PRESET_KEY, presetId);
+	experiments.update((prev) => ({ ...prev, preset: presetId }));
 }
 
 /** @param {string} id @param {number} value */
 export function setSlider(id, value) {
-	const def = [...MUSIC_SLIDERS, ...APPS_SLIDERS, ...DOCK_SLIDERS].find((d) => d.id === id);
+	const def = [...OVERLAP_SLIDERS, ...DOCK_SLIDERS].find((d) => d.id === id);
 	if (!def) return;
 	const n = Math.min(def.max, Math.max(def.min, Number(value)));
 	if (!Number.isFinite(n)) return;
@@ -226,29 +221,32 @@ export function setSlider(id, value) {
 	experiments.update((prev) => ({ ...prev, [id]: n }));
 }
 
+/** @param {boolean} open */
+export function setPanelOpen(open) {
+	panelOpen.set(!!open);
+	if (typeof localStorage === 'undefined') return;
+	try {
+		localStorage.setItem(PANEL_KEY, open ? '1' : '0');
+	} catch {
+		/* ignore */
+	}
+}
+
 /**
- * CSS custom properties for TEMP overlap / dock consumers.
+ * CSS custom properties — tiny clamp so even max stays subtle.
  * @param {Record<string, boolean | string | number>} e
  */
 export function overlapStyle(e) {
-	const mv = Number(e.musicV) || 0;
-	const mh = Number(e.musicH) || 0;
-	const ms = Number(e.musicScale) || 100;
-	const ma = Number(e.musicActive) || 128;
-	const av = Number(e.appsV) || 0;
-	const ah = Number(e.appsH) || 0;
-	const as_ = Number(e.appsScale) || 100;
-	const aa = Number(e.appsActive) || 128;
+	const v = Number(e.overlapV) || 0;
+	const h = Number(e.overlapH) || 0;
+	const s = Number(e.baseScale) || 100;
+	const a = Number(e.activeScale) || 118;
 	const dd = Number(e.dockDepth) || 0;
 	return [
-		`--exp-mv:${(mv / 100) * 0.95}rem`,
-		`--exp-mh:${(mh / 100) * 0.55}rem`,
-		`--exp-ms:${ms / 100}`,
-		`--exp-ma:${ma / 100}`,
-		`--exp-av:${(av / 100) * 0.85}rem`,
-		`--exp-ah:${(ah / 100) * 0.5}rem`,
-		`--exp-as:${as_ / 100}`,
-		`--exp-aa:${aa / 100}`,
-		`--exp-dock:${(dd / 100) * 0.7}rem`
+		`--exp-v:${(v / 100) * 0.55}rem`,
+		`--exp-h:${(h / 100) * 0.35}rem`,
+		`--exp-s:${s / 100}`,
+		`--exp-a:${a / 100}`,
+		`--exp-dock:${(dd / 100) * 0.4}rem`
 	].join(';');
 }
