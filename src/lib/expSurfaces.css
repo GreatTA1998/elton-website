@@ -34,3 +34,10 @@
 .unit.exp-color[data-color-mode=gen] .pill::before,.spotlight.exp-color[data-color-mode=gen] .spotlight-feature::before{background:var(--art-url) center/cover no-repeat;transform:scale(var(--exp-zoom,2.2)) rotate(8deg);filter:blur(var(--exp-art-blur,18px)) saturate(1.45) hue-rotate(168deg) contrast(1.08);opacity:calc(.38 + var(--exp-str,.7)*.5)}
 .unit.exp-color[data-color-mode=gen] .pill::after,.spotlight.exp-color[data-color-mode=gen] .spotlight-feature::after{background:repeating-linear-gradient(-18deg,transparent 0 11px,rgba(255,255,255,.1) 11px 13px),radial-gradient(circle at 78% 22%,rgba(255,255,255,.28),transparent 42%),rgba(255,252,248,.42);opacity:calc(.92 - var(--exp-str,.7)*.42);mix-blend-mode:soft-light}
 .unit.exp-color .icon-btn.play,.spotlight.exp-color .feature-action{background:rgba(255,255,255,calc(.35 + (1 - var(--exp-str,.7))*.3));border-color:rgba(40,40,40,.14)}
+/* essay layout TEMP — caption / sheet / pair */
+.spotlight[data-essay-layout=caption] .essay-media-wrap,.spotlight[data-essay-layout=pair] .essay-media-wrap{grid-template-columns:minmax(0,18rem)}
+.spotlight[data-essay-layout=sheet] .essay-row{flex-direction:column;gap:.55rem}
+.spotlight[data-essay-layout=sheet] .essay-side{max-width:100%;width:100%}
+.spotlight[data-essay-layout=sheet] .essay-media-wrap{grid-template-columns:minmax(0,18rem);max-width:22rem}
+.spotlight[data-essay-layout=pair] .essay-side .feature-desc{margin:.12rem 0 .4rem;max-width:36ch}
+@media (max-width:900px){.spotlight[data-essay-layout] .essay-media-wrap{grid-template-columns:minmax(0,1fr);max-width:24rem}}

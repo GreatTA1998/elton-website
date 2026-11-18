@@ -63,25 +63,30 @@
 	</div>
 
 	<div class="spotlight-col essays-col">
-		<section class="spotlight" aria-label={$messages.videoEssays}>
+		<section
+			class="spotlight"
+			data-essay-layout={essayLayoutMode}
+			aria-label={$messages.videoEssays}
+		>
 			<div class="essay-row">
-				<div class="essay-side">
-					<div role="group" aria-label={$messages.videoEssays}>
-						{#each essays as essay (essay.id)}
-							<button
-								type="button"
-								class="essay-title-btn"
-								class:selected={selectedEssayId === essay.id}
-								class:soon={essay.kind === 'soon'}
-								aria-pressed={selectedEssayId === essay.id}
-								title={essay.title}
-								aria-label={essay.title}
-								on:click={() => selectEssay(essay.id)}
-							>
-								{truncateTitle(essay.title)}
-							</button>
-						{/each}
-					</div>
+				<div class="essay-side" role="group" aria-label={$messages.videoEssays}>
+					{#each essays as essay (essay.id)}
+						<button
+							type="button"
+							class="essay-title-btn"
+							class:selected={selectedEssayId === essay.id}
+							class:soon={essay.kind === 'soon'}
+							aria-pressed={selectedEssayId === essay.id}
+							title={essay.title}
+							aria-label={essay.title}
+							on:click={() => selectEssay(essay.id)}
+						>
+							{truncateTitle(essay.title)}
+						</button>
+						{#if essayPair && selectedEssayId === essay.id}
+							<p class="feature-desc">{essayDesc}</p>
+						{/if}
+					{/each}
 				</div>
 
 				{#key selectedEssayId}
@@ -128,13 +133,9 @@
 							<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
 						{/if}
 
-						<p class="feature-desc">
-							{#if selectedEssay.sentenceKey}
-								{$messages[selectedEssay.sentenceKey]}
-							{:else}
-								{selectedEssay.sentence}
-							{/if}
-						</p>
+						{#if !essayPair}
+							<p class="feature-desc">{essayDesc}</p>
+						{/if}
 					</div>
 				{/key}
 			</div>
@@ -261,6 +262,12 @@
 
 	$: selectedApp = apps.find((app) => app.id === selectedAppId) || apps[0];
 	$: selectedEssay = essays.find((essay) => essay.id === selectedEssayId) || essays[0];
+	$: essayDesc = selectedEssay.sentenceKey
+		? $messages[selectedEssay.sentenceKey]
+		: selectedEssay.sentence;
+	// TEMP experiments — essay layout mode (null = classic 3-col)
+	$: essayLayoutMode = $experiments.essayLayout ? $experiments.essayMode : null;
+	$: essayPair = essayLayoutMode === 'pair';
 	// TEMP experiments — art color theme vars from selected app logo
 	$: appsStyle =
 		$experiments.overlap || $experiments.dockSelected || $experiments.colorTheme
@@ -285,302 +292,40 @@
 </script>
 
 <style>
-	.home {
-		width: 100%;
-		max-width: none;
-		padding: 2.25rem 2rem 3.5rem;
-		box-sizing: border-box;
-	}
-
-	.spotlights {
-		display: flex;
-		align-items: flex-start;
-		gap: 2rem;
-		margin-top: 1.75em;
-		width: 100%;
-	}
-
-	.spotlight-col {
-		min-width: 0;
-	}
-
-	.apps-col {
-		flex: 0 1 20rem;
-		max-width: 22rem;
-	}
-
-	.essays-col {
-		flex: 0 1 auto;
-		min-width: 0;
-		max-width: 100%;
-	}
-
-	.spotlight {
-		display: flex;
-		flex-direction: column;
-		gap: 0.65rem;
-		width: 100%;
-	}
-
-	.spotlight-feature {
-		display: flex;
-		align-items: center;
-		width: auto;
-		max-width: 100%;
-		padding: 0.85rem 1rem;
-		box-sizing: border-box;
-		border: 1px solid rgba(40, 40, 40, 0.08);
-		border-radius: 1.15rem;
-		background: linear-gradient(160deg, rgba(255, 252, 248, 0.92), rgba(255, 255, 255, 0.82));
-		box-shadow: 0 6px 20px rgba(40, 36, 30, 0.04);
-	}
-
-	.feature-copy {
-		display: flex;
-		flex-direction: column;
-		gap: 0.22rem;
-		min-width: 0;
-		width: 100%;
-	}
-
-	.feature-title {
-		display: inline-flex;
-		align-items: center;
-		margin: 0;
-		font-weight: 600;
-		font-size: 0.92rem;
-		color: #1a1a1a;
-		line-height: 1.3;
-	}
-
-	.feature-desc {
-		margin: 0;
-		font-size: 0.82rem;
-		color: #6a6a6a;
-		line-height: 1.4;
-	}
-
-	.feature-status {
-		font-size: 0.72rem;
-		color: #9a9a9a;
-		line-height: 1.35;
-	}
-
-	.feature-actions {
-		display: flex;
-		gap: 0.35rem;
-		margin-top: 0.35rem;
-	}
-
-	.feature-action {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.22rem 0.62rem;
-		border: 1px solid #d8d8d8;
-		border-radius: 999px;
-		background: #fff;
-		color: #2c2c2c;
-		font: inherit;
-		font-size: 0.7rem;
-		font-weight: 500;
-		line-height: 1.3;
-		text-decoration: none;
-		cursor: pointer;
-	}
-
-	.ready-tick {
-		margin-left: 6px;
-		color: #2f9e44;
-	}
-
-	.spotlight-thumbs {
-		display: flex;
-		align-items: flex-start;
-		gap: 0.45rem;
-	}
-
-	.spotlight-thumb {
-		appearance: none;
-		margin: 0;
-		padding: 0;
-		border: none;
-		background: transparent;
-		width: 3rem;
-		aspect-ratio: 1;
-		border-radius: 10px;
-		overflow: hidden;
-		cursor: pointer;
-		flex-shrink: 0;
-		transition: width 0.22s ease;
-	}
-
-	.spotlight-thumb img {
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	.spotlight-thumb.selected {
-		width: 3.55rem;
-	}
-
-	.essay-row {
-		display: flex;
-		align-items: flex-start;
-		gap: 0.65rem;
-		max-width: 100%;
-		min-width: 0;
-	}
-
-	.essay-side {
-		flex: 0 1 auto;
-		width: max-content;
-		max-width: min(52ch, 100%);
-		min-width: 0;
-	}
-
-	.essay-media-wrap {
-		flex: 0 1 auto;
-		min-width: 0;
-		max-width: 100%;
-		display: grid;
-		grid-template-columns: minmax(0, 16rem) minmax(0, 22rem);
-		gap: 0.65rem;
-		align-items: start;
-	}
-
-	.essay-feature-media {
-		display: block;
-		position: relative;
-		width: 100%;
-		aspect-ratio: 16 / 9;
-		padding: 0;
-		border: none;
-		background: transparent;
-		border-radius: 10px;
-		overflow: hidden;
-		cursor: pointer;
-	}
-
-	.essay-feature-media img {
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	.essay-video-frame {
-		cursor: default;
-		background: #111;
-	}
-
-	.essay-video-frame iframe {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		border: 0;
-	}
-
-	.essay-play {
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		width: 2.6rem;
-		height: 2.6rem;
-		border-radius: 999px;
-		background: rgba(20, 20, 20, 0.72);
-		color: #fff;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		pointer-events: none;
-	}
-
-	.essay-play svg {
-		display: block;
-		margin-left: 2px;
-	}
-
-	.essay-thumb-placeholder {
-		background: #e8e8e8;
-	}
-
-	.essay-title-btn {
-		appearance: none;
-		display: block;
-		width: 100%;
-		margin: 0;
-		padding: 0.32rem 0;
-		border: none;
-		background: transparent;
-		color: #7a7a7a;
-		font: inherit;
-		font-size: 0.8rem;
-		line-height: 1.35;
-		text-align: left;
-		cursor: pointer;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.essay-title-btn.selected {
-		color: #1a1a1a;
-		font-weight: 500;
-		font-size: 0.9rem;
-	}
-
-	.essay-title-btn.soon {
-		opacity: 0.72;
-	}
-
-	.updates-dialog {
-		box-sizing: border-box;
-		width: min(28rem, calc(100vw - 2rem));
-		padding: 1.15rem 1.2rem 1.35rem;
-		border: 1px solid rgba(40, 40, 40, 0.1);
-		border-radius: 1rem;
-		background: #faf9f7;
-	}
-
-	.updates-dialog::backdrop {
-		background: rgba(40, 36, 30, 0.28);
-	}
-
-	@media (max-width: 900px) {
-		.spotlights {
-			flex-direction: column;
-			gap: 2.5rem;
-		}
-
-		.apps-col,
-		.essays-col {
-			flex: 1 1 auto;
-			max-width: none;
-			width: 100%;
-		}
-
-		.essay-row {
-			flex-direction: column;
-			gap: 0.75rem;
-		}
-
-		.essay-media-wrap {
-			grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
-		}
-	}
-
-	@media (max-width: 640px) {
-		.essay-media-wrap {
-			grid-template-columns: minmax(0, 1fr);
-			gap: 0.45rem;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.spotlight-thumb { transition: none; }
-	}
+	.home{width:100%;max-width:none;padding:2.25rem 2rem 3.5rem;box-sizing:border-box}
+	.spotlights{display:flex;align-items:flex-start;gap:2rem;margin-top:1.75em;width:100%}
+	.spotlight-col{min-width:0}
+	.apps-col{flex:0 1 20rem;max-width:22rem}
+	.essays-col{flex:0 1 auto;min-width:0;max-width:100%}
+	.spotlight{display:flex;flex-direction:column;gap:.65rem;width:100%}
+	.spotlight-feature{display:flex;align-items:center;width:auto;max-width:100%;padding:.85rem 1rem;box-sizing:border-box;border:1px solid rgba(40,40,40,.08);border-radius:1.15rem;background:linear-gradient(160deg,rgba(255,252,248,.92),rgba(255,255,255,.82));box-shadow:0 6px 20px rgba(40,36,30,.04)}
+	.feature-copy{display:flex;flex-direction:column;gap:.22rem;min-width:0;width:100%}
+	.feature-title{display:inline-flex;align-items:center;margin:0;font-weight:600;font-size:.92rem;color:#1a1a1a;line-height:1.3}
+	.feature-desc{margin:0;font-size:.82rem;color:#6a6a6a;line-height:1.4}
+	.feature-status{font-size:.72rem;color:#9a9a9a;line-height:1.35}
+	.feature-actions{display:flex;gap:.35rem;margin-top:.35rem}
+	.feature-action{display:inline-flex;align-items:center;padding:.22rem .62rem;border:1px solid #d8d8d8;border-radius:999px;background:#fff;color:#2c2c2c;font:inherit;font-size:.7rem;font-weight:500;line-height:1.3;text-decoration:none;cursor:pointer}
+	.ready-tick{margin-left:6px;color:#2f9e44}
+	.spotlight-thumbs{display:flex;align-items:flex-start;gap:.45rem}
+	.spotlight-thumb{appearance:none;margin:0;padding:0;border:none;background:transparent;width:3rem;aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer;flex-shrink:0;transition:width .22s ease}
+	.spotlight-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+	.spotlight-thumb.selected{width:3.55rem}
+	.essay-row{display:flex;align-items:flex-start;gap:.65rem;max-width:100%;min-width:0}
+	.essay-side{flex:0 1 auto;width:max-content;max-width:min(52ch,100%);min-width:0}
+	.essay-media-wrap{flex:0 1 auto;min-width:0;max-width:100%;display:grid;grid-template-columns:minmax(0,16rem) minmax(0,22rem);gap:.65rem;align-items:start}
+	.essay-feature-media{display:block;position:relative;width:100%;aspect-ratio:16/9;padding:0;border:none;background:transparent;border-radius:10px;overflow:hidden;cursor:pointer}
+	.essay-feature-media img{display:block;width:100%;height:100%;object-fit:cover}
+	.essay-video-frame{cursor:default;background:#111}
+	.essay-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+	.essay-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:2.6rem;height:2.6rem;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;display:inline-flex;align-items:center;justify-content:center;pointer-events:none}
+	.essay-play svg{display:block;margin-left:2px}
+	.essay-thumb-placeholder{background:#e8e8e8}
+	.essay-title-btn{appearance:none;display:block;width:100%;margin:0;padding:.32rem 0;border:none;background:transparent;color:#7a7a7a;font:inherit;font-size:.8rem;line-height:1.35;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+	.essay-title-btn.selected{color:#1a1a1a;font-weight:500;font-size:.9rem}
+	.essay-title-btn.soon{opacity:.72}
+	.updates-dialog{box-sizing:border-box;width:min(28rem,calc(100vw - 2rem));padding:1.15rem 1.2rem 1.35rem;border:1px solid rgba(40,40,40,.1);border-radius:1rem;background:#faf9f7}
+	.updates-dialog::backdrop{background:rgba(40,36,30,.28)}
+	@media (max-width:900px){.spotlights{flex-direction:column;gap:2.5rem}.apps-col,.essays-col{flex:1 1 auto;max-width:none;width:100%}.essay-row{flex-direction:column;gap:.75rem}.essay-media-wrap{grid-template-columns:minmax(0,24rem) minmax(0,1fr)}}
+	@media (max-width:640px){.essay-media-wrap{grid-template-columns:minmax(0,1fr);gap:.45rem}}
+	@media (prefers-reduced-motion:reduce){.spotlight-thumb{transition:none}}
 </style>

@@ -4,6 +4,7 @@
 		FLAG_DEFS,
 		PRESETS,
 		COLOR_MODES,
+		ESSAY_MODES,
 		OVERLAP_SLIDERS,
 		DOCK_SLIDERS,
 		COLOR_SLIDERS,
@@ -12,6 +13,7 @@
 		toggleExperiment,
 		setPreset,
 		setColorMode,
+		setEssayMode,
 		setSlider,
 		setPanelOpen
 	} from './experiments.js';
@@ -172,110 +174,49 @@
 						{/each}
 					</div>
 				{/if}
+
+				{#if f.id === 'essayLayout' && $experiments.essayLayout}
+					<fieldset class="exp-field">
+						<legend class="exp-legend">Mode</legend>
+						{#each ESSAY_MODES as m (m.id)}
+							<label class="exp-radio" title={m.hint}>
+								<input
+									type="radio"
+									name="exp-essay-mode"
+									value={m.id}
+									checked={$experiments.essayMode === m.id}
+									on:change={() => setEssayMode(m.id)}
+								/>
+								<span>{m.label}</span>
+							</label>
+						{/each}
+					</fieldset>
+				{/if}
 			{/each}
 		</div>
 	{/if}
 </aside>
 
 <style>
-	.exp {
-		position: fixed;
-		left: 0.65rem;
-		right: 0.65rem;
-		bottom: 0.55rem;
-		z-index: 80;
-		max-width: 22rem;
-		margin: 0 auto;
-		padding: 0.45rem 0.65rem 0.55rem;
-		box-sizing: border-box;
-		background: rgba(250, 249, 247, 0.94);
-		border: 1px solid rgba(42, 42, 42, 0.12);
-		border-radius: 10px;
-		box-shadow: 0 6px 22px rgba(42, 42, 42, 0.08);
-		pointer-events: auto;
-		overflow: visible;
-	}
-	.exp.collapsed { padding-bottom: 0.45rem; }
-	.exp-bar { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
-	.exp-label {
-		margin: 0;
-		font-size: 0.68rem;
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: #9a9a9a;
-	}
-	.exp-tag {
-		margin-left: 0.35rem;
-		padding: 0.05rem 0.32rem;
-		border: 1px solid rgba(42, 42, 42, 0.12);
-		border-radius: 3px;
-		font-size: 0.58rem;
-		font-weight: 500;
-		letter-spacing: 0.04em;
-		text-transform: lowercase;
-		color: #b0b0b0;
-	}
-	.exp-toggle {
-		appearance: none;
-		margin: 0;
-		padding: 0.12rem 0.45rem;
-		border: 1px solid rgba(42, 42, 42, 0.14);
-		border-radius: 4px;
-		background: transparent;
-		font-size: 0.68rem;
-		font-weight: 500;
-		color: #7a7a7a;
-		cursor: pointer;
-	}
-	.exp-body {
-		margin-top: 0.35rem;
-		max-height: min(46vh, 24rem);
-		overflow: auto;
-		overscroll-behavior: contain;
-		-webkit-overflow-scrolling: touch;
-	}
-	.exp-row {
-		display: flex;
-		align-items: flex-start;
-		gap: 0.5rem;
-		margin: 0.3rem 0;
-		cursor: pointer;
-		color: #6a6a6a;
-	}
-	.exp-row input { margin: 0.15rem 0 0; accent-color: #5a5a5a; }
-	.exp-text { display: flex; flex-direction: column; gap: 0.08rem; min-width: 0; }
-	.exp-name { font-size: 0.78rem; font-weight: 500; color: #4a4a4a; line-height: 1.3; }
-	.exp-hint { font-size: 0.68rem; line-height: 1.3; color: #9a9a9a; }
-	.exp-field {
-		margin: 0.2rem 0 0.3rem 1.35rem;
-		padding: 0.3rem 0 0;
-		border: none;
-		display: grid;
-		gap: 0.18rem;
-	}
-	.exp-legend { padding: 0; font-size: 0.64rem; font-weight: 500; color: #8a8a8a; }
-	.exp-radio {
-		display: flex;
-		align-items: center;
-		gap: 0.4rem;
-		font-size: 0.74rem;
-		color: #5a5a5a;
-		cursor: pointer;
-	}
-	.exp-radio input { margin: 0; accent-color: #5a5a5a; }
-	.exp-sliders { margin: 0.15rem 0 0.35rem 1.35rem; display: grid; gap: 0.32rem; }
-	.exp-slider { display: grid; gap: 0.12rem; font-size: 0.7rem; color: #6a6a6a; touch-action: none; }
-	.exp-slider-meta { display: flex; justify-content: space-between; gap: 0.5rem; }
-	.exp-val { font-variant-numeric: tabular-nums; color: #9a9a9a; }
-	.exp-slider input[type='range'] {
-		display: block;
-		width: 100%;
-		margin: 0;
-		padding: 0;
-		height: 1.75rem;
-		accent-color: #6a6a6a;
-		touch-action: none;
-		cursor: pointer;
-	}
+	.exp{position:fixed;left:.65rem;right:.65rem;bottom:.55rem;z-index:80;max-width:22rem;margin:0 auto;padding:.45rem .65rem .55rem;box-sizing:border-box;background:rgba(250,249,247,.94);border:1px solid rgba(42,42,42,.12);border-radius:10px;box-shadow:0 6px 22px rgba(42,42,42,.08);pointer-events:auto;overflow:visible}
+	.exp.collapsed{padding-bottom:.45rem}
+	.exp-bar{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+	.exp-label{margin:0;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#9a9a9a}
+	.exp-tag{margin-left:.35rem;padding:.05rem .32rem;border:1px solid rgba(42,42,42,.12);border-radius:3px;font-size:.58rem;font-weight:500;letter-spacing:.04em;text-transform:lowercase;color:#b0b0b0}
+	.exp-toggle{appearance:none;margin:0;padding:.12rem .45rem;border:1px solid rgba(42,42,42,.14);border-radius:4px;background:transparent;font-size:.68rem;font-weight:500;color:#7a7a7a;cursor:pointer}
+	.exp-body{margin-top:.35rem;max-height:min(46vh,24rem);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+	.exp-row{display:flex;align-items:flex-start;gap:.5rem;margin:.3rem 0;cursor:pointer;color:#6a6a6a}
+	.exp-row input{margin:.15rem 0 0;accent-color:#5a5a5a}
+	.exp-text{display:flex;flex-direction:column;gap:.08rem;min-width:0}
+	.exp-name{font-size:.78rem;font-weight:500;color:#4a4a4a;line-height:1.3}
+	.exp-hint{font-size:.68rem;line-height:1.3;color:#9a9a9a}
+	.exp-field{margin:.2rem 0 .3rem 1.35rem;padding:.3rem 0 0;border:none;display:grid;gap:.18rem}
+	.exp-legend{padding:0;font-size:.64rem;font-weight:500;color:#8a8a8a}
+	.exp-radio{display:flex;align-items:center;gap:.4rem;font-size:.74rem;color:#5a5a5a;cursor:pointer}
+	.exp-radio input{margin:0;accent-color:#5a5a5a}
+	.exp-sliders{margin:.15rem 0 .35rem 1.35rem;display:grid;gap:.32rem}
+	.exp-slider{display:grid;gap:.12rem;font-size:.7rem;color:#6a6a6a;touch-action:none}
+	.exp-slider-meta{display:flex;justify-content:space-between;gap:.5rem}
+	.exp-val{font-variant-numeric:tabular-nums;color:#9a9a9a}
+	.exp-slider input[type='range']{display:block;width:100%;margin:0;padding:0;height:1.75rem;accent-color:#6a6a6a;touch-action:none;cursor:pointer}
 </style>
