@@ -73,7 +73,7 @@ export const APPS_SLIDERS = [
 	{ id: 'appsV', key: 'elton-exp-apps-v', label: 'Selected overlap', min: 0, max: 100, step: 1, def: 52 },
 	{ id: 'appsH', key: 'elton-exp-apps-h', label: 'Selected nudge', min: 0, max: 100, step: 1, def: 14 },
 	{ id: 'appsScale', key: 'elton-exp-apps-scale', label: 'Base logo scale', min: 70, max: 130, step: 1, def: 100 },
-	{ id: 'appsActive', key: 'elton-exp-apps-active', label: 'Active scale ratio', min: 110, max: 170, step: 1, def: 132 }
+	{ id: 'appsActive', key: 'elton-exp-apps-active', label: 'Active scale ratio', min: 110, max: 170, step: 1, def: 145 }
 ];
 
 /** @type {SliderDef[]} */
@@ -238,7 +238,7 @@ export function overlapStyle(e) {
 	const av = Number(e.appsV) || 0;
 	const ah = Number(e.appsH) || 0;
 	const as_ = Number(e.appsScale) || 100;
-	const aa = Number(e.appsActive) || 132;
+	const aa = Number(e.appsActive) || 145;
 	const dd = Number(e.dockDepth) || 0;
 	return [
 		`--exp-mv:${(mv / 100) * 1.85}rem`,

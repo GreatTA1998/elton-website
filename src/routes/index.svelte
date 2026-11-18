@@ -458,7 +458,7 @@
 	}
 
 	.spotlight.exp-overlap .spotlight-thumb.selected {
-		width: calc(3rem * var(--exp-as, 1) * var(--exp-aa, 1.32));
+		width: calc(3rem * var(--exp-as, 1) * var(--exp-aa, 1.45));
 		transform: translateY(calc(0.78 * var(--exp-av, 0.85rem)));
 		z-index: 3;
 	}
@@ -473,7 +473,7 @@
 	}
 
 	.spotlight.exp-dock .spotlight-thumb.selected {
-		width: calc(3rem * var(--exp-as, 1) * var(--exp-aa, 1.32));
+		width: calc(3rem * var(--exp-as, 1) * var(--exp-aa, 1.45));
 		transform: translateY(var(--exp-dock, 0.5rem));
 		z-index: 3;
 	}
