@@ -20,7 +20,7 @@ const DICT = {
 		actionsDesc: 'Put to-do lists on the calendar. Fully using since 2024.',
 		actionsStatus: '2022 – current',
 		visit: 'Visit',
-		ready: 'Ready',
+		readMore: 'Read more', ready: 'Ready',
 		blackboardsDesc:
 			'Previously explain.mit.edu — ~800 students/teachers across ~10 MIT classes during COVID-19.',
 		blackboardsStatus: '2018 (under rework) – current',
@@ -64,7 +64,7 @@ const DICT = {
 		actionsDesc: '把待办放进日历。2024 年起一直在用。',
 		actionsStatus: '2022 – 至今',
 		visit: '访问',
-		ready: '可用',
+		readMore: '阅读全文', ready: '可用',
 		blackboardsDesc:
 			'前身 explain.mit.edu — COVID-19 期间约 800 名学生/教师、约 10 门 MIT 课程使用。',
 		blackboardsStatus: '2018（重制中）– 至今',
@@ -106,7 +106,7 @@ const DICT = {
 		actionsDesc: 'ToDoをカレンダーに。2024年からずっと使っています。',
 		actionsStatus: '2022 – 現在',
 		visit: '開く',
-		ready: '利用可',
+		readMore: '続きを読む', ready: '利用可',
 		blackboardsDesc:
 			'旧 explain.mit.edu — COVID-19期に約800人の学生/教師、約10のMIT授業で利用。',
 		blackboardsStatus: '2018（再構築中）– 現在',

@@ -37,27 +37,18 @@
 						<strong class="feature-title type-title">
 							{selectedApp.name}
 							{#if selectedApp.ready}
-								<span class="ready-tick" role="img" title={$messages.ready} aria-label={$messages.ready}
-									>✓</span
-								>
+								<span class="ready-tick" role="img" title={$messages.ready} aria-label={$messages.ready}>✓</span>
 							{/if}
 						</strong>
 						<span class="feature-desc type-body">{$messages[selectedApp.descKey]}</span>
 						<span class="feature-status type-caption">{$messages[selectedApp.statusKey]}</span>
 						<div class="feature-actions">
 							{#if selectedApp.visit}
-								<a
-									class="feature-action"
-									target="_blank"
-									rel="noopener noreferrer"
-									href={selectedApp.visit}
+								<a class="feature-action" target="_blank" rel="noopener noreferrer" href={selectedApp.visit}
+									>{$messages.visit}</a
 								>
-									{$messages.visit}
-								</a>
 							{/if}
-							<button type="button" class="feature-action" on:click={openUpdates}>
-								{$messages.emailUpdates}
-							</button>
+							<button type="button" class="feature-action" on:click={openUpdates}>{$messages.emailUpdates}</button>
 						</div>
 					</div>
 				</div>
@@ -91,59 +82,69 @@
 								<time class="essay-date type-caption" datetime={essay.date}>{fmtDate(essay.date)}</time>
 							{/if}
 							<p class="type-caption essay-pair-desc">{essayDesc}</p>
+							{#if essay.href}
+								<div class="feature-actions"><a class="feature-action" href={essay.href}>{$messages.readMore}</a></div>
+							{:else if essay.kind === 'video' && !essayThumbs}
+								<div class="feature-actions">
+									<button type="button" class="feature-action" on:click={() => (notionPlaying = true)}>{$messages.play}</button>
+								</div>
+							{/if}
 						{/if}
 					{/each}
 				</div>
 
-				{#key selectedEssayId}
-					<div class="essay-media-wrap" in:fade={{ duration: fadeMs }}>
-						{#if selectedEssay.kind === 'essay'}
-							<a class="essay-feature-media" href={selectedEssay.href}>
-								<picture>
-									<source srcset={selectedEssay.coverAvif} type="image/avif" />
-									<source srcset={selectedEssay.coverWebp} type="image/webp" />
-									<img
-										src={selectedEssay.coverJpg}
-										alt={selectedEssay.title}
-										loading="lazy"
-										decoding="async"
-									/>
-								</picture>
-							</a>
-						{:else if selectedEssay.kind === 'video'}
-							{#if notionPlaying}
-								<div class="essay-feature-media essay-video-frame">
-									<iframe
-										src="https://www.youtube-nocookie.com/embed/{selectedEssay.youtubeId}?autoplay=1&rel=0"
-										title={selectedEssay.title}
-										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-										allowfullscreen
-									></iframe>
-								</div>
-							{:else}
-								<button
-									type="button"
-									class="essay-feature-media essay-feature-play"
-									aria-label={`${$messages.play}: ${selectedEssay.title}`}
-									on:click={() => (notionPlaying = true)}
-								>
-									<img src={selectedEssay.thumb} alt="" />
-									<span class="essay-play" aria-hidden="true">
-										<svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
-											<path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" />
-										</svg>
-									</span>
-								</button>
+				{#if showEssayMedia || !essayPair}
+					{#key selectedEssayId}
+						<div class="essay-media-wrap" in:fade={{ duration: fadeMs }}>
+							{#if showEssayMedia}
+								{#if selectedEssay.kind === 'essay'}
+									<a class="essay-feature-media" href={selectedEssay.href}>
+										<picture>
+											<source srcset={selectedEssay.coverAvif} type="image/avif" />
+											<source srcset={selectedEssay.coverWebp} type="image/webp" />
+											<img src={selectedEssay.coverJpg} alt={selectedEssay.title} loading="lazy" decoding="async" />
+										</picture>
+									</a>
+								{:else if selectedEssay.kind === 'video'}
+									{#if notionPlaying}
+										<div class="essay-feature-media essay-video-frame">
+											<iframe
+												src="https://www.youtube-nocookie.com/embed/{selectedEssay.youtubeId}?autoplay=1&rel=0"
+												title={selectedEssay.title}
+												allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+												allowfullscreen
+											></iframe>
+										</div>
+									{:else}
+										<button
+											type="button"
+											class="essay-feature-media essay-feature-play"
+											aria-label={`${$messages.play}: ${selectedEssay.title}`}
+											on:click={() => (notionPlaying = true)}
+										>
+											<img src={selectedEssay.thumb} alt="" />
+											<span class="essay-play" aria-hidden="true"
+												><svg viewBox="0 0 24 24" width="22" height="22" focusable="false"
+													><path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor" /></svg
+												></span
+											>
+										</button>
+									{/if}
+								{:else}
+									<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
+								{/if}
 							{/if}
-						{:else}
-							<div class="essay-feature-media essay-thumb-placeholder" aria-hidden="true"></div>
-						{/if}
-
-						{#if !essayPair}
-							<p class="feature-desc type-body">{essayDesc}</p>
-						{/if}
-					</div>
-				{/key}
+							{#if !essayPair}
+								<p class="feature-desc type-body">{essayDesc}</p>
+								{#if selectedEssay.href && !essayThumbs}
+									<div class="feature-actions">
+										<a class="feature-action" href={selectedEssay.href}>{$messages.readMore}</a>
+									</div>
+								{/if}
+							{/if}
+						</div>
+					{/key}
+				{/if}
 			</div>
 		</section>
 	</div>
@@ -294,6 +295,8 @@
 	// TEMP experiments — Title+copy pair (null = classic); Reading size + date locked on
 	$: essayPair = !!$experiments.essayLayout;
 	$: essayLayoutMode = essayPair ? 'pair' : null;
+	$: essayThumbs = !!$experiments.essayThumbs;
+	$: showEssayMedia = essayThumbs || (selectedEssay.kind === 'video' && notionPlaying); // TEMP
 	// TEMP experiments — palette border from selected app logo
 	$: requestPalette(
 		appsPalOwner,
@@ -337,17 +340,12 @@
 	.feature-title{display:inline-flex;align-items:center;margin:0}
 	.feature-actions{display:flex;gap:.35rem;margin-top:.35rem}
 	.feature-action{display:inline-flex;align-items:center;padding:.22rem .62rem;border:1px solid #d8d8d8;border-radius:999px;background:#fff;color:var(--ink-body);font:inherit;font-size:var(--text-xs);font-weight:var(--w-medium);line-height:var(--lh-tight);text-decoration:none;cursor:pointer}
-	.ready-tick{margin-left:6px;color:#2f9e44}
-	.spotlight-thumbs{display:flex;align-items:flex-start;gap:.45rem}
+	.ready-tick{margin-left:6px;color:#2f9e44}.spotlight-thumbs{display:flex;align-items:flex-start;gap:.45rem}
 	.spotlight-thumb{appearance:none;margin:0;padding:0;border:none;background:transparent;width:3rem;aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer;flex-shrink:0;transition:width .22s ease}
-	.spotlight-thumb img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
-	.spotlight-thumb.selected{width:3.55rem}
+	.spotlight-thumb img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}.spotlight-thumb.selected{width:3.55rem}
 	.essay-row{display:flex;align-items:flex-start;gap:.65rem;max-width:100%;min-width:0}
-	.essay-side{flex:0 1 auto;width:max-content;max-width:min(52ch,100%);min-width:0}
-	.essay-media-wrap{flex:0 1 auto;min-width:0;max-width:100%;display:grid;grid-template-columns:minmax(0,16rem) minmax(0,22rem);gap:.65rem;align-items:start}
-	.spotlight[data-essay-layout='pair'] .essay-media-wrap{grid-template-columns:minmax(0,18rem)}
-	.essay-date{display:block;margin:.02rem 0 0;font-size:var(--text-xs);color:var(--ink-quiet);line-height:var(--lh-tight)}
-	.essay-pair-desc{margin:.4rem 0 .6rem;max-width:36ch;font-size:var(--text-md);color:var(--ink-soft);line-height:var(--lh-body)}.essay-date+.essay-pair-desc{margin-top:.22rem}
+	.essay-side{flex:0 1 auto;width:max-content;max-width:min(52ch,100%);min-width:0}.essay-media-wrap{flex:0 1 auto;min-width:0;max-width:18rem;width:100%;display:grid;gap:.65rem}
+	.essay-date{display:block;margin:.02rem 0 0;font-size:var(--text-xs);color:var(--ink-quiet);line-height:var(--lh-tight)}.essay-pair-desc{margin:.4rem 0 .35rem;max-width:36ch;font-size:var(--text-md);color:var(--ink-soft);line-height:var(--lh-body)}.essay-date+.essay-pair-desc{margin-top:.22rem}
 	.essay-feature-media{display:block;position:relative;width:100%;aspect-ratio:16/9;padding:0;border:none;background:transparent;border-radius:10px;overflow:hidden;cursor:pointer}
 	.essay-feature-media img{display:block;width:100%;height:100%;object-fit:cover}
 	.essay-video-frame{cursor:default;background:#111}.essay-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -355,9 +353,6 @@
 	.essay-play svg{display:block;margin-left:2px}.essay-thumb-placeholder{background:#e8e8e8}
 	.essay-title-btn{appearance:none;display:block;width:100%;margin:0;padding:.32rem 0;border:none;background:transparent;font-family:inherit;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 	.essay-title-btn.soon{opacity:.72}
-	.updates-dialog{box-sizing:border-box;width:min(28rem,calc(100vw - 2rem));padding:1.15rem 1.2rem 1.35rem;border:1px solid rgba(40,40,40,.1);border-radius:1rem;background:#faf9f7}
-	.updates-dialog::backdrop{background:rgba(40,36,30,.28)}
-	@media (max-width:900px){.spotlights{flex-direction:column;gap:2.5rem}.apps-col,.essays-col{flex:1 1 auto;max-width:none;width:100%}.essay-row{flex-direction:column;gap:.75rem}.essay-media-wrap{grid-template-columns:minmax(0,24rem) minmax(0,1fr)}.spotlight[data-essay-layout] .essay-media-wrap{grid-template-columns:minmax(0,1fr);max-width:24rem}}
-	@media (max-width:640px){.essay-media-wrap{grid-template-columns:minmax(0,1fr);gap:.45rem}}
-	@media (prefers-reduced-motion:reduce){.spotlight-thumb{transition:none}}
-</style>
+	.updates-dialog{box-sizing:border-box;width:min(28rem,calc(100vw - 2rem));padding:1.15rem 1.2rem 1.35rem;border:1px solid rgba(40,40,40,.1);border-radius:1rem;background:#faf9f7}.updates-dialog::backdrop{background:rgba(40,36,30,.28)}
+	@media (max-width:900px){.spotlights{flex-direction:column;gap:2.5rem}.apps-col,.essays-col{flex:1 1 auto;max-width:none;width:100%}.essay-row{flex-direction:column;gap:.75rem}}
+	@media (prefers-reduced-motion:reduce){.spotlight-thumb{transition:none}}</style>
