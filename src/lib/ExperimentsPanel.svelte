@@ -3,19 +3,18 @@
 	import {
 		FLAG_DEFS,
 		PRESETS,
+		COLOR_MODES,
 		OVERLAP_SLIDERS,
 		DOCK_SLIDERS,
+		COLOR_SLIDERS,
 		experiments,
 		panelOpen,
 		toggleExperiment,
 		setPreset,
+		setColorMode,
 		setSlider,
 		setPanelOpen
 	} from './experiments.js';
-
-	const defaultFlag = FLAG_DEFS.find((d) => d.id === 'defaultSecond');
-	const overlapFlag = FLAG_DEFS.find((d) => d.id === 'overlap');
-	const dockFlag = FLAG_DEFS.find((d) => d.id === 'dockSelected');
 
 	/** Owns range value; skips store→DOM sync while dragging. @param {HTMLInputElement} node @param {string} id */
 	function liveRange(node, id) {
@@ -39,9 +38,7 @@
 		const onTouchMove = (e) => e.preventDefault();
 		const onDown = () => {
 			dragging = true;
-			scrollEl = /** @type {HTMLElement | null} */ (
-				node.closest('.exp-body') || node.closest('.exp')
-			);
+			scrollEl = /** @type {HTMLElement | null} */ (node.closest('.exp-body') || node.closest('.exp'));
 			if (!scrollEl) return;
 			prev = scrollEl.style.overflow;
 			scrollEl.style.overflow = 'hidden';
@@ -94,94 +91,88 @@
 
 	{#if $panelOpen}
 		<div class="exp-body" id="exp-body">
-			<label class="exp-row" title={defaultFlag.hint}>
-				<input
-					type="checkbox"
-					checked={!!$experiments.defaultSecond}
-					on:change={() => toggleExperiment('defaultSecond')}
-				/>
-				<span class="exp-text">
-					<span class="exp-name">{defaultFlag.label}</span>
-					<span class="exp-hint">{defaultFlag.hint}</span>
-				</span>
-			</label>
+			{#each FLAG_DEFS as f (f.id)}
+				<label class="exp-row" title={f.hint}>
+					<input
+						type="checkbox"
+						checked={!!$experiments[f.id]}
+						on:change={() => toggleExperiment(f.id)}
+					/>
+					<span class="exp-text">
+						<span class="exp-name">{f.label}</span>
+						<span class="exp-hint">{f.hint}</span>
+					</span>
+				</label>
 
-			<label class="exp-row" title={overlapFlag.hint}>
-				<input
-					type="checkbox"
-					checked={!!$experiments.overlap}
-					on:change={() => toggleExperiment('overlap')}
-				/>
-				<span class="exp-text">
-					<span class="exp-name">{overlapFlag.label}</span>
-					<span class="exp-hint">{overlapFlag.hint}</span>
-				</span>
-			</label>
+				{#if f.id === 'overlap' && $experiments.overlap}
+					<fieldset class="exp-field">
+						<legend class="exp-legend">Preset</legend>
+						{#each PRESETS as p (p.id)}
+							<label class="exp-radio" title={p.hint}>
+								<input
+									type="radio"
+									name="exp-preset"
+									value={p.id}
+									checked={$experiments.preset === p.id}
+									on:change={() => setPreset(p.id)}
+								/>
+								<span>{p.label}</span>
+							</label>
+						{/each}
+					</fieldset>
+					<div class="exp-sliders">
+						{#each OVERLAP_SLIDERS as s (s.id)}
+							<label class="exp-slider">
+								<span class="exp-slider-meta"
+									><span>{s.label}</span><span class="exp-val">{$experiments[s.id]}</span></span
+								>
+								<input type="range" min={s.min} max={s.max} step={s.step} use:liveRange={s.id} />
+							</label>
+						{/each}
+					</div>
+				{/if}
 
-			{#if $experiments.overlap}
-				<fieldset class="exp-field">
-					<legend class="exp-legend">Preset</legend>
-					{#each PRESETS as p (p.id)}
-						<label class="exp-radio" title={p.hint}>
-							<input
-								type="radio"
-								name="exp-preset"
-								value={p.id}
-								checked={$experiments.preset === p.id}
-								on:change={() => setPreset(p.id)}
-							/>
-							<span>{p.label}</span>
-						</label>
-					{/each}
-				</fieldset>
-				<div class="exp-sliders">
-					{#each OVERLAP_SLIDERS as s (s.id)}
-						<label class="exp-slider">
-							<span class="exp-slider-meta"
-								><span>{s.label}</span><span class="exp-val">{$experiments[s.id]}</span></span
-							>
-							<input
-								type="range"
-								min={s.min}
-								max={s.max}
-								step={s.step}
-								use:liveRange={s.id}
-							/>
-						</label>
-					{/each}
-				</div>
-			{/if}
+				{#if f.id === 'dockSelected' && $experiments.dockSelected}
+					<div class="exp-sliders">
+						{#each DOCK_SLIDERS as s (s.id)}
+							<label class="exp-slider">
+								<span class="exp-slider-meta"
+									><span>{s.label}</span><span class="exp-val">{$experiments[s.id]}</span></span
+								>
+								<input type="range" min={s.min} max={s.max} step={s.step} use:liveRange={s.id} />
+							</label>
+						{/each}
+					</div>
+				{/if}
 
-			<label class="exp-row" title={dockFlag.hint}>
-				<input
-					type="checkbox"
-					checked={!!$experiments.dockSelected}
-					on:change={() => toggleExperiment('dockSelected')}
-				/>
-				<span class="exp-text">
-					<span class="exp-name">{dockFlag.label}</span>
-					<span class="exp-hint">{dockFlag.hint}</span>
-				</span>
-			</label>
-
-			{#if $experiments.dockSelected}
-				<div class="exp-sliders">
-					{#each DOCK_SLIDERS as s (s.id)}
-						<label class="exp-slider">
-							<span class="exp-slider-meta"
-								><span>{s.label}</span><span class="exp-val">{$experiments[s.id]}</span></span
-							>
-							<input
-								type="range"
-								min={s.min}
-								max={s.max}
-								step={s.step}
-								use:liveRange={s.id}
-							/>
-						</label>
-					{/each}
-				</div>
-			{/if}
+				{#if f.id === 'colorTheme' && $experiments.colorTheme}
+					<fieldset class="exp-field">
+						<legend class="exp-legend">Mode</legend>
+						{#each COLOR_MODES as m (m.id)}
+							<label class="exp-radio" title={m.hint}>
+								<input
+									type="radio"
+									name="exp-color-mode"
+									value={m.id}
+									checked={$experiments.colorMode === m.id}
+									on:change={() => setColorMode(m.id)}
+								/>
+								<span>{m.label}</span>
+							</label>
+						{/each}
+					</fieldset>
+					<div class="exp-sliders">
+						{#each COLOR_SLIDERS as s (s.id)}
+							<label class="exp-slider">
+								<span class="exp-slider-meta"
+									><span>{s.label}</span><span class="exp-val">{$experiments[s.id]}</span></span
+								>
+								<input type="range" min={s.min} max={s.max} step={s.step} use:liveRange={s.id} />
+							</label>
+						{/each}
+					</div>
+				{/if}
+			{/each}
 		</div>
 	{/if}
 </aside>
@@ -205,12 +196,7 @@
 		overflow: visible;
 	}
 	.exp.collapsed { padding-bottom: 0.45rem; }
-	.exp-bar {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 0.5rem;
-	}
+	.exp-bar { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 	.exp-label {
 		margin: 0;
 		font-size: 0.68rem;
@@ -244,7 +230,7 @@
 	}
 	.exp-body {
 		margin-top: 0.35rem;
-		max-height: min(42vh, 20rem);
+		max-height: min(46vh, 24rem);
 		overflow: auto;
 		overscroll-behavior: contain;
 		-webkit-overflow-scrolling: touch;
@@ -279,13 +265,7 @@
 	}
 	.exp-radio input { margin: 0; accent-color: #5a5a5a; }
 	.exp-sliders { margin: 0.15rem 0 0.35rem 1.35rem; display: grid; gap: 0.32rem; }
-	.exp-slider {
-		display: grid;
-		gap: 0.12rem;
-		font-size: 0.7rem;
-		color: #6a6a6a;
-		touch-action: none;
-	}
+	.exp-slider { display: grid; gap: 0.12rem; font-size: 0.7rem; color: #6a6a6a; touch-action: none; }
 	.exp-slider-meta { display: flex; justify-content: space-between; gap: 0.5rem; }
 	.exp-val { font-variant-numeric: tabular-nums; color: #9a9a9a; }
 	.exp-slider input[type='range'] {

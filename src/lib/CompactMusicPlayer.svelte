@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { nowPlaying, currentTrack, TRACKS, ALBUM_IDS, playTrack } from './nowPlaying.js';
 	import { messages } from './i18n.js';
-	import { experiments, overlapStyle } from './experiments.js'; // TEMP experiments
+	import { experiments, overlapStyle, colorThemeStyle } from './experiments.js'; // TEMP experiments
 
 	let playing = false;
 	let ytReady = false;
@@ -26,6 +26,11 @@
 			: track.credit === 'Coming soon'
 				? $messages.bachComingSoon
 				: track.credit;
+	// TEMP experiments — art color theme vars from selected cover
+	$: unitStyle =
+		$experiments.overlap || $experiments.dockSelected || $experiments.colorTheme
+			? overlapStyle($experiments, colorThemeStyle($experiments, track?.cover || ''))
+			: null;
 
 	/** @param {HTMLElement} node */
 	function ytHost(node) {
@@ -212,8 +217,10 @@
 	class="unit"
 	class:exp-overlap={$experiments.overlap}
 	class:exp-dock={$experiments.dockSelected}
+	class:exp-color={$experiments.colorTheme}
 	data-exp-preset={$experiments.overlap ? $experiments.preset : null}
-	style={$experiments.overlap || $experiments.dockSelected ? overlapStyle($experiments) : null}
+	data-color-mode={$experiments.colorTheme ? $experiments.colorMode : null}
+	style={unitStyle}
 	role="region"
 	aria-label={$messages.musicPlayer}
 >
@@ -419,67 +426,6 @@
 		pointer-events: none;
 	}
 
-	/* TEMP: slots=base; only .selected scales. Music Y toward pill. */
-	.unit.exp-overlap,
-	.unit.exp-dock { gap: 0; isolation: isolate; overflow: visible; }
-	.unit.exp-overlap .pill,
-	.unit.exp-dock .pill {
-		position: relative;
-		z-index: 0;
-		overflow: visible;
-		transform: translateZ(0);
-	}
-	.unit.exp-overlap .thumbs,
-	.unit.exp-dock .thumbs {
-		--exp-slot: calc(var(--thumb) * var(--exp-s, 1));
-		position: relative;
-		z-index: 2;
-		overflow: visible;
-		min-height: var(--exp-slot);
-		gap: 0.35rem;
-		align-items: center;
-	}
-	.unit.exp-overlap .thumb,
-	.unit.exp-dock .thumb {
-		width: var(--exp-slot);
-		position: relative;
-		z-index: 0;
-		transform-origin: center center;
-		filter: blur(var(--exp-blur, 0px));
-		transition: none;
-	}
-	.unit.exp-overlap .thumb.selected,
-	.unit.exp-dock .thumb.selected {
-		--exp-tx: 0;
-		--exp-ty: calc(-1 * var(--exp-v, 1.5px));
-		--exp-rot: 0deg;
-		overflow: visible;
-		filter: none;
-		margin-inline: calc(var(--exp-slot) * (var(--exp-a, 1.1) - 1) / 2);
-		transform: translate3d(var(--exp-tx), var(--exp-ty), 0) rotate(var(--exp-rot))
-			scale(var(--exp-a, 1.1));
-		z-index: 5;
-	}
-	.unit.exp-overlap[data-exp-preset='deep'] .thumb.selected {
-		--exp-ty: calc(-1.25 * var(--exp-v, 1.5px));
-	}
-	.unit.exp-overlap[data-exp-preset='tilt'] .thumb.selected {
-		--exp-tx: calc(-1 * var(--exp-h, 0.4px));
-		--exp-ty: calc(-1.1 * var(--exp-v, 1.5px));
-		--exp-rot: -2deg;
-	}
-	.unit.exp-dock .thumb.selected { --exp-ty: calc(-1 * var(--exp-dock, 0.8px)); }
-	.unit.exp-dock.exp-overlap .thumb.selected {
-		--exp-ty: calc(-1 * var(--exp-v, 1.5px) - var(--exp-dock, 0.8px));
-	}
-	.unit.exp-dock.exp-overlap[data-exp-preset='deep'] .thumb.selected {
-		--exp-ty: calc(-1.25 * var(--exp-v, 1.5px) - var(--exp-dock, 0.8px));
-	}
-	.unit.exp-dock.exp-overlap[data-exp-preset='tilt'] .thumb.selected {
-		--exp-tx: calc(-1 * var(--exp-h, 0.4px));
-		--exp-ty: calc(-1.1 * var(--exp-v, 1.5px) - var(--exp-dock, 0.8px));
-		--exp-rot: -2deg;
-	}
 	@media (prefers-reduced-motion: reduce) {
 		.thumb { transition: none; }
 	}

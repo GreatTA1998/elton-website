@@ -1,6 +1,6 @@
 /**
  * TEMP discoverability A/B scaffold — delete this file, ExperimentsPanel.svelte,
- * and every `// TEMP experiments` hook when the test is done.
+ * artTheme.js, and every `// TEMP experiments` hook when the test is done.
  */
 import { writable, get } from 'svelte/store';
 import { ALBUM_IDS, nowPlaying } from './nowPlaying.js';
@@ -28,13 +28,17 @@ export const FLAG_DEFS = [
 		key: 'elton-exp-dock-selected',
 		label: 'Extra dock depth',
 		hint: 'Adds a little more depth on the selected item'
+	},
+	{
+		id: 'colorTheme',
+		key: 'elton-exp-color-theme',
+		label: 'Art color theme',
+		hint: 'Restyle music pill / app card from selected art'
 	}
 ];
 
-/** Keep old export name for any TEMP grep familiarity */
 export const EXPERIMENT_DEFS = FLAG_DEFS;
 
-/** Shared preset family for music + apps */
 /** @type {PresetDef[]} */
 export const PRESETS = [
 	{ id: 'soft', label: 'Soft dock', hint: 'Selected peeks slightly into the parent' },
@@ -42,7 +46,14 @@ export const PRESETS = [
 	{ id: 'tilt', label: 'Tilted dock', hint: 'Selected docks with a slight tilt' }
 ];
 
-/** Shared V / H / scale / active-scale (music + apps). V units ≈ 0.1px. */
+/** @type {PresetDef[]} */
+export const COLOR_MODES = [
+	{ id: 'crop', label: 'Art crop bg', hint: 'Enlarged selected art as background' },
+	{ id: 'wash', label: 'Palette wash', hint: 'Colors sampled from the art' },
+	{ id: 'gen', label: 'Generated art', hint: 'Complementary generated wash from the palette' }
+];
+
+/** Shared V / H / scale / active-scale / blur (music + apps). V units ≈ 0.1px. */
 /** @type {SliderDef[]} */
 export const OVERLAP_SLIDERS = [
 	{ id: 'overlapV', key: 'elton-exp-v', label: 'Vertical overlap', min: 0, max: 25, step: 1, def: 15 },
@@ -57,53 +68,46 @@ export const DOCK_SLIDERS = [
 	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Extra dock depth', min: 0, max: 20, step: 1, def: 8 }
 ];
 
+/** @type {SliderDef[]} */
+export const COLOR_SLIDERS = [
+	{ id: 'colorStrength', key: 'elton-exp-color-str', label: 'Strength', min: 20, max: 100, step: 5, def: 70 },
+	{ id: 'colorZoom', key: 'elton-exp-color-zoom', label: 'Crop zoom', min: 140, max: 360, step: 10, def: 220 },
+	{ id: 'colorArtBlur', key: 'elton-exp-color-blur', label: 'Art blur', min: 0, max: 40, step: 2, def: 18 }
+];
+
+const ALL_SLIDERS = [...OVERLAP_SLIDERS, ...DOCK_SLIDERS, ...COLOR_SLIDERS];
 const PRESET_KEY = 'elton-exp-preset';
+const COLOR_MODE_KEY = 'elton-exp-color-mode';
 const PANEL_KEY = 'elton-exp-panel-open';
 
 /** @returns {Record<string, boolean | string | number>} */
 function readAll() {
 	/** @type {Record<string, boolean | string | number>} */
 	const state = {};
-
 	for (const def of FLAG_DEFS) {
 		state[def.id] = false;
-		if (typeof localStorage !== 'undefined') {
-			try {
-				state[def.id] = localStorage.getItem(def.key) === '1';
-			} catch {
-				/* ignore */
-			}
-		}
-	}
-
-	// Migrate prior dual music/apps overlap toggles → one enable
-	if (!state.overlap && typeof localStorage !== 'undefined') {
 		try {
-			if (
-				localStorage.getItem('elton-exp-overlap-music') === '1' ||
-				localStorage.getItem('elton-exp-overlap-apps') === '1'
-			) {
-				state.overlap = true;
-			}
+			if (typeof localStorage !== 'undefined') state[def.id] = localStorage.getItem(def.key) === '1';
 		} catch {
 			/* ignore */
 		}
 	}
-
 	state.preset = 'soft';
-	if (typeof localStorage !== 'undefined') {
-		try {
+	state.colorMode = 'crop';
+	try {
+		if (typeof localStorage !== 'undefined') {
 			const p = localStorage.getItem(PRESET_KEY);
 			if (p && PRESETS.some((x) => x.id === p)) state.preset = p;
-		} catch {
-			/* ignore */
+			const m = localStorage.getItem(COLOR_MODE_KEY);
+			if (m && COLOR_MODES.some((x) => x.id === m)) state.colorMode = m;
 		}
+	} catch {
+		/* ignore */
 	}
-
-	for (const def of [...OVERLAP_SLIDERS, ...DOCK_SLIDERS]) {
+	for (const def of ALL_SLIDERS) {
 		state[def.id] = def.def;
-		if (typeof localStorage === 'undefined') continue;
 		try {
+			if (typeof localStorage === 'undefined') continue;
 			const raw = localStorage.getItem(def.key);
 			if (raw == null) continue;
 			const n = Number(raw);
@@ -112,14 +116,13 @@ function readAll() {
 			/* ignore */
 		}
 	}
-
 	return state;
 }
 
 /** @param {string} key @param {boolean} on */
 function writeFlag(key, on) {
-	if (typeof localStorage === 'undefined') return;
 	try {
+		if (typeof localStorage === 'undefined') return;
 		if (on) localStorage.setItem(key, '1');
 		else localStorage.removeItem(key);
 	} catch {
@@ -129,9 +132,8 @@ function writeFlag(key, on) {
 
 /** @param {string} key @param {string} value */
 function writeStr(key, value) {
-	if (typeof localStorage === 'undefined') return;
 	try {
-		localStorage.setItem(key, value);
+		if (typeof localStorage !== 'undefined') localStorage.setItem(key, value);
 	} catch {
 		/* ignore */
 	}
@@ -143,10 +145,7 @@ let writeNumRaf = 0;
 
 function flushNums() {
 	writeNumRaf = 0;
-	if (typeof localStorage === 'undefined') {
-		pendingNums.clear();
-		return;
-	}
+	if (typeof localStorage === 'undefined') return pendingNums.clear();
 	for (const [k, v] of pendingNums) {
 		try {
 			localStorage.setItem(k, String(v));
@@ -157,7 +156,7 @@ function flushNums() {
 	pendingNums.clear();
 }
 
-/** rAF-coalesce localStorage; store updates stay sync. @param {string} key @param {number} value */
+/** @param {string} key @param {number} value */
 function writeNum(key, value) {
 	pendingNums.set(key, value);
 	if (typeof requestAnimationFrame === 'undefined') return flushNums();
@@ -165,16 +164,11 @@ function writeNum(key, value) {
 }
 
 const initial = readAll();
-
 export const experiments = writable(initial);
-
-/** Floating panel open state (UI only). */
 export const panelOpen = writable(true);
-
-/** Emits when defaultSecond should (re)apply — homepage apps subscribe. */
 export const defaultSecondApply = writable(!!initial.defaultSecond);
 
-/** Sync album default without fighting an in-progress autoplay nonce unnecessarily. */
+/** @param {boolean} on */
 function syncAlbum(on) {
 	const id = on ? ALBUM_IDS[1] : ALBUM_IDS[0];
 	nowPlaying.update((prev) => {
@@ -183,25 +177,22 @@ function syncAlbum(on) {
 	});
 }
 
-// Client module load: apply before first paint when flag already persisted.
 if (typeof window !== 'undefined' && initial.defaultSecond) {
 	nowPlaying.set({ id: ALBUM_IDS[1], autoplay: false, nonce: 0 });
 }
 
-/** Call once in the browser (layout onMount). */
 export function hydrateExperiments() {
 	const flags = readAll();
 	experiments.set(flags);
 	syncAlbum(!!flags.defaultSecond);
 	defaultSecondApply.set(!!flags.defaultSecond);
-	if (typeof localStorage !== 'undefined') {
-		try {
-			const raw = localStorage.getItem(PANEL_KEY);
-			if (raw === '0') panelOpen.set(false);
-			else if (raw === '1') panelOpen.set(true);
-		} catch {
-			/* ignore */
-		}
+	try {
+		if (typeof localStorage === 'undefined') return;
+		const raw = localStorage.getItem(PANEL_KEY);
+		if (raw === '0') panelOpen.set(false);
+		else if (raw === '1') panelOpen.set(true);
+	} catch {
+		/* ignore */
 	}
 }
 
@@ -229,9 +220,16 @@ export function setPreset(presetId) {
 	experiments.update((prev) => ({ ...prev, preset: presetId }));
 }
 
+/** @param {string} modeId */
+export function setColorMode(modeId) {
+	if (!COLOR_MODES.some((p) => p.id === modeId)) return;
+	writeStr(COLOR_MODE_KEY, modeId);
+	experiments.update((prev) => ({ ...prev, colorMode: modeId }));
+}
+
 /** @param {string} id @param {number} value */
 export function setSlider(id, value) {
-	const def = [...OVERLAP_SLIDERS, ...DOCK_SLIDERS].find((d) => d.id === id);
+	const def = ALL_SLIDERS.find((d) => d.id === id);
 	if (!def) return;
 	const n = Math.min(def.max, Math.max(def.min, Number(value)));
 	if (!Number.isFinite(n)) return;
@@ -242,26 +240,38 @@ export function setSlider(id, value) {
 /** @param {boolean} open */
 export function setPanelOpen(open) {
 	panelOpen.set(!!open);
-	if (typeof localStorage === 'undefined') return;
 	try {
-		localStorage.setItem(PANEL_KEY, open ? '1' : '0');
+		if (typeof localStorage !== 'undefined') localStorage.setItem(PANEL_KEY, open ? '1' : '0');
 	} catch {
 		/* ignore */
 	}
 }
 
 /**
- * CSS custom properties — tiny clamp so even max stays subtle.
  * @param {Record<string, boolean | string | number>} e
+ * @param {string} artUrl
  */
-export function overlapStyle(e) {
+export function colorThemeStyle(e, artUrl) {
+	if (!e.colorTheme || !artUrl) return '';
+	const str = Math.min(1, Math.max(0.15, (Number(e.colorStrength) || 70) / 100));
+	const zoom = Math.min(4, Math.max(1.2, (Number(e.colorZoom) || 220) / 100));
+	const blur = Math.min(48, Math.max(0, Number(e.colorArtBlur) || 18));
+	const safe = String(artUrl).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+	return `--art-url:url("${safe}");--exp-str:${str};--exp-zoom:${zoom};--exp-art-blur:${blur}px`;
+}
+
+/**
+ * @param {Record<string, boolean | string | number>} e
+ * @param {string} [colorCss]
+ */
+export function overlapStyle(e, colorCss = '') {
 	const v = Number(e.overlapV) || 0;
 	const h = Number(e.overlapH) || 0;
 	const s = Number(e.baseScale) || 100;
 	const a = Number(e.activeScale) || 110;
 	const dd = Number(e.dockDepth) || 0;
 	const blur = Number(e.inactiveBlur) || 0;
-	return [
+	const base = [
 		`--exp-v:${v / 10}px`,
 		`--exp-h:${h / 10}px`,
 		`--exp-s:${s / 100}`,
@@ -269,4 +279,5 @@ export function overlapStyle(e) {
 		`--exp-dock:${dd / 10}px`,
 		`--exp-blur:${blur}px`
 	].join(';');
+	return colorCss ? `${base};${colorCss}` : base;
 }
