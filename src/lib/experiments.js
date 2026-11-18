@@ -21,25 +21,25 @@ export const FLAG_DEFS = [
 		id: 'grayscaleUnselected',
 		key: 'elton-exp-grayscale-unselected',
 		label: 'Grayscale unselected',
-		hint: 'Unselected art/logos go B&W'
+		hint: 'Optional B&W — selection should read via size + dock'
 	},
 	{
 		id: 'overlapMusic',
 		key: 'elton-exp-overlap-music',
 		label: 'Enable overlap (music)',
-		hint: 'Album arts layer with the player pill'
+		hint: 'Selected album art docks onto the player (inactive stay clear)'
 	},
 	{
 		id: 'overlapApps',
 		key: 'elton-exp-overlap-apps',
 		label: 'Enable overlap (apps)',
-		hint: 'App logos layer with the feature card'
+		hint: 'Selected logo docks into the card (inactive stay clear)'
 	},
 	{
 		id: 'dockSelected',
 		key: 'elton-exp-dock-selected',
-		label: 'Dock selected into parent',
-		hint: 'Selected thumb nests into pill / logo into card'
+		label: 'Extra dock depth',
+		hint: 'Adds depth on top of overlap (selected only)'
 	}
 ];
 
@@ -48,35 +48,37 @@ export const EXPERIMENT_DEFS = FLAG_DEFS;
 
 /** @type {PresetDef[]} */
 export const MUSIC_PRESETS = [
-	{ id: 'tuck', label: 'Tuck under', hint: 'Thumbs peek behind the pill bottom edge' },
-	{ id: 'straddle', label: 'Straddle', hint: 'Part above / part below the pill baseline' },
-	{ id: 'fan', label: 'Fan cascade', hint: 'Each thumb stepped like a spread deck' }
+	{ id: 'tuck', label: 'Soft dock', hint: 'Selected art peeks onto the pill (above)' },
+	{ id: 'straddle', label: 'Deep dock', hint: 'Selected art nests further into the pill' },
+	{ id: 'fan', label: 'Tilted dock', hint: 'Selected art docks with a slight tilt' }
 ];
 
 /** @type {PresetDef[]} */
 export const APPS_PRESETS = [
-	{ id: 'hang', label: 'Hang into card', hint: 'Logos drop into the card top edge' },
-	{ id: 'sit', label: 'Sit on edge', hint: 'Logos rest on the card rim' },
-	{ id: 'fan', label: 'Fan cascade', hint: 'Each logo stepped like a spread deck' }
+	{ id: 'hang', label: 'Hang into card', hint: 'Selected logo drops into the card top' },
+	{ id: 'sit', label: 'Sit on edge', hint: 'Selected logo rests on the card rim' },
+	{ id: 'fan', label: 'Tilted dock', hint: 'Selected logo docks with a slight tilt' }
 ];
 
 /** @type {SliderDef[]} */
 export const MUSIC_SLIDERS = [
-	{ id: 'musicV', key: 'elton-exp-music-v', label: 'Vertical overlap', min: 0, max: 100, step: 1, def: 48 },
-	{ id: 'musicH', key: 'elton-exp-music-h', label: 'Horizontal stagger', min: 0, max: 100, step: 1, def: 28 },
-	{ id: 'musicScale', key: 'elton-exp-music-scale', label: 'Thumb scale', min: 70, max: 130, step: 1, def: 100 }
+	{ id: 'musicV', key: 'elton-exp-music-v', label: 'Selected overlap', min: 0, max: 100, step: 1, def: 18 },
+	{ id: 'musicH', key: 'elton-exp-music-h', label: 'Selected nudge', min: 0, max: 100, step: 1, def: 10 },
+	{ id: 'musicScale', key: 'elton-exp-music-scale', label: 'Base thumb scale', min: 70, max: 130, step: 1, def: 100 },
+	{ id: 'musicActive', key: 'elton-exp-music-active', label: 'Active scale ratio', min: 110, max: 170, step: 1, def: 128 }
 ];
 
 /** @type {SliderDef[]} */
 export const APPS_SLIDERS = [
-	{ id: 'appsV', key: 'elton-exp-apps-v', label: 'Vertical overlap', min: 0, max: 100, step: 1, def: 42 },
-	{ id: 'appsH', key: 'elton-exp-apps-h', label: 'Horizontal stagger', min: 0, max: 100, step: 1, def: 24 },
-	{ id: 'appsScale', key: 'elton-exp-apps-scale', label: 'Logo scale', min: 70, max: 130, step: 1, def: 100 }
+	{ id: 'appsV', key: 'elton-exp-apps-v', label: 'Selected overlap', min: 0, max: 100, step: 1, def: 28 },
+	{ id: 'appsH', key: 'elton-exp-apps-h', label: 'Selected nudge', min: 0, max: 100, step: 1, def: 10 },
+	{ id: 'appsScale', key: 'elton-exp-apps-scale', label: 'Base logo scale', min: 70, max: 130, step: 1, def: 100 },
+	{ id: 'appsActive', key: 'elton-exp-apps-active', label: 'Active scale ratio', min: 110, max: 170, step: 1, def: 128 }
 ];
 
 /** @type {SliderDef[]} */
 export const DOCK_SLIDERS = [
-	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Dock depth', min: 0, max: 100, step: 1, def: 52 }
+	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Extra dock depth', min: 0, max: 100, step: 1, def: 24 }
 ];
 
 const MUSIC_PRESET_KEY = 'elton-exp-music-preset';
@@ -232,17 +234,21 @@ export function overlapStyle(e) {
 	const mv = Number(e.musicV) || 0;
 	const mh = Number(e.musicH) || 0;
 	const ms = Number(e.musicScale) || 100;
+	const ma = Number(e.musicActive) || 128;
 	const av = Number(e.appsV) || 0;
 	const ah = Number(e.appsH) || 0;
 	const as_ = Number(e.appsScale) || 100;
+	const aa = Number(e.appsActive) || 128;
 	const dd = Number(e.dockDepth) || 0;
 	return [
-		`--exp-mv:${(mv / 100) * 1.85}rem`,
-		`--exp-mh:${(mh / 100) * 0.85}rem`,
+		`--exp-mv:${(mv / 100) * 0.95}rem`,
+		`--exp-mh:${(mh / 100) * 0.55}rem`,
 		`--exp-ms:${ms / 100}`,
-		`--exp-av:${(av / 100) * 1.65}rem`,
-		`--exp-ah:${(ah / 100) * 0.75}rem`,
+		`--exp-ma:${ma / 100}`,
+		`--exp-av:${(av / 100) * 0.85}rem`,
+		`--exp-ah:${(ah / 100) * 0.5}rem`,
 		`--exp-as:${as_ / 100}`,
-		`--exp-dock:${(dd / 100) * 1.35}rem`
+		`--exp-aa:${aa / 100}`,
+		`--exp-dock:${(dd / 100) * 0.7}rem`
 	].join(';');
 }

@@ -430,111 +430,87 @@
 		filter: none;
 	}
 
-	/* TEMP experiments — overlap album arts with player pill */
-	.unit.exp-overlap {
-		gap: 0;
+	/* TEMP experiments — subtle selected dock ON TOP of pill; inactive stay close under */
+	.unit.exp-overlap,
+	.unit.exp-dock {
+		/* tight gap so inactive sit just under the pill */
+		gap: 0.1rem;
+		isolation: isolate;
+		overflow: visible;
 	}
 
-	.unit.exp-overlap .pill {
+	.unit.exp-overlap .pill,
+	.unit.exp-dock .pill {
+		position: relative;
+		z-index: 0;
+		overflow: visible;
+		transform: translateZ(0);
+	}
+
+	.unit.exp-overlap .thumbs,
+	.unit.exp-dock .thumbs {
 		position: relative;
 		z-index: 2;
+		overflow: visible;
+		/* inactive-sized row — selected grows via scale so it doesn't drop siblings */
+		min-height: calc(var(--thumb) * var(--exp-ms, 1));
+		gap: max(0.18rem, calc(0.45rem - var(--exp-mh, 0.1rem)));
 	}
 
-	.unit.exp-overlap .thumbs {
-		position: relative;
-		z-index: 1;
-		margin-top: calc(-1 * var(--exp-mv, 0.9rem));
-		gap: max(0.12rem, calc(0.45rem - var(--exp-mh, 0.25rem)));
-		padding-top: 0.15rem;
-		min-height: calc(var(--thumb-on) + 0.2rem);
-	}
-
-	.unit.exp-overlap .thumb {
+	.unit.exp-overlap .thumb,
+	.unit.exp-dock .thumb {
 		width: calc(var(--thumb) * var(--exp-ms, 1));
+		position: relative;
+		z-index: 0;
 		transform-origin: bottom center;
-		transition: width 0.22s ease, transform 0.22s ease;
+		transition: transform 0.22s ease;
+	}
+
+	.unit.exp-overlap .thumb.selected,
+	.unit.exp-dock .thumb.selected {
+		/* same layout width as inactive — visual size via scale only */
+		width: calc(var(--thumb) * var(--exp-ms, 1));
 	}
 
 	.unit.exp-overlap .thumb.selected {
-		width: calc(var(--thumb-on) * var(--exp-ms, 1));
+		/* scale keeps layout height; translate docks onto pill above */
+		transform: translate3d(0, calc(-1 * var(--exp-mv, 0.17rem)), 0) scale(var(--exp-ma, 1.28));
+		z-index: 5;
 	}
 
-	.unit.exp-overlap[data-exp-preset='tuck'] .thumbs {
-		z-index: 0;
+	.unit.exp-overlap[data-exp-preset='straddle'] .thumb.selected {
+		transform: translate3d(0, calc(-1.25 * var(--exp-mv, 0.17rem)), 0) scale(var(--exp-ma, 1.28));
 	}
 
-	.unit.exp-overlap[data-exp-preset='tuck'] .pill {
-		z-index: 2;
-		/* keep tucked thumbs clickable under the translucent wash */
-		pointer-events: none;
-	}
-
-	.unit.exp-overlap[data-exp-preset='tuck'] .pill > * {
-		pointer-events: auto;
-	}
-
-	.unit.exp-overlap[data-exp-preset='straddle'] .thumbs {
-		z-index: 1;
-		margin-top: calc(-0.55 * var(--exp-mv, 0.9rem));
-	}
-
-	.unit.exp-overlap[data-exp-preset='straddle'] .thumb {
-		transform: translateY(calc(-0.22 * var(--exp-mv, 0.9rem)));
-	}
-
-	.unit.exp-overlap[data-exp-preset='fan'] .thumb:nth-child(1) {
-		transform: translate(calc(0.35 * var(--exp-mh, 0.25rem)), calc(0.15 * var(--exp-mv, 0.9rem)))
-			rotate(-4deg);
-	}
-
-	.unit.exp-overlap[data-exp-preset='fan'] .thumb:nth-child(2) {
-		transform: translate(0, calc(-0.05 * var(--exp-mv, 0.9rem))) rotate(-1deg);
-		z-index: 1;
-	}
-
-	.unit.exp-overlap[data-exp-preset='fan'] .thumb:nth-child(3) {
-		transform: translate(calc(-0.2 * var(--exp-mh, 0.25rem)), calc(0.28 * var(--exp-mv, 0.9rem)))
-			rotate(3deg);
-	}
-
-	.unit.exp-overlap[data-exp-preset='fan'] .thumb:nth-child(4) {
-		transform: translate(calc(-0.45 * var(--exp-mh, 0.25rem)), calc(0.55 * var(--exp-mv, 0.9rem)))
-			rotate(6deg);
-	}
-
-	/* TEMP experiments — selected album docks into pill edge */
-	.unit.exp-dock:not(.exp-overlap) {
-		gap: 0.18rem;
-	}
-
-	.unit.exp-dock .pill {
-		position: relative;
-		z-index: 2;
-	}
-
-	.unit.exp-dock .thumbs {
-		position: relative;
-		z-index: 3;
+	.unit.exp-overlap[data-exp-preset='fan'] .thumb.selected {
+		transform: translate3d(calc(-0.2 * var(--exp-mh, 0.1rem)), calc(-1.15 * var(--exp-mv, 0.17rem)), 0)
+			rotate(-2deg) scale(var(--exp-ma, 1.28));
 	}
 
 	.unit.exp-dock .thumb.selected {
-		transform: translateY(calc(-1 * var(--exp-dock, 0.7rem)));
-		z-index: 4;
-		transition: width 0.22s ease, transform 0.22s ease;
+		transform: translate3d(0, calc(-1 * var(--exp-dock, 0.2rem)), 0) scale(var(--exp-ma, 1.28));
+		z-index: 5;
+	}
+
+	.unit.exp-dock.exp-overlap .thumb.selected {
+		transform: translate3d(0, calc(-1 * var(--exp-mv, 0.17rem) - var(--exp-dock, 0.2rem)), 0)
+			scale(var(--exp-ma, 1.28));
 	}
 
 	.unit.exp-dock.exp-overlap[data-exp-preset='straddle'] .thumb.selected {
-		transform: translateY(calc(-0.22 * var(--exp-mv, 0.9rem) - var(--exp-dock, 0.7rem)));
+		transform: translate3d(0, calc(-1.25 * var(--exp-mv, 0.17rem) - var(--exp-dock, 0.2rem)), 0)
+			scale(var(--exp-ma, 1.28));
 	}
 
 	.unit.exp-dock.exp-overlap[data-exp-preset='fan'] .thumb.selected {
-		transform: translateY(calc(-1 * var(--exp-dock, 0.7rem)));
+		transform: translate3d(calc(-0.2 * var(--exp-mh, 0.1rem)), calc(-1.15 * var(--exp-mv, 0.17rem) - var(--exp-dock, 0.2rem)), 0)
+			rotate(-2deg) scale(var(--exp-ma, 1.28));
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.thumb { transition: none; }
-		.unit.exp-gray .thumb:not(.selected) img { transition: none; }
+		.thumb,
 		.unit.exp-overlap .thumb,
-		.unit.exp-dock .thumb.selected { transition: none; }
+		.unit.exp-dock .thumb { transition: none; }
+		.unit.exp-gray .thumb:not(.selected) img { transition: none; }
 	}
 </style>

@@ -145,7 +145,7 @@
 		</div>
 	{/if}
 
-	<p class="exp-section">Association</p>
+	<p class="exp-section">Extra depth</p>
 
 	<label class="exp-row" title={dockFlag.hint}>
 		<input
