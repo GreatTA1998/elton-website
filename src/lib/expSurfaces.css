@@ -22,8 +22,12 @@
 .unit.exp-color[data-color-mode=gen] .pill::before,.spotlight.exp-color[data-color-mode=gen] .spotlight-feature::before{background:var(--art-url) center/cover no-repeat;transform:scale(var(--exp-zoom,2.2)) rotate(8deg);filter:blur(var(--exp-art-blur,18px)) saturate(1.45) hue-rotate(168deg) contrast(1.08);opacity:calc(.38 + var(--exp-str,.7)*.5)}
 .unit.exp-color[data-color-mode=gen] .pill::after,.spotlight.exp-color[data-color-mode=gen] .spotlight-feature::after{background:repeating-linear-gradient(-18deg,transparent 0 11px,rgba(255,255,255,.1) 11px 13px),radial-gradient(circle at 78% 22%,rgba(255,255,255,.28),transparent 42%),rgba(255,252,248,.42);opacity:calc(.92 - var(--exp-str,.7)*.42);mix-blend-mode:soft-light}
 .unit.exp-color .icon-btn.play,.spotlight.exp-color .feature-action{background:rgba(255,255,255,calc(.35 + (1 - var(--exp-str,.7))*.3));border-color:rgba(40,40,40,.14)}
-.unit.exp-read[data-read-mode=ink] .meta,.spotlight.exp-read[data-read-mode=ink] .feature-copy{color:#fff;mix-blend-mode:difference}
-.unit.exp-read[data-read-mode=ink] .title,.unit.exp-read[data-read-mode=ink] .credit,.spotlight.exp-read[data-read-mode=ink] .feature-title,.spotlight.exp-read[data-read-mode=ink] .feature-desc,.spotlight.exp-read[data-read-mode=ink] .feature-status{color:inherit}
+.unit.exp-read[data-read-mode=ink],.spotlight.exp-read[data-read-mode=ink]{--ink:var(--exp-ink,#0e0e0e);--mute:var(--exp-mute,#2e2e2e);color:var(--ink)}
+/* Color-theme veils are light — prefer dark type when both flags are on */
+.unit.exp-color.exp-read[data-read-mode=ink],.spotlight.exp-color.exp-read[data-read-mode=ink]{--ink:#0e0e0e;--mute:#2e2e2e}
+.unit.exp-read[data-read-mode=ink] .title,.unit.exp-read[data-read-mode=ink] .credit,.spotlight.exp-read[data-read-mode=ink] .feature-title{color:var(--ink)}
+.spotlight.exp-read[data-read-mode=ink] .feature-desc,.spotlight.exp-read[data-read-mode=ink] .feature-status{color:var(--mute)}
+.unit.exp-read[data-read-mode=ink] .icon-btn.play{color:var(--ink);background:rgba(255,255,255,.45);border:1px solid rgba(40,40,40,.18)}
 .unit.exp-read[data-read-mode=scrim] .meta,.spotlight.exp-read[data-read-mode=scrim] .feature-copy{margin:.05rem 0;background:rgba(255,252,248,.8);border-radius:.65rem;padding:.28rem .5rem;box-shadow:0 1px 10px rgba(40,36,30,.06)}
 .unit.exp-read[data-read-mode=scrim] .title,.spotlight.exp-read[data-read-mode=scrim] .feature-title{color:#141414}
 .unit.exp-read[data-read-mode=scrim] .credit,.spotlight.exp-read[data-read-mode=scrim] .feature-desc,.spotlight.exp-read[data-read-mode=scrim] .feature-status{color:#3a3a3a}

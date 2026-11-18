@@ -283,10 +283,14 @@
 	$: essayLayoutMode = $experiments.essayLayout ? $experiments.essayMode : null;
 	$: essayPair = essayLayoutMode === 'pair';
 	// TEMP experiments — palette border from selected app logo
-	$: requestPalette(appsPalOwner, $experiments.paletteBorder ? selectedApp?.logo || '' : '', (css, kind) => {
-		appsArtCss = css;
-		appsBorderKind = kind;
-	});
+	$: requestPalette(
+		appsPalOwner,
+		$experiments.paletteBorder || $experiments.textRead ? selectedApp?.logo || '' : '',
+		(css, kind) => {
+			appsArtCss = css;
+			appsBorderKind = kind;
+		}
+	);
 	$: appsStyle = needsSurfaceStyle($experiments)
 		? overlapStyle(
 				$experiments,

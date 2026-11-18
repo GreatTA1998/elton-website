@@ -34,7 +34,7 @@ export const COLOR_MODES = [
 ];
 /** @type {PresetDef[]} */
 export const READ_MODES = [
-	{ id: 'ink', label: 'Adaptive ink', hint: 'Difference-blend type against the art' },
+	{ id: 'ink', label: 'Adaptive ink', hint: 'Dark/light type from art luminance' },
 	{ id: 'scrim', label: 'Soft scrim', hint: 'Light veil under the text block' },
 	{ id: 'outline', label: 'Outlined type', hint: 'Halo / shadow so type clears the art' }
 ];
@@ -309,10 +309,11 @@ export function overlapStyle(e, colorCss = '') {
 	return colorCss ? `${base};${colorCss}` : base;
 }
 
-/** @typedef {{ colors: string[], mono: boolean }} ArtPalette */
+/** @typedef {{ colors: string[], mono: boolean, ink: string, mute: string }} ArtPalette */
 /** @type {Map<string, Promise<ArtPalette>>} */
 const palCache = new Map();
-const palFallback = () => /** @type {ArtPalette} */ ({ colors: ['#6a6a6a', '#9a9a9a', '#c4c4c4'], mono: true });
+const palFallback = () =>
+	/** @type {ArtPalette} */ ({ colors: ['#6a6a6a', '#9a9a9a', '#c4c4c4'], mono: true, ink: '#141414', mute: '#3a3a3a' });
 /** @param {number} r @param {number} g @param {number} b */
 const toHex = (r, g, b) => `#${[r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('')}`;
 
@@ -323,6 +324,7 @@ export function sampleArt(url) {
 	if (hit) return hit;
 	const p = new Promise((resolve, reject) => {
 		const img = new Image();
+		img.crossOrigin = 'anonymous';
 		img.decoding = 'async';
 		img.onload = () => {
 			try {
@@ -335,12 +337,16 @@ export function sampleArt(url) {
 				const { data } = ctx.getImageData(0, 0, s, s);
 				/** @type {Map<string, { n: number, r: number, g: number, b: number }>} */
 				const buckets = new Map();
+				let sumL = 0;
+				let nL = 0;
 				for (let i = 0; i < data.length; i += 4) {
 					if (data[i + 3] < 200) continue;
 					const r = data[i],
 						g = data[i + 1],
 						b = data[i + 2];
 					const L = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+					sumL += L;
+					nL++;
 					if (L < 0.08 || L > 0.92 || Math.max(r, g, b) - Math.min(r, g, b) < 12) continue;
 					const key = `${r >> 4},${g >> 4},${b >> 4}`;
 					const cur = buckets.get(key);
@@ -351,11 +357,21 @@ export function sampleArt(url) {
 						cur.b += b;
 					} else buckets.set(key, { n: 1, r, g, b });
 				}
+				const avgL = nL ? sumL / nL : 0.85;
+				const ink = avgL > 0.55 ? '#0e0e0e' : '#f7f4ef';
+				const mute = avgL > 0.55 ? '#2e2e2e' : '#d9d3c8';
 				const ranked = [...buckets.values()]
 					.sort((a, b) => b.n - a.n)
 					.slice(0, 5)
 					.map((x) => ({ n: x.n, r: Math.round(x.r / x.n), g: Math.round(x.g / x.n), b: Math.round(x.b / x.n) }));
-				if (!ranked.length) return resolve(palFallback());
+				if (!ranked.length) {
+					return resolve({
+						colors: avgL > 0.55 ? ['#5a5a5a', '#8a8a8a', '#b0b0b0'] : ['#c8c2b8', '#9a948a', '#6a655c'],
+						mono: true,
+						ink,
+						mute
+					});
+				}
 				const colors = ranked.slice(0, 3).map((x) => toHex(x.r, x.g, x.b));
 				while (colors.length < 3) colors.push(colors[colors.length - 1]);
 				const top = ranked[0];
@@ -363,7 +379,9 @@ export function sampleArt(url) {
 				const dist = (a, b) => Math.abs(a.r - b.r) + Math.abs(a.g - b.g) + Math.abs(a.b - b.b);
 				resolve({
 					colors,
-					mono: share > 0.62 || ranked.length === 1 || ranked.slice(1).every((x) => dist(top, x) < 90)
+					mono: share > 0.62 || ranked.length === 1 || ranked.slice(1).every((x) => dist(top, x) < 90),
+					ink,
+					mute
 				});
 			} catch (e) {
 				reject(e);
@@ -379,7 +397,7 @@ export function sampleArt(url) {
 /** @param {ArtPalette} p */
 export function paletteStyle(p) {
 	const [c1, c2, c3] = p.colors;
-	return `--exp-c1:${c1};--exp-c2:${c2};--exp-c3:${c3}`;
+	return `--exp-c1:${c1};--exp-c2:${c2};--exp-c3:${c3};--exp-ink:${p.ink};--exp-mute:${p.mute}`;
 }
 
 /** @type {WeakMap<object, number>} */

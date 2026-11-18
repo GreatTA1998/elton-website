@@ -37,10 +37,14 @@
 				? $messages.bachComingSoon
 				: track.credit;
 	// TEMP experiments — palette border from selected cover
-	$: requestPalette(palOwner, $experiments.paletteBorder ? track?.cover || '' : '', (css, kind) => {
-		artCss = css;
-		borderKind = kind;
-	});
+	$: requestPalette(
+		palOwner,
+		$experiments.paletteBorder || $experiments.textRead ? track?.cover || '' : '',
+		(css, kind) => {
+			artCss = css;
+			borderKind = kind;
+		}
+	);
 	$: unitStyle = needsSurfaceStyle($experiments)
 		? overlapStyle(
 				$experiments,
