@@ -9,16 +9,17 @@ import { ALBUM_IDS, nowPlaying } from './nowPlaying.js';
 /** @typedef {{ id: string, key: string, label: string, min: number, max: number, step: number, def: number }} SliderDef */
 
 /** Winners default-on. Rev clears stale LS. */
-export const DEFAULT_ON = new Set(['defaultSecond', 'overlap', 'essayLayout', 'essayDate']);
+export const DEFAULT_ON = new Set(['defaultSecond', 'overlap', 'essayLayout']);
 const WINNERS_REV_KEY = 'elton-exp-winners-rev';
-const WINNERS_REV = '4';
+const WINNERS_REV = '5';
+const LEGACY_ESSAY_DATE_KEY = 'elton-exp-essay-date';
+const LEGACY_ESSAY_DESC_KEY = 'elton-exp-essay-desc-mode';
 
 /** @type {FlagDef[]} */
 export const FLAG_DEFS = [
 	{ id: 'defaultSecond', key: 'elton-exp-default-second', label: 'Default select second', hint: 'Winner — 2nd album / app' },
 	{ id: 'overlap', key: 'elton-exp-overlap', label: 'Tilted dock', hint: 'Winner — overlap + tilt' },
-	{ id: 'essayLayout', key: 'elton-exp-essay-layout', label: 'Essay Title+copy pair', hint: 'Winner — copy under title' },
-	{ id: 'essayDate', key: 'elton-exp-essay-date', label: 'Essay date', hint: 'TEMP — date under selected title' }
+	{ id: 'essayLayout', key: 'elton-exp-essay-layout', label: 'Essay Title+copy pair', hint: 'Winner — Reading size + date' }
 ];
 
 /** @type {FlagDef[]} */
@@ -30,16 +31,6 @@ export const ARCHIVED_FLAG_DEFS = [
 ];
 export const ALL_FLAG_DEFS = [...FLAG_DEFS, ...ARCHIVED_FLAG_DEFS];
 
-/** @typedef {{ id: string, label: string, hint: string }} PresetDef */
-/** @type {PresetDef[]} */
-export const ESSAY_DESC_MODES = [
-	{ id: 'quiet', label: 'Quiet caption', hint: 'Current xs / quiet ink' },
-	{ id: 'ink', label: 'Stronger ink', hint: 'sm size; soft ink' },
-	{ id: 'read', label: 'Reading size', hint: 'body size; soft ink' },
-	{ id: 'article', label: 'Article pair', hint: 'title-size desc; body ink' }
-];
-const ESSAY_DESC_IDS = ESSAY_DESC_MODES.map((m) => m.id);
-
 /** @type {SliderDef[]} */
 export const OVERLAP_SLIDERS = [
 	{ id: 'overlapV', key: 'elton-exp-v', label: 'Vertical overlap', min: 0, max: 25, step: 1, def: 15 },
@@ -50,7 +41,6 @@ export const OVERLAP_SLIDERS = [
 	{ id: 'inactiveBlur', key: 'elton-exp-blur', label: 'Inactive blur', min: 0, max: 12, step: 1, def: 0 }
 ];
 
-const ESSAY_DESC_KEY = 'elton-exp-essay-desc-mode';
 const PANEL_KEY = 'elton-exp-panel-open';
 const LEGACY_PRESET_KEY = 'elton-exp-preset';
 const LEGACY_ESSAY_MODE_KEY = 'elton-exp-essay-mode';
@@ -61,7 +51,8 @@ function migrateWinnersRev() {
 		for (const def of ALL_FLAG_DEFS) localStorage.removeItem(def.key);
 		localStorage.removeItem(LEGACY_PRESET_KEY);
 		localStorage.removeItem(LEGACY_ESSAY_MODE_KEY);
-		localStorage.removeItem(ESSAY_DESC_KEY);
+		localStorage.removeItem(LEGACY_ESSAY_DESC_KEY);
+		localStorage.removeItem(LEGACY_ESSAY_DATE_KEY);
 		localStorage.setItem(WINNERS_REV_KEY, WINNERS_REV);
 	} catch {
 		/* ignore */
@@ -81,18 +72,6 @@ function readFlag(key, fallback) {
 	return fallback;
 }
 
-/** @param {string} key @param {string[]} allowed @param {string} fallback */
-function readMode(key, allowed, fallback) {
-	try {
-		if (typeof localStorage === 'undefined') return fallback;
-		const raw = localStorage.getItem(key);
-		if (raw && allowed.includes(raw)) return raw;
-	} catch {
-		/* ignore */
-	}
-	return fallback;
-}
-
 /** @returns {Record<string, boolean | string | number>} */
 function readAll() {
 	migrateWinnersRev();
@@ -101,7 +80,6 @@ function readAll() {
 	for (const def of ALL_FLAG_DEFS) state[def.id] = readFlag(def.key, DEFAULT_ON.has(def.id));
 	state.colorMode = 'crop';
 	state.readMode = 'ink';
-	state.essayDescMode = readMode(ESSAY_DESC_KEY, ESSAY_DESC_IDS, 'read');
 	for (const def of OVERLAP_SLIDERS) {
 		state[def.id] = def.def;
 		try {
@@ -203,22 +181,6 @@ export function setExperiment(id, on) {
 /** @param {string} id */
 export function toggleExperiment(id) {
 	setExperiment(id, !get(experiments)[id]);
-}
-
-/** @param {string} key @param {string} value */
-function writeStr(key, value) {
-	try {
-		if (typeof localStorage !== 'undefined') localStorage.setItem(key, value);
-	} catch {
-		/* ignore */
-	}
-}
-
-/** @param {string} modeId */
-export function setEssayDescMode(modeId) {
-	if (!ESSAY_DESC_IDS.includes(modeId)) return;
-	writeStr(ESSAY_DESC_KEY, modeId);
-	experiments.update((prev) => ({ ...prev, essayDescMode: modeId }));
 }
 
 /** @param {Record<string, boolean | string | number>} e */

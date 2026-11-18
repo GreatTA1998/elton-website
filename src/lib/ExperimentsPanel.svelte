@@ -3,12 +3,10 @@
 	import {
 		FLAG_DEFS,
 		ARCHIVED_FLAG_DEFS,
-		ESSAY_DESC_MODES,
 		OVERLAP_SLIDERS,
 		experiments,
 		panelOpen,
 		toggleExperiment,
-		setEssayDescMode,
 		setSlider,
 		setPanelOpen
 	} from './experiments.js';
@@ -93,16 +91,6 @@
 							>
 						{/each}
 					</div>
-				{/if}
-				{#if f.id === 'essayLayout' && $experiments.essayLayout}
-					<fieldset class="exp-field">
-						<legend class="exp-legend">Desc type</legend>
-						{#each ESSAY_DESC_MODES as m (m.id)}
-							<label class="exp-radio" title={m.hint}
-								><input type="radio" name="exp-essay-desc" value={m.id} checked={$experiments.essayDescMode === m.id} on:change={() => setEssayDescMode(m.id)} /><span>{m.label}</span></label
-							>
-						{/each}
-					</fieldset>
 				{/if}
 			{/each}
 
