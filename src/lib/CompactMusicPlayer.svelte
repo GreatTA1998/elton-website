@@ -2,6 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { nowPlaying, currentTrack, TRACKS, ALBUM_IDS, playTrack } from './nowPlaying.js';
 	import { messages } from './i18n.js';
+	import { experiments } from './experiments.js'; // TEMP experiments
 
 	let playing = false;
 	let ytReady = false;
@@ -207,7 +208,12 @@
 	});
 </script>
 
-<div class="unit" role="region" aria-label={$messages.musicPlayer}>
+<div
+	class="unit"
+	class:exp-gray={$experiments.grayscaleUnselected}
+	role="region"
+	aria-label={$messages.musicPlayer}
+>
 	<div class="yt-host" aria-hidden="true">
 		<div use:ytHost></div>
 	</div>
@@ -410,7 +416,18 @@
 		pointer-events: none;
 	}
 
+	/* TEMP experiments — grayscale unselected album arts */
+	.unit.exp-gray .thumb:not(.selected) img {
+		filter: grayscale(0.92);
+		transition: filter 0.22s ease;
+	}
+
+	.unit.exp-gray .thumb.selected img {
+		filter: none;
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.thumb { transition: none; }
+		.unit.exp-gray .thumb:not(.selected) img { transition: none; }
 	}
 </style>
