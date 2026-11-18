@@ -88,9 +88,6 @@
 	<div class="main">
 		<header class="top">
 			<p class="crumb"><a href="/">Home</a><span class="sep">/</span><span>Essay</span></p>
-			{#if isFull}
-				<p class="layout-note">Full-width layout experiment</p>
-			{/if}
 			<h1 class="essay-title">{essay.title}</h1>
 			{#if essay.lede}
 				<p class="essay-lede">{essay.lede}</p>
@@ -374,15 +371,6 @@
 	.sep {
 		margin: 0 0.4em;
 		color: #c0c0c0;
-	}
-
-	.layout-note {
-		margin: 0 0 0.75rem;
-		font-size: 0.78rem;
-		font-weight: 500;
-		letter-spacing: 0.02em;
-		text-transform: uppercase;
-		color: #8a8a8a;
 	}
 
 	.essay-title {

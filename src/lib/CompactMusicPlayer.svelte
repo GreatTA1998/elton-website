@@ -2,11 +2,21 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { nowPlaying, currentTrack, TRACKS, ALBUM_IDS, playTrack } from './nowPlaying.js';
 	import { messages } from './i18n.js';
-	import { experiments, overlapStyle, colorThemeStyle } from './experiments.js'; // TEMP experiments
+	import {
+		experiments,
+		overlapStyle,
+		colorThemeStyle,
+		needsSurfaceStyle,
+		requestPalette
+	} from './experiments.js'; // TEMP experiments
 
 	let playing = false;
 	let ytReady = false;
 	let lastNonce = -1;
+	/** TEMP experiments — palette border sample */
+	const palOwner = {};
+	let artCss = '';
+	let borderKind = /** @type {'mono' | 'multi' | null} */ (null);
 
 	/** @type {HTMLElement | null} */
 	let hostEl = null;
@@ -26,11 +36,17 @@
 			: track.credit === 'Coming soon'
 				? $messages.bachComingSoon
 				: track.credit;
-	// TEMP experiments — art color theme vars from selected cover
-	$: unitStyle =
-		$experiments.overlap || $experiments.dockSelected || $experiments.colorTheme
-			? overlapStyle($experiments, colorThemeStyle($experiments, track?.cover || ''))
-			: null;
+	// TEMP experiments — palette border from selected cover
+	$: requestPalette(palOwner, $experiments.paletteBorder ? track?.cover || '' : '', (css, kind) => {
+		artCss = css;
+		borderKind = kind;
+	});
+	$: unitStyle = needsSurfaceStyle($experiments)
+		? overlapStyle(
+				$experiments,
+				[colorThemeStyle($experiments, track?.cover || ''), artCss].filter(Boolean).join(';')
+			)
+		: null;
 
 	/** @param {HTMLElement} node */
 	function ytHost(node) {
@@ -218,8 +234,11 @@
 	class:exp-overlap={$experiments.overlap}
 	class:exp-dock={$experiments.dockSelected}
 	class:exp-color={$experiments.colorTheme}
-	data-exp-preset={$experiments.overlap ? $experiments.preset : null}
+	class:exp-read={$experiments.textRead}
+	class:exp-border={$experiments.paletteBorder}
 	data-color-mode={$experiments.colorTheme ? $experiments.colorMode : null}
+	data-read-mode={$experiments.textRead ? $experiments.readMode : null}
+	data-border-kind={$experiments.paletteBorder ? borderKind : null}
 	style={unitStyle}
 	role="region"
 	aria-label={$messages.musicPlayer}

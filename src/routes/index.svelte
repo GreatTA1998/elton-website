@@ -8,8 +8,11 @@
 			class:exp-overlap={$experiments.overlap}
 			class:exp-dock={$experiments.dockSelected}
 			class:exp-color={$experiments.colorTheme}
-			data-exp-preset={$experiments.overlap ? $experiments.preset : null}
+			class:exp-read={$experiments.textRead}
+			class:exp-border={$experiments.paletteBorder}
 			data-color-mode={$experiments.colorTheme ? $experiments.colorMode : null}
+			data-read-mode={$experiments.textRead ? $experiments.readMode : null}
+			data-border-kind={$experiments.paletteBorder ? appsBorderKind : null}
 			style={appsStyle}
 			aria-label={$messages.softwareApps}
 		>
@@ -164,7 +167,14 @@
 	import SiteFooter from '$lib/SiteFooter.svelte';
 	import SubscribeForm from '$lib/SubscribeForm.svelte';
 	import { messages } from '$lib/i18n.js';
-	import { experiments, defaultSecondApply, overlapStyle, colorThemeStyle } from '$lib/experiments.js'; // TEMP experiments
+	import {
+		experiments,
+		defaultSecondApply,
+		overlapStyle,
+		colorThemeStyle,
+		needsSurfaceStyle,
+		requestPalette
+	} from '$lib/experiments.js'; // TEMP experiments
 
 	const reduceMotion =
 		typeof window !== 'undefined' &&
@@ -244,6 +254,10 @@
 	let notionPlaying = false;
 	let updatesDialog;
 	let updatesFormKey = 0;
+	/** TEMP experiments — palette border sample for apps */
+	const appsPalOwner = {};
+	let appsArtCss = '';
+	let appsBorderKind = /** @type {'mono' | 'multi' | null} */ (null);
 	// TEMP experiments — default select second app when flag is on
 	onMount(() =>
 		defaultSecondApply.subscribe((on) => {
@@ -268,11 +282,17 @@
 	// TEMP experiments — essay layout mode (null = classic 3-col)
 	$: essayLayoutMode = $experiments.essayLayout ? $experiments.essayMode : null;
 	$: essayPair = essayLayoutMode === 'pair';
-	// TEMP experiments — art color theme vars from selected app logo
-	$: appsStyle =
-		$experiments.overlap || $experiments.dockSelected || $experiments.colorTheme
-			? overlapStyle($experiments, colorThemeStyle($experiments, selectedApp?.logo || ''))
-			: null;
+	// TEMP experiments — palette border from selected app logo
+	$: requestPalette(appsPalOwner, $experiments.paletteBorder ? selectedApp?.logo || '' : '', (css, kind) => {
+		appsArtCss = css;
+		appsBorderKind = kind;
+	});
+	$: appsStyle = needsSurfaceStyle($experiments)
+		? overlapStyle(
+				$experiments,
+				[colorThemeStyle($experiments, selectedApp?.logo || ''), appsArtCss].filter(Boolean).join(';')
+			)
+		: null;
 
 	/** @param {string} id */
 	function selectEssay(id) {

@@ -1,53 +1,15 @@
-<!--
-  Reversible homepage place-atmosphere (vibe-only photo + quiet lived places).
-  Portrait frame; Hsinchu → wisteria, Milton Keynes → rainbow garden,
-  Boston → Maseeh snow, Tokyo → IMG_2334 rainy alley. No white fade overlay.
-  Quiet ~5s crossfade among all four places. Selecting a city crossfades
-  to that place and resets the ~5s cycle from there (does not permanently
-  stop rotation). Hover/focus on the frame or list pauses temporarily.
-  Delete this component (and its import/usage in index.svelte) to remove it.
--->
+<!-- Homepage place-atmosphere: lived-city photo + quiet ~5s crossfade. -->
 <script>
 	import { onMount, tick } from 'svelte';
 	import { messages } from './i18n.js';
 
-	// Cities only (>short stops omitted). No country suffixes, no London/Taipei.
 	const places = ['Hsinchu', 'Milton Keynes', 'Boston', 'Tokyo'];
-
 	/** @type {Record<string, { mobileJpg: string; mobileWebp: string; desktopJpg: string; desktopWebp: string; position: string; desktopPosition: string }>} */
 	const scenery = {
-		Hsinchu: {
-			mobileJpg: '/home-wisteria.jpg',
-			mobileWebp: '/home-wisteria.webp',
-			desktopJpg: '/home-wisteria-desktop.jpg',
-			desktopWebp: '/home-wisteria-desktop.webp',
-			position: '62% 38%',
-			desktopPosition: '55% 44%'
-		},
-		'Milton Keynes': {
-			mobileJpg: '/home-milton-keynes.jpg',
-			mobileWebp: '/home-milton-keynes.webp',
-			desktopJpg: '/home-milton-keynes-desktop.jpg',
-			desktopWebp: '/home-milton-keynes-desktop.webp',
-			position: '55% 40%',
-			desktopPosition: '52% 38%'
-		},
-		Boston: {
-			mobileJpg: '/home-boston.jpg',
-			mobileWebp: '/home-boston.webp',
-			desktopJpg: '/home-boston-desktop.jpg',
-			desktopWebp: '/home-boston-desktop.webp',
-			position: '50% 42%',
-			desktopPosition: '50% 40%'
-		},
-		Tokyo: {
-			mobileJpg: '/home-tokyo.jpg',
-			mobileWebp: '/home-tokyo.webp',
-			desktopJpg: '/home-tokyo-desktop.jpg',
-			desktopWebp: '/home-tokyo-desktop.webp',
-			position: '50% 42%',
-			desktopPosition: '50% 40%'
-		}
+		Hsinchu: { mobileJpg: '/home-wisteria.jpg', mobileWebp: '/home-wisteria.webp', desktopJpg: '/home-wisteria-desktop.jpg', desktopWebp: '/home-wisteria-desktop.webp', position: '62% 38%', desktopPosition: '55% 44%' },
+		'Milton Keynes': { mobileJpg: '/home-milton-keynes.jpg', mobileWebp: '/home-milton-keynes.webp', desktopJpg: '/home-milton-keynes-desktop.jpg', desktopWebp: '/home-milton-keynes-desktop.webp', position: '55% 40%', desktopPosition: '52% 38%' },
+		Boston: { mobileJpg: '/home-boston.jpg', mobileWebp: '/home-boston.webp', desktopJpg: '/home-boston-desktop.jpg', desktopWebp: '/home-boston-desktop.webp', position: '50% 42%', desktopPosition: '50% 40%' },
+		Tokyo: { mobileJpg: '/home-tokyo.jpg', mobileWebp: '/home-tokyo.webp', desktopJpg: '/home-tokyo-desktop.jpg', desktopWebp: '/home-tokyo-desktop.webp', position: '50% 42%', desktopPosition: '50% 40%' }
 	};
 
 	const scenicPlaces = places.filter((p) => scenery[p]);
