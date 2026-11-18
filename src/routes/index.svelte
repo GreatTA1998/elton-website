@@ -69,6 +69,7 @@
 		<section
 			class="spotlight"
 			data-essay-layout={essayLayoutMode}
+			data-essay-desc={essayDescMode}
 			aria-label={$messages.videoEssays}
 		>
 			<div class="essay-row">
@@ -87,6 +88,9 @@
 							{truncateTitle(essay.title)}
 						</button>
 						{#if essayPair && selectedEssayId === essay.id}
+							{#if essayDateOn && essay.date}
+								<time class="essay-date type-caption" datetime={essay.date}>{fmtDate(essay.date)}</time>
+							{/if}
 							<p class="type-caption essay-pair-desc">{essayDesc}</p>
 						{/if}
 					{/each}
@@ -227,6 +231,7 @@
 			kind: 'essay',
 			href: '/essays/gohs-folly',
 			title: "Goh's Folly: Seeing What Others Couldn't",
+			date: '2026-11-06',
 			sentence:
 				"Sometimes, we have to devote many years of our life into something that might not work - a four-chapter essay on originality, courage, based on Singapore's founding story",
 			coverAvif: '/gohs-folly-cover.avif',
@@ -237,6 +242,7 @@
 			id: 'notion',
 			kind: 'video',
 			title: 'Beyond the features: what is the point of Notion?',
+			date: '2026-07-15',
 			sentence: 'True freedom to customize the UI by drag-and-drop, and databases',
 			thumb: '/notion-essay-thumb.jpg',
 			youtubeId: 'DhyhHdN02xc'
@@ -266,12 +272,19 @@
 	);
 
 	const TITLE_MAX = 52;
+	const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
 	/** @param {string} text */
 	function truncateTitle(text) {
 		const value = String(text || '').trim();
 		if (value.length <= TITLE_MAX) return value;
 		return `${value.slice(0, TITLE_MAX).trimEnd()}…`;
+	}
+
+	/** @param {string} iso */
+	function fmtDate(iso) {
+		const d = new Date(`${iso}T12:00:00`);
+		return Number.isNaN(d.getTime()) ? iso : dateFmt.format(d);
 	}
 
 	$: selectedApp = apps.find((app) => app.id === selectedAppId) || apps[0];
@@ -282,6 +295,8 @@
 	// TEMP experiments — Title+copy pair (null = classic)
 	$: essayPair = !!$experiments.essayLayout;
 	$: essayLayoutMode = essayPair ? 'pair' : null;
+	$: essayDescMode = essayPair ? $experiments.essayDescMode || 'quiet' : null;
+	$: essayDateOn = !!$experiments.essayDate;
 	// TEMP experiments — palette border from selected app logo
 	$: requestPalette(
 		appsPalOwner,
@@ -334,7 +349,11 @@
 	.essay-side{flex:0 1 auto;width:max-content;max-width:min(52ch,100%);min-width:0}
 	.essay-media-wrap{flex:0 1 auto;min-width:0;max-width:100%;display:grid;grid-template-columns:minmax(0,16rem) minmax(0,22rem);gap:.65rem;align-items:start}
 	.spotlight[data-essay-layout='pair'] .essay-media-wrap{grid-template-columns:minmax(0,18rem)}
-	.essay-pair-desc{margin:.4rem 0 .6rem;max-width:36ch;font-size:var(--text-xs);line-height:var(--lh-body)}
+	.essay-date{display:block;margin:.02rem 0 0;font-size:var(--text-xs);color:var(--ink-quiet);line-height:var(--lh-tight)}
+	.essay-pair-desc{margin:.4rem 0 .6rem;max-width:36ch;font-size:var(--text-xs);line-height:var(--lh-body)}.essay-date+.essay-pair-desc{margin-top:.22rem}
+	.spotlight[data-essay-desc=ink] .essay-pair-desc{font-size:var(--text-sm);color:var(--ink-soft)}
+	.spotlight[data-essay-desc=read] .essay-pair-desc{font-size:var(--text-md);color:var(--ink-soft)}
+	.spotlight[data-essay-desc=article] .essay-pair-desc{font-size:var(--text-base);color:var(--ink-body)}
 	.essay-feature-media{display:block;position:relative;width:100%;aspect-ratio:16/9;padding:0;border:none;background:transparent;border-radius:10px;overflow:hidden;cursor:pointer}
 	.essay-feature-media img{display:block;width:100%;height:100%;object-fit:cover}
 	.essay-video-frame{cursor:default;background:#111}.essay-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
