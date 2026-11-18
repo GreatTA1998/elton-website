@@ -19,7 +19,8 @@ const LEGACY_ESSAY_DESC_KEY = 'elton-exp-essay-desc-mode';
 export const FLAG_DEFS = [
 	{ id: 'defaultSecond', key: 'elton-exp-default-second', label: 'Default select second', hint: 'Winner — 2nd album / app' },
 	{ id: 'overlap', key: 'elton-exp-overlap', label: 'Tilted dock', hint: 'Winner — overlap + tilt' },
-	{ id: 'essayLayout', key: 'elton-exp-essay-layout', label: 'Essay Title+copy pair', hint: 'Winner — Reading size + date' }
+	{ id: 'essayLayout', key: 'elton-exp-essay-layout', label: 'Essay Title+copy pair', hint: 'Winner — Reading size + date' },
+	{ id: 'essayThumbs', key: 'elton-exp-essay-thumbs', label: 'Essay thumbs', hint: 'TEMP — show media (off by default)' }
 ];
 
 /** @type {FlagDef[]} */
