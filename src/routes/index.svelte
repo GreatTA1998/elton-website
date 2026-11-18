@@ -69,7 +69,6 @@
 		<section
 			class="spotlight"
 			data-essay-layout={essayLayoutMode}
-			data-essay-desc={essayDescMode}
 			aria-label={$messages.videoEssays}
 		>
 			<div class="essay-row">
@@ -88,7 +87,7 @@
 							{truncateTitle(essay.title)}
 						</button>
 						{#if essayPair && selectedEssayId === essay.id}
-							{#if essayDateOn && essay.date}
+							{#if essay.date}
 								<time class="essay-date type-caption" datetime={essay.date}>{fmtDate(essay.date)}</time>
 							{/if}
 							<p class="type-caption essay-pair-desc">{essayDesc}</p>
@@ -292,11 +291,9 @@
 	$: essayDesc = selectedEssay.sentenceKey
 		? $messages[selectedEssay.sentenceKey]
 		: selectedEssay.sentence;
-	// TEMP experiments — Title+copy pair (null = classic)
+	// TEMP experiments — Title+copy pair (null = classic); Reading size + date locked on
 	$: essayPair = !!$experiments.essayLayout;
 	$: essayLayoutMode = essayPair ? 'pair' : null;
-	$: essayDescMode = essayPair ? $experiments.essayDescMode || 'quiet' : null;
-	$: essayDateOn = !!$experiments.essayDate;
 	// TEMP experiments — palette border from selected app logo
 	$: requestPalette(
 		appsPalOwner,
@@ -350,10 +347,7 @@
 	.essay-media-wrap{flex:0 1 auto;min-width:0;max-width:100%;display:grid;grid-template-columns:minmax(0,16rem) minmax(0,22rem);gap:.65rem;align-items:start}
 	.spotlight[data-essay-layout='pair'] .essay-media-wrap{grid-template-columns:minmax(0,18rem)}
 	.essay-date{display:block;margin:.02rem 0 0;font-size:var(--text-xs);color:var(--ink-quiet);line-height:var(--lh-tight)}
-	.essay-pair-desc{margin:.4rem 0 .6rem;max-width:36ch;font-size:var(--text-xs);line-height:var(--lh-body)}.essay-date+.essay-pair-desc{margin-top:.22rem}
-	.spotlight[data-essay-desc=ink] .essay-pair-desc{font-size:var(--text-sm);color:var(--ink-soft)}
-	.spotlight[data-essay-desc=read] .essay-pair-desc{font-size:var(--text-md);color:var(--ink-soft)}
-	.spotlight[data-essay-desc=article] .essay-pair-desc{font-size:var(--text-base);color:var(--ink-body)}
+	.essay-pair-desc{margin:.4rem 0 .6rem;max-width:36ch;font-size:var(--text-md);color:var(--ink-soft);line-height:var(--lh-body)}.essay-date+.essay-pair-desc{margin-top:.22rem}
 	.essay-feature-media{display:block;position:relative;width:100%;aspect-ratio:16/9;padding:0;border:none;background:transparent;border-radius:10px;overflow:hidden;cursor:pointer}
 	.essay-feature-media img{display:block;width:100%;height:100%;object-fit:cover}
 	.essay-video-frame{cursor:default;background:#111}.essay-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
