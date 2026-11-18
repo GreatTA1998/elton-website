@@ -42,18 +42,18 @@ export const PRESETS = [
 	{ id: 'tilt', label: 'Tilted dock', hint: 'Selected docks with a slight tilt' }
 ];
 
-/** Shared V / H / scale / active-scale (music + apps) */
+/** Shared V / H / scale / active-scale (music + apps). V units ≈ 0.1px. */
 /** @type {SliderDef[]} */
 export const OVERLAP_SLIDERS = [
-	{ id: 'overlapV', key: 'elton-exp-v', label: 'Vertical overlap', min: 0, max: 36, step: 1, def: 12 },
-	{ id: 'overlapH', key: 'elton-exp-h', label: 'Horizontal nudge', min: 0, max: 36, step: 1, def: 6 },
+	{ id: 'overlapV', key: 'elton-exp-v', label: 'Vertical overlap', min: 0, max: 25, step: 1, def: 15 },
+	{ id: 'overlapH', key: 'elton-exp-h', label: 'Horizontal nudge', min: 0, max: 20, step: 1, def: 4 },
 	{ id: 'baseScale', key: 'elton-exp-scale', label: 'Base scale', min: 85, max: 110, step: 1, def: 100 },
-	{ id: 'activeScale', key: 'elton-exp-active', label: 'Active scale', min: 105, max: 135, step: 1, def: 118 }
+	{ id: 'activeScale', key: 'elton-exp-active', label: 'Active scale', min: 105, max: 120, step: 1, def: 110 }
 ];
 
 /** @type {SliderDef[]} */
 export const DOCK_SLIDERS = [
-	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Extra dock depth', min: 0, max: 36, step: 1, def: 10 }
+	{ id: 'dockDepth', key: 'elton-exp-dock-depth', label: 'Extra dock depth', min: 0, max: 20, step: 1, def: 8 }
 ];
 
 const PRESET_KEY = 'elton-exp-preset';
@@ -240,13 +240,14 @@ export function overlapStyle(e) {
 	const v = Number(e.overlapV) || 0;
 	const h = Number(e.overlapH) || 0;
 	const s = Number(e.baseScale) || 100;
-	const a = Number(e.activeScale) || 118;
+	const a = Number(e.activeScale) || 110;
 	const dd = Number(e.dockDepth) || 0;
+	// V/H/dock in px (slider ≈ tenths of a px); max V = 2.5px kiss
 	return [
-		`--exp-v:${(v / 100) * 0.55}rem`,
-		`--exp-h:${(h / 100) * 0.35}rem`,
+		`--exp-v:${v / 10}px`,
+		`--exp-h:${h / 10}px`,
 		`--exp-s:${s / 100}`,
 		`--exp-a:${a / 100}`,
-		`--exp-dock:${(dd / 100) * 0.4}rem`
+		`--exp-dock:${dd / 10}px`
 	].join(';');
 }

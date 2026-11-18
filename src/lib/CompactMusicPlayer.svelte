@@ -419,10 +419,11 @@
 		pointer-events: none;
 	}
 
-	/* TEMP experiments — reserved slot + scale-from-center; even flex gap */
+	/* TEMP experiments — equal ACTIVE-sized slots; inactive scale down from center */
 	.unit.exp-overlap,
 	.unit.exp-dock {
-		gap: 0.1rem;
+		/* gap 0 so --exp-v translate alone makes the ~1–2px pill kiss */
+		gap: 0;
 		isolation: isolate;
 		overflow: visible;
 	}
@@ -437,56 +438,61 @@
 
 	.unit.exp-overlap .thumbs,
 	.unit.exp-dock .thumbs {
+		/* every thumb reserves the active footprint — scale never covers a neighbor */
+		--exp-slot: calc(var(--thumb) * var(--exp-s, 1) * var(--exp-a, 1.1));
 		position: relative;
 		z-index: 2;
 		overflow: visible;
-		min-height: calc(var(--thumb) * var(--exp-s, 1));
-		/* constant gap — H only nudges the selected item, never the row */
-		gap: 0.28rem;
+		min-height: var(--exp-slot);
+		gap: 0.35rem;
+		align-items: center;
 	}
 
 	.unit.exp-overlap .thumb,
 	.unit.exp-dock .thumb {
-		/* reserved inactive-sized slot; active grows via scale only */
-		width: calc(var(--thumb) * var(--exp-s, 1));
+		width: var(--exp-slot);
+		overflow: hidden;
 		position: relative;
 		z-index: 0;
+		transform: scale(calc(1 / var(--exp-a, 1.1)));
 		transform-origin: center center;
 		transition: transform 0.22s ease;
 	}
 
-	.unit.exp-overlap .thumb.selected {
-		transform: translate3d(0, calc(-1 * var(--exp-v, 0.07rem)), 0) scale(var(--exp-a, 1.18));
+	.unit.exp-overlap .thumb.selected,
+	.unit.exp-dock .thumb.selected {
+		/* fill reserved slot; tiny Y kiss only — no overflow into neighbor */
+		transform: translate3d(0, calc(-1 * var(--exp-v, 1.5px)), 0) scale(1);
 		z-index: 5;
 	}
 
 	.unit.exp-overlap[data-exp-preset='deep'] .thumb.selected {
-		transform: translate3d(0, calc(-1.25 * var(--exp-v, 0.07rem)), 0) scale(var(--exp-a, 1.18));
+		transform: translate3d(0, calc(-1.25 * var(--exp-v, 1.5px)), 0) scale(1);
 	}
 
 	.unit.exp-overlap[data-exp-preset='tilt'] .thumb.selected {
-		transform: translate3d(calc(-1 * var(--exp-h, 0.02rem)), calc(-1.1 * var(--exp-v, 0.07rem)), 0)
-			rotate(-2deg) scale(var(--exp-a, 1.18));
+		transform: translate3d(calc(-1 * var(--exp-h, 0.4px)), calc(-1.1 * var(--exp-v, 1.5px)), 0)
+			rotate(-2deg) scale(1);
 	}
 
 	.unit.exp-dock .thumb.selected {
-		transform: translate3d(0, calc(-1 * var(--exp-dock, 0.04rem)), 0) scale(var(--exp-a, 1.18));
+		transform: translate3d(0, calc(-1 * var(--exp-dock, 0.8px)), 0) scale(1);
 		z-index: 5;
 	}
 
 	.unit.exp-dock.exp-overlap .thumb.selected {
-		transform: translate3d(0, calc(-1 * var(--exp-v, 0.07rem) - var(--exp-dock, 0.04rem)), 0)
-			scale(var(--exp-a, 1.18));
+		transform: translate3d(0, calc(-1 * var(--exp-v, 1.5px) - var(--exp-dock, 0.8px)), 0)
+			scale(1);
 	}
 
 	.unit.exp-dock.exp-overlap[data-exp-preset='deep'] .thumb.selected {
-		transform: translate3d(0, calc(-1.25 * var(--exp-v, 0.07rem) - var(--exp-dock, 0.04rem)), 0)
-			scale(var(--exp-a, 1.18));
+		transform: translate3d(0, calc(-1.25 * var(--exp-v, 1.5px) - var(--exp-dock, 0.8px)), 0)
+			scale(1);
 	}
 
 	.unit.exp-dock.exp-overlap[data-exp-preset='tilt'] .thumb.selected {
-		transform: translate3d(calc(-1 * var(--exp-h, 0.02rem)), calc(-1.1 * var(--exp-v, 0.07rem) - var(--exp-dock, 0.04rem)), 0)
-			rotate(-2deg) scale(var(--exp-a, 1.18));
+		transform: translate3d(calc(-1 * var(--exp-h, 0.4px)), calc(-1.1 * var(--exp-v, 1.5px) - var(--exp-dock, 0.8px)), 0)
+			rotate(-2deg) scale(1);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
