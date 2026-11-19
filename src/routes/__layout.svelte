@@ -3,11 +3,10 @@
 	import CompactMusicPlayer from '$lib/CompactMusicPlayer.svelte';
 	import LanguageToggle from '$lib/LanguageToggle.svelte';
 	import WelcomeSplash from '$lib/WelcomeSplash.svelte';
-	import { hydrateExperiments } from '$lib/experiments.js'; // TEMP experiments
-	import '$lib/expSurfaces.css'; // TEMP experiments
+	import { hydrateExperiments } from '$lib/experiments.js';
+	import '$lib/expSurfaces.css';
 	import '$lib/type.css';
 
-	// TEMP experiments
 	onMount(hydrateExperiments);
 </script>
 

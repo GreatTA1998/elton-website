@@ -1,6 +1,5 @@
 <script>
 	import { messages } from './i18n.js';
-	import ExperimentsPanel from './ExperimentsPanel.svelte'; // TEMP experiments
 </script>
 
 <footer class="site-footer">
@@ -65,33 +64,11 @@
 			</svg>
 		</a>
 	</nav>
-	<ExperimentsPanel />
 </footer>
 
 <style>
-	.site-footer {
-		width: 100%;
-		max-width: none;
-		padding: 2.5rem 2rem 2.75rem;
-		box-sizing: border-box;
-	}
-
-	.socials {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 14px;
-	}
-
-	.socials a {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		color: #8a8a8a;
-		text-decoration: none;
-	}
-
-	.socials svg {
-		display: block;
-	}
+	.site-footer{width:100%;max-width:none;padding:2.5rem 2rem 2.75rem;box-sizing:border-box}
+	.socials{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+	.socials a{display:inline-flex;align-items:center;justify-content:center;color:#8a8a8a;text-decoration:none}
+	.socials svg{display:block}
 </style>

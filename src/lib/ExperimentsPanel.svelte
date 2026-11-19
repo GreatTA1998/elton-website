@@ -1,4 +1,3 @@
-<!-- TEMP discoverability A/B — delete with experiments.js + TEMP hooks. -->
 <script>
 	import {
 		FLAG_DEFS,
