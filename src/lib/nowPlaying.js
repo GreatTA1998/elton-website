@@ -36,13 +36,12 @@ export const TRACKS = {
 	}
 };
 
-/** Selectable thumbs under the pill (Bach stays coming-soon — art only). */
-export const ALBUM_IDS = ['rachmaninoff', 'ghost', 'all-of-me'];
+export const ALBUM_IDS = ['all-of-me', 'rachmaninoff', 'ghost']; // Bach art only, not selectable
 
 /** @type {import('svelte/store').Writable<{ id: string, autoplay: boolean, nonce: number }>} */
-export const nowPlaying = writable({ id: 'rachmaninoff', autoplay: false, nonce: 0 });
+export const nowPlaying = writable({ id: ALBUM_IDS[1], autoplay: false, nonce: 0 });
 
-export const currentTrack = derived(nowPlaying, ($np) => TRACKS[$np.id] || TRACKS.rachmaninoff);
+export const currentTrack = derived(nowPlaying, ($np) => TRACKS[$np.id] || TRACKS[ALBUM_IDS[1]]);
 
 /** @param {string} id @param {boolean} [autoplay] */
 export function playTrack(id, autoplay = true) {
