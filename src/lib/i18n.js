@@ -181,7 +181,7 @@ export function initLocale() {
 	if (saved && offered.includes(/** @type {Locale} */ (saved))) {
 		locale.set(/** @type {Locale} */ (saved));
 	} else {
-		locale.set('en');
+		locale.set(secondary || 'en');
 	}
 }
 
