@@ -14,6 +14,8 @@ const STORAGE_KEY = 'elton-site-lang';
 const DICT = {
 	en: {
 		welcome: 'Welcome to my absolutely epic website!',
+		welcomeBody:
+			"Hello! I'm Elton, a startup founder. This home page centralizes my software, music recordings, essays. Thanks for visiting!",
 		softwareApps: 'apps',
 		videoEssays: 'essays',
 		emailUpdates: 'Get updates',
@@ -58,6 +60,8 @@ const DICT = {
 	},
 	zh: {
 		welcome: '欢迎来到我超赞的网站',
+		welcomeBody:
+			'你好！我是 Elton，一位创业者。这个主页集中了我的软件、音乐录音和随笔。感谢来访！',
 		softwareApps: '应用',
 		videoEssays: '随笔',
 		emailUpdates: '获取更新',
@@ -100,6 +104,8 @@ const DICT = {
 	},
 	ja: {
 		welcome: 'ようこそ。ここはとてもいいサイトです',
+		welcomeBody:
+			'こんにちは！スタートアップ創業者の Elton です。このホームページにソフトウェア、音楽録音、エッセイをまとめています。ご訪問ありがとうございます！',
 		softwareApps: 'アプリ',
 		videoEssays: 'エッセイ',
 		emailUpdates: '更新を受け取る',
