@@ -41,7 +41,7 @@
 		position: fixed;
 		top: clamp(0.55rem, 1.4vw, 0.85rem);
 		left: clamp(0.55rem, 1.4vw, 0.85rem);
-		z-index: 200;
+		z-index: 310;
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;

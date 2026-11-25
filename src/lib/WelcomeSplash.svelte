@@ -1,5 +1,5 @@
 <script>
-	import { onMount, tick } from 'svelte';
+	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { messages } from './i18n.js';
 	import { nowPlaying, playTrack } from './nowPlaying.js';
@@ -7,8 +7,6 @@
 	const KEY = 'elton-welcome-seen';
 	let show = false;
 	let autoplay = true;
-	/** @type {HTMLButtonElement | null} */
-	let enterBtn = null;
 
 	onMount(() => {
 		try {
@@ -24,7 +22,6 @@
 			enter();
 		};
 		window.addEventListener('keydown', onKey);
-		tick().then(() => enterBtn?.focus());
 		return () => window.removeEventListener('keydown', onKey);
 	});
 
@@ -49,7 +46,7 @@
 			music recordings, essays and contact information.
 		</p>
 		<div class="row">
-			<button type="button" class="enter" bind:this={enterBtn} on:click={enter}>Enter</button>
+			<button type="button" class="enter" on:click={enter}>Enter</button>
 			<label class="tog"><input type="checkbox" bind:checked={autoplay} /> autoplay music</label>
 		</div>
 	</div>
@@ -100,6 +97,7 @@
 		font-size: 0.85rem;
 		font-weight: 500;
 		cursor: pointer;
+		outline: none;
 	}
 	.tog {
 		display: inline-flex;
