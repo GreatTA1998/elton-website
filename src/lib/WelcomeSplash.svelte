@@ -41,10 +41,7 @@
 {#if show}
 	<div class="splash" role="dialog" aria-modal="true" aria-labelledby="welcome-splash-title">
 		<h1 id="welcome-splash-title">{$messages.welcome}</h1>
-		<p id="welcome-splash-copy">
-			Hello! I'm Elton, a startup founder since 2021. This place centralizes my software,
-			music recordings, essays and contact information.
-		</p>
+		<p id="welcome-splash-copy">{$messages.welcomeBody}</p>
 		<div class="row">
 			<button type="button" class="enter" on:click={enter}>Enter</button>
 			<label class="tog"><input type="checkbox" bind:checked={autoplay} /> autoplay music</label>
