@@ -162,7 +162,7 @@ export function detectSecondaryLocale() {
 	return null;
 }
 
-/** Call once in the browser (e.g. LanguageToggle onMount). */
+/** Call once in the browser (e.g. WelcomeSplash onMount). */
 export function initLocale() {
 	if (typeof window === 'undefined') return;
 

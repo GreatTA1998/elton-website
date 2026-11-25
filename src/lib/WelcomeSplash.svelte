@@ -1,7 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
-	import { messages } from './i18n.js';
+	import { messages, initLocale } from './i18n.js';
+	import LanguageToggle from './LanguageToggle.svelte';
 	import { nowPlaying, playTrack } from './nowPlaying.js';
 
 	const KEY = 'elton-welcome-seen';
@@ -9,6 +10,7 @@
 	let autoplay = true;
 
 	onMount(() => {
+		initLocale();
 		try {
 			show = localStorage.getItem(KEY) !== '1';
 		} catch {
@@ -40,6 +42,7 @@
 
 {#if show}
 	<div class="splash" role="dialog" aria-modal="true" aria-labelledby="welcome-splash-title">
+		<LanguageToggle />
 		<h1 id="welcome-splash-title">{$messages.welcome}</h1>
 		<p id="welcome-splash-copy">
 			Hello! I'm Elton, a startup founder since 2021. This place centralizes my software,
